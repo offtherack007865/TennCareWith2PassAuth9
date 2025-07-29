@@ -1,0 +1,24 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TennCareWith2PassAuth9.Data.Models
+{
+    public class qy_GetMonthlyEntriesYieldingEligInfoTodayOutput
+    {
+        public qy_GetMonthlyEntriesYieldingEligInfoTodayOutput()
+        {
+            IsOk = true;
+            ErrorMessage = string.Empty;
+            qy_GetMonthlyEntriesYieldingEligInfoTodayOutputColumnsList =
+                new List<qy_GetMonthlyEntriesYieldingEligInfoTodayOutputColumns>();
+        }
+        public bool IsOk {  get; set; }
+        public string ErrorMessage { get; set; }
+        public List<qy_GetMonthlyEntriesYieldingEligInfoTodayOutputColumns>
+            qy_GetMonthlyEntriesYieldingEligInfoTodayOutputColumnsList
+            { get; set; }
+    }
+}

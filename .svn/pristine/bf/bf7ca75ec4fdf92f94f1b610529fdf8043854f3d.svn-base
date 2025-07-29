@@ -1,0 +1,415 @@
+﻿using TennCareWith2PassAuth9.FirefoxOps;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TennCareWith2PassAuth9.CallWebApiLand;
+using TennCareWith2PassAuth9.Data.Models;
+using System.Text.RegularExpressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Collections;
+
+namespace TennCareWith2PassAuth9.CollectionsLookUpConsoleApp
+{
+    public class MainOps
+    {
+        public MainOps
+                (
+                    ConfigOptions inputFileConfigOptions
+                    ,qy_GetTennCareWith2PassAuthConfigOutputColumns inputqy_GetTennCareWith2PassAuthConfigOutputColumns
+                )
+        {
+            MyFileConfigOptions =
+                inputFileConfigOptions;
+
+            MyConfigOptions =
+                inputqy_GetTennCareWith2PassAuthConfigOutputColumns;
+        }
+
+        // MyConfigOption
+        public
+            qy_GetTennCareWith2PassAuthConfigOutputColumns
+                MyConfigOptions
+        { get; set; }
+
+        // MyFileConfigOption
+        public
+            ConfigOptions
+                MyFileConfigOptions
+        { get; set; }
+
+        public MainOpsOutput MyMain()
+        {
+            MainOpsOutput returnOutput =
+                new MainOpsOutput();
+
+            // Get all collections needing to be looked up.
+            qy_GetAllCollectionsEntriesLookedUpTodayOutput
+                myqy_GetAllCollectionsEntriesLookedUpTodayOutput =
+                    GetAllCollectionsEntriesLookedUpToday();
+            if (!myqy_GetAllCollectionsEntriesLookedUpTodayOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    myqy_GetAllCollectionsEntriesLookedUpTodayOutput.ErrorMessage;
+                return returnOutput;
+            }
+            if (
+                    myqy_GetAllCollectionsEntriesLookedUpTodayOutput
+                    .qy_GetAllCollectionsEntriesLookedUpTodayOutputColumnsList
+                    .Count == 0
+                )
+            {
+                Console.WriteLine("There are no collections entries today.  Program is Ending.");
+                return returnOutput;
+            }
+
+            // Given there are entries to look up, Truncate the Eligibility Info Output table.
+            dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutput
+                mydd_TruncateCollectionsEntriesYieldingEligInfoTodayOutput =
+                    TruncateCollectionsEntriesYieldingEligInfoToday();
+            if (!mydd_TruncateCollectionsEntriesYieldingEligInfoTodayOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    mydd_TruncateCollectionsEntriesYieldingEligInfoTodayOutput.ErrorMessage;
+                return returnOutput;
+            }
+
+
+            FirefoxOps.FireFoxOps
+                myFirefoxOps =
+                    new FirefoxOps.FireFoxOps(MyFileConfigOptions);
+            myFirefoxOps.StartFirefoxBrowser();
+            if (myFirefoxOps.MyFirefoxBrowser == null)
+            {
+                Console.WriteLine("Something went wrong with the Firefox browser.  Program is exiting.");
+                return returnOutput;
+            }
+
+            // Ask user to log into the TennCare site
+            // and to navigate to the TennCare Eligibility
+            // screen.
+            Console.WriteLine("\r\nYour firefox Browser should have started at the TennCare LogIn screen.  Please log in and navigate to the TennCare Eligibility screen.  Is your browser on the TennCare Eligibility screen (y/n)?");
+            string onEligibilityScreenAnswer =
+                Console.ReadLine();
+
+            // If user does not answer that they've got their Firefox browser ready to perform
+            // the mass-lookup, exit.
+            if (onEligibilityScreenAnswer.ToUpper().CompareTo("Y") != 0)
+            {
+                Console.WriteLine("You must navigate to the TennCare Eligibility screen so that this program can determine the eligibility of many patients.  Exiting the program.");
+                return returnOutput;
+            }
+
+            for (int entryCtr = 0; entryCtr < myqy_GetAllCollectionsEntriesLookedUpTodayOutput.qy_GetAllCollectionsEntriesLookedUpTodayOutputColumnsList.Count; entryCtr++)
+            {
+                qy_GetAllCollectionsEntriesLookedUpTodayOutputColumns
+                    loopEntry =
+                        myqy_GetAllCollectionsEntriesLookedUpTodayOutput
+                        .qy_GetAllCollectionsEntriesLookedUpTodayOutputColumnsList[entryCtr];
+                int oneBasedEntryCtr = entryCtr + 1;
+                Console.WriteLine($"Collections Patient Appt {oneBasedEntryCtr} of {myqy_GetAllCollectionsEntriesLookedUpTodayOutput.qy_GetAllCollectionsEntriesLookedUpTodayOutputColumnsList.Count} being looked up.");
+                if (loopEntry.PatientID == 1189234)
+                {
+                    int i = 0;
+                    i++;
+                }
+                FirefoxPatientInfoToLookUp
+                    myEntryToLookUp =
+                        new FirefoxPatientInfoToLookUp
+                        {
+                            FileName = loopEntry.FileName,
+                            PatientID = loopEntry.PatientID,
+                            DOB = loopEntry.DOB,
+                            DOS = loopEntry.DOS,
+                            SSN = loopEntry.SSN,
+                            DateImported = loopEntry.DateImported
+                        };
+                myFirefoxOps.MyFirefoxPatientInfoToLookUp =
+                    myEntryToLookUp;
+                myFirefoxOps.LookUpTennCareEligibility();
+
+                // Update the look-up entry as Looked Up.
+                du_MarkCollectionsEntryLookedUpTodayAsLookedUpOutput
+                    mydu_MarkCollectionsEntryLookedUpTodayAsLookedUpOutput =
+                        MarkCollectionsEntryLookedUpTodayAsLookedUp
+                        (
+                            loopEntry.CollectionsEntriesLookedUpTodayID
+                        );
+                if (!mydu_MarkCollectionsEntryLookedUpTodayAsLookedUpOutput.IsOk)
+                {
+                    returnOutput.IsOk = false;
+                    returnOutput.ErrorMessage =
+                        mydu_MarkCollectionsEntryLookedUpTodayAsLookedUpOutput.ErrorMessage;
+                    return returnOutput; 
+                }
+
+                // If we don't have Status='Y', we're done.
+                if (
+                        myFirefoxOps.MyTennCareListOfInfoForPatient.Count == 0
+                        ||
+                        myFirefoxOps.MyFirefoxEligInfoForPatient == null
+                        ||
+                        myFirefoxOps.MyFirefoxEligInfoForPatient.Status.CompareTo("Yes") != 0
+                   )
+                {
+                    continue;
+                }
+
+                // Insert CollectionsEntriesYieldingEligInfoToday with the 
+                // Eligibility Info from the Firefox Look-Up
+                di_InsertCollectionsEntriesYieldingEligInfoTodayOutput
+                    mydi_InsertCollectionsEntriesYieldingEligInfoTodayOutput =
+                        InsertCollectionsEntriesYieldingEligInfoToday
+                        (
+                            myFirefoxOps.MyFirefoxEligInfoForPatient
+                        );
+                if (!mydi_InsertCollectionsEntriesYieldingEligInfoTodayOutput.IsOk)
+                {
+                    returnOutput.IsOk = false;
+                    returnOutput.ErrorMessage =
+                        mydi_InsertCollectionsEntriesYieldingEligInfoTodayOutput.ErrorMessage;
+                    return returnOutput;
+                }
+            }
+            myFirefoxOps.LogOutOfBrowser();
+
+
+            qy_GetCollectionsEntriesYieldingEligInfoTodayOutput
+                myqy_GetCollectionsEntriesYieldingEligInfoTodayOutput =
+                    qy_GetCollectionsEntriesYieldingEligInfoToday();
+            if (!myqy_GetCollectionsEntriesYieldingEligInfoTodayOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    myqy_GetCollectionsEntriesYieldingEligInfoTodayOutput
+                    .ErrorMessage;
+                return returnOutput;
+            }
+
+            if (myqy_GetCollectionsEntriesYieldingEligInfoTodayOutput
+                .qy_GetCollectionsEntriesYieldingEligInfoTodayOutputColumnsList
+                .Count > 0)
+            {
+                CreateOutputFile
+                (
+                    myqy_GetCollectionsEntriesYieldingEligInfoTodayOutput
+                    .qy_GetCollectionsEntriesYieldingEligInfoTodayOutputColumnsList
+                );
+
+                string outputFilename =
+                    myqy_GetCollectionsEntriesYieldingEligInfoTodayOutput
+                    .qy_GetCollectionsEntriesYieldingEligInfoTodayOutputColumnsList[0]
+                    .OutputFileName;
+                    
+                returnOutput.MailBodyLineList.Add
+                (
+                    $"Created Output File:  {outputFilename} with {myqy_GetCollectionsEntriesYieldingEligInfoTodayOutput.qy_GetCollectionsEntriesYieldingEligInfoTodayOutputColumnsList.Count} Collections Patient Eligibility Entry(ies)."
+                );
+            }
+
+            return returnOutput;
+        }
+
+        public void CreateOutputFile
+            (
+                List<qy_GetCollectionsEntriesYieldingEligInfoTodayOutputColumns> 
+                    inputqy_GetCollectionsEntriesYieldingEligInfoTodayOutputColumnsList
+            ) 
+        {
+            if (inputqy_GetCollectionsEntriesYieldingEligInfoTodayOutputColumnsList.Count == 0)
+            {
+                return;
+            }
+            string outputFullFilename =
+                inputqy_GetCollectionsEntriesYieldingEligInfoTodayOutputColumnsList[0].OutputFileName;
+
+            string returnOutput = string.Empty;
+            List<string> fileStringList = new List<string>();
+            fileStringList.Add("AccountNumber, Dob, DOS, FileDate, FileName, MCO, Medicare, PCP, Ssn, Status, TennCareElligibility");
+            foreach (qy_GetCollectionsEntriesYieldingEligInfoTodayOutputColumns loopEntry in inputqy_GetCollectionsEntriesYieldingEligInfoTodayOutputColumnsList)
+            {
+                fileStringList.Add($"{loopEntry.PatientID}, {loopEntry.DOB.ToString("MM/dd/yyyy")}, {loopEntry.DOS.ToString("MM/dd/yyyy")}, {loopEntry.OutputFileDate.ToString("MM/dd/yyyy")}, TennCareCollections, {loopEntry.MCO},  {loopEntry.Medicare}, {loopEntry.PCP}, {loopEntry.SSN}, {loopEntry.Status}, {loopEntry.TennCareEligibility}");
+            }
+
+            if (File.Exists(outputFullFilename))
+            {
+                File.Delete(outputFullFilename);
+            }
+            File.WriteAllLines(outputFullFilename, fileStringList);
+        }
+        public qy_GetCollectionsEntriesYieldingEligInfoTodayOutput qy_GetCollectionsEntriesYieldingEligInfoToday()
+        {
+            qy_GetCollectionsEntriesYieldingEligInfoTodayOutput returnOutput =
+                new qy_GetCollectionsEntriesYieldingEligInfoTodayOutput();
+            CallWebApiLandClass myCallWebApiLandClass =
+                new CallWebApiLandClass(this.MyConfigOptions.BaseWebApiUrl);
+            returnOutput =
+                myCallWebApiLandClass
+                .qy_GetCollectionsEntriesYieldingEligInfoToday();
+            if (!returnOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    returnOutput.ErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+
+        public qy_GetAllCollectionsEntriesLookedUpTodayOutput GetAllCollectionsEntriesLookedUpToday()
+        {
+            qy_GetAllCollectionsEntriesLookedUpTodayOutput returnOutput =
+                new qy_GetAllCollectionsEntriesLookedUpTodayOutput();
+            CallWebApiLandClass myCallWebApiLandClass =
+                new CallWebApiLandClass(this.MyConfigOptions.BaseWebApiUrl);
+            returnOutput =
+                myCallWebApiLandClass
+                .qy_GetAllCollectionsEntriesLookedUpToday();
+            if (!returnOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    returnOutput.ErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+        public du_MarkCollectionsEntryLookedUpTodayAsLookedUpOutput MarkCollectionsEntryLookedUpTodayAsLookedUp(int inputCollectionsEntryID)
+        {
+            du_MarkCollectionsEntryLookedUpTodayAsLookedUpOutput returnOutput =
+                new du_MarkCollectionsEntryLookedUpTodayAsLookedUpOutput();
+            CallWebApiLandClass myCallWebApiLandClass =
+                new CallWebApiLandClass(this.MyConfigOptions.BaseWebApiUrl);
+            returnOutput =
+                myCallWebApiLandClass
+                .du_MarkCollectionsEntryLookedUpTodayAsLookedUp(inputCollectionsEntryID);
+            if (!returnOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    returnOutput.ErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+        public dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutput TruncateCollectionsEntriesYieldingEligInfoToday()
+        {
+            dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutput returnOutput =
+                new dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutput();
+            CallWebApiLandClass myCallWebApiLandClass =
+                new CallWebApiLandClass(this.MyConfigOptions.BaseWebApiUrl);
+            returnOutput =
+                myCallWebApiLandClass
+                .dd_TruncateCollectionsEntriesYieldingEligInfoToday();
+            if (!returnOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    returnOutput.ErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+        public di_InsertCollectionsEntriesYieldingEligInfoTodayOutput
+            InsertCollectionsEntriesYieldingEligInfoToday
+            (
+                FirefoxEligInfoForPatient inputFirefoxEligInfoForPatient
+            )
+        {
+            inputFirefoxEligInfoForPatient =
+                CompleteEligInfo(inputFirefoxEligInfoForPatient);
+
+            di_InsertCollectionsEntriesYieldingEligInfoTodayOutput 
+                returnOutput =
+                    new di_InsertCollectionsEntriesYieldingEligInfoTodayOutput();
+            CallWebApiLandClass myCallWebApiLandClass =
+                new CallWebApiLandClass(this.MyConfigOptions.BaseWebApiUrl);
+            returnOutput =
+                myCallWebApiLandClass
+                .di_InsertCollectionsEntriesYieldingEligInfoToday
+                (
+                    inputFirefoxEligInfoForPatient.ImportFileName
+                    , inputFirefoxEligInfoForPatient.PatientID.ToString()
+                    , inputFirefoxEligInfoForPatient.DOB.ToString("yyyyMMdd")
+                    , inputFirefoxEligInfoForPatient.SSN
+                    , inputFirefoxEligInfoForPatient.DOS.ToString("yyyyMMdd")
+                    , inputFirefoxEligInfoForPatient.DateImported.ToString("yyyyMMdd")
+                    , inputFirefoxEligInfoForPatient.MCO
+                    , inputFirefoxEligInfoForPatient.Medicare
+                    , (inputFirefoxEligInfoForPatient.PCP.CompareTo("MT") == 0) ? "" : inputFirefoxEligInfoForPatient.PCP
+                    , inputFirefoxEligInfoForPatient.Status
+                    , inputFirefoxEligInfoForPatient.TennCareEligibility
+                    , inputFirefoxEligInfoForPatient.OutputFileDate.ToString("yyyyMMdd")
+                    , inputFirefoxEligInfoForPatient.OutputFileName
+                );
+            if (!returnOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    returnOutput.ErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+
+        }
+        public FirefoxEligInfoForPatient CompleteEligInfo(FirefoxEligInfoForPatient inputFirefoxEligInfoForPatient)
+        {
+            DateTime myOutputFileDate = new DateTime(1900, 1, 1);
+            string myOutputFileName = string.Empty;
+            FileInfo importFilenameFi =
+                new FileInfo(inputFirefoxEligInfoForPatient.ImportFileName);
+            Regex regex = new Regex(@"(?<prefix>.+)_(?<yyyy>\d{4})(?<MM>\d{2})(?<dd>\d{2})");
+            Match match = regex.Match(importFilenameFi.Name);
+            if (match.Success)
+            {
+                string prefix = match.Groups["prefix"].Value;
+                string yyyyString = match.Groups["yyyy"].Value;
+                string MMString = match.Groups["MM"].Value;
+                string ddString = match.Groups["dd"].Value;
+
+                int yyyy = -1;
+                int MM = -1;
+                int dd = -1;
+
+                Int32.TryParse(yyyyString, out yyyy);
+                Int32.TryParse(MMString, out MM);
+                Int32.TryParse(ddString, out dd);
+
+                DateTime.TryParse($"{MM}/{dd}/{yyyy}", out myOutputFileDate);
+
+                myOutputFileName =
+                    Path.Combine
+                    (
+                        MyConfigOptions.CollectionsOutputArchiveDirectory
+                        ,$"{prefix}_{yyyyString}{MMString}{ddString}.csv"
+                    );
+                
+            }
+
+            FirefoxEligInfoForPatient returnOutput =
+                new FirefoxEligInfoForPatient
+                {
+                    ImportFileName = (inputFirefoxEligInfoForPatient.ImportFileName.Length == 0) ? "MT" : inputFirefoxEligInfoForPatient.ImportFileName,
+                    PatientID = inputFirefoxEligInfoForPatient.PatientID,
+                    DOB = inputFirefoxEligInfoForPatient.DOB,
+                    SSN = (inputFirefoxEligInfoForPatient.SSN.Length == 0) ? "MT" : inputFirefoxEligInfoForPatient.SSN,
+                    DOS = inputFirefoxEligInfoForPatient.DOS,
+                    DateImported = inputFirefoxEligInfoForPatient.DateImported,
+                    MCO = (inputFirefoxEligInfoForPatient.MCO.Length == 0) ? "MT" : inputFirefoxEligInfoForPatient.MCO,
+                    Medicare = (inputFirefoxEligInfoForPatient.Medicare.Length == 0) ? "MT" : inputFirefoxEligInfoForPatient.Medicare,
+                    PCP = (inputFirefoxEligInfoForPatient.PCP.Length == 0) ? "MT" : inputFirefoxEligInfoForPatient.PCP,
+                    Status = (inputFirefoxEligInfoForPatient.Status.Length == 0) ? "MT" : inputFirefoxEligInfoForPatient.Status,
+                    TennCareEligibility = (inputFirefoxEligInfoForPatient.TennCareEligibility.Length == 0) ? "MT" : inputFirefoxEligInfoForPatient.TennCareEligibility,
+                    OutputFileDate = myOutputFileDate,
+                    OutputFileName = myOutputFileName
+                };
+            return returnOutput;
+        }
+    }
+}

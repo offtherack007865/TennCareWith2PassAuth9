@@ -1,0 +1,8 @@
+-- SQL Server Instance:  smg-sql01
+-----------------------------------------------------------------------
+-- Grant Execute Authority on qy_GetTennCareWith2PassAuthConfig
+-- to AppUser
+-----------------------------------------------------------------------
+USE [Utilities];
+GRANT EXECUTE ON OBJECT::[tc].[qy_GetTennCareWith2PassAuthConfig]
+   TO [AppUser];  

@@ -1,0 +1,252 @@
+-- SQL Server Instance:  smg-sql01
+USE [Utilities];
+IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND OBJECT_ID = OBJECT_ID('tc.di_InsertDunningEntriesYieldingEligInfoToday'))
+   DROP PROC [tc].[di_InsertDunningEntriesYieldingEligInfoToday]
+GO
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+                       
+CREATE PROCEDURE [tc].[di_InsertDunningEntriesYieldingEligInfoToday]
+(
+  @inputImportFileName [varchar](300)
+  ,@inputPatientID [int]
+  ,@inputDOB [datetime]
+  ,@inputSSN [varchar](10)
+  ,@inputDOS [datetime]
+  ,@inputDateImported [datetime]
+  ,@inputMCO [nvarchar](100)
+  ,@inputMedicare [nvarchar](100)
+  ,@inputPCP [nvarchar](100)
+  ,@inputStatus [nvarchar](100)
+  ,@inputTennCareEligibility [nvarchar](300)
+  ,@inputOutputFileDate [datetime]
+  ,@inputOutputFileName [varchar](300)
+)
+/* -----------------------------------------------------------------------------------------------------------
+   Procedure Name  :  tc.di_InsertDunningEntriesYieldingEligInfoToday
+   Business Analyis:
+   Project/Process :   
+   Description     :  Insert Patient's Eligibility Information.
+	  
+   Author          :  Philip Morrison 
+   Create Date     :  04/18/2025
+
+   ***********************************************************************************************************
+   **         Change History                                                                                **
+   ***********************************************************************************************************
+
+   Date       Version    Author             Description
+   --------   --------   -----------        ------------
+   04/18/2025 1.01.001   Philip Morrison    Created
+
+*/ -----------------------------------------------------------------------------------------------------------                                      
+AS
+BEGIN
+
+-- Instance Declarations.
+declare @IsOk [bit] 
+declare @MyCount [int] 
+
+-- Template Declarations
+DECLARE @Application            varchar(128) = 'TennCareEligility' 
+DECLARE @Version                varchar(25)  = '1.00.001'
+
+DECLARE @ProcessID              int          = 212
+DECLARE @Process                varchar(128) = 'Import'
+
+DECLARE @BatchOutID             int
+DECLARE @BatchDescription       varchar(1000) = @@ServerName + '  - ' + @Version
+DECLARE @BatchDetailDescription varchar(1000)
+DECLARE @BatchMessage           varchar(MAX)
+DECLARE @User                   varchar(128) = SUSER_NAME()
+
+DECLARE @AnticipatedRecordCount int 
+DECLARE @ActualRecordCount      int
+
+SET NOCOUNT ON
+
+BEGIN TRY
+
+--  Initialize Batch
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  NULL, 'BatchStart', @BatchDescription, @ProcessID, @Process
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    SET @BatchDetailDescription = '010/030:   Check for duplicate record'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = 0;
+	  
+	DECLARE @ExistsImportFileName [nvarchar] (300) = '' 
+	SET @ExistsImportFileName = NULL
+    
+    -- Check for duplicate record
+    SELECT @ExistsImportFileName = [ImportFileName]
+	FROM [TennCareEligibility].[tc].[DunningEntriesYieldingEligInfoToday]
+	WHERE [ImportFileName] = @inputImportFileName
+	  AND [PatientID] = @inputPatientID
+	  AND [DOB] = @inputDOB
+	  AND [SSN] = @inputSSN
+      AND [DOS] = @inputDOS
+	  AND [DateImported] = @inputDateImported
+	  AND [MCO] = @inputMCO
+      AND [Medicare] = @inputMedicare
+	  AND [PCP] = @inputPCP
+	  AND [Status] = @inputStatus
+      AND [TennCareEligibility] = @inputTennCareEligibility
+	  AND [OutputFileDate] = @inputOutputFileDate
+      AND [OutputFileName] = @inputOutputFileName
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+	
+IF (@ExistsImportFileName IS NULL) BEGIN
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    SET @BatchDetailDescription = '020/030:   Insert Dunning Eligibility Info for a patient into today table'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = 1;
+	  
+    -- Insert Dunning Eligibility Info for a patient into today table
+    INSERT INTO [TennCareEligibility].[tc].[DunningEntriesYieldingEligInfoToday]
+	(
+	   [ImportFileName]
+	   ,[PatientID]
+	   ,[DOB]
+	   ,[SSN]
+	   ,[DOS]
+	   ,[DateImported]
+	   ,[MCO]
+	   ,[Medicare]
+	   ,[PCP]
+	   ,[Status]
+	   ,[TennCareEligibility]
+	   ,[OutputFileDate]
+	   ,[OutputFileName]
+	)
+	VALUES
+	(
+	  @inputImportFileName
+      ,@inputPatientID
+      ,@inputDOB
+      ,@inputSSN
+      ,@inputDOS
+      ,@inputDateImported
+      ,@inputMCO
+      ,@inputMedicare
+      ,@inputPCP
+      ,@inputStatus
+      ,@inputTennCareEligibility
+      ,@inputOutputFileDate
+      ,@inputOutputFileName
+	);
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    SET @BatchDetailDescription = '030/030:   Insert Dunning Eligibility Info for a patient into today history table'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = 1;
+	  
+    -- Insert Dunning Eligibility Info for a patient into today history table
+    INSERT INTO [TennCareEligibility].[tc].[DunningEntriesYieldingEligInfoTodayHistory]
+	(
+	   [ImportFileName]
+	   ,[PatientID]
+	   ,[DOB]
+	   ,[SSN]
+	   ,[DOS]
+	   ,[DateImported]
+	   ,[MCO]
+	   ,[Medicare]
+	   ,[PCP]
+	   ,[Status]
+	   ,[TennCareEligibility]
+	   ,[OutputFileDate]
+	   ,[OutputFileName]
+	)
+	VALUES
+	(
+	  @inputImportFileName
+      ,@inputPatientID
+      ,@inputDOB
+      ,@inputSSN
+      ,@inputDOS
+      ,@inputDateImported
+      ,@inputMCO
+      ,@inputMedicare
+      ,@inputPCP
+      ,@inputStatus
+      ,@inputTennCareEligibility
+      ,@inputOutputFileDate
+      ,@inputOutputFileName
+	);
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+END 
+------------------------------------------------------------------------------------------------------------------------------------------------------  Close batch
+    EXEC Admin.Utilities.logs.di_batch @BatchOutID OUTPUT, @BatchOutID, 'BatchEnd'
+    
+
+set @MyCount = 0
+select @MyCount = count(*)
+  from [TennCareEligibility].[tc].[DunningEntriesYieldingEligInfoToday]
+  where [ImportFileName] = @inputImportFileName
+  and [PatientID] = @inputPatientID
+  and [DOS] = @inputDOS;
+      
+
+if (@MyCount > 0) begin
+  set @IsOk = 1
+  select @IsOk as [IsOk]
+  return
+end  
+
+set @IsOk = 0
+select @IsOk as [IsOk]
+
+END TRY
+
+BEGIN CATCH
+DECLARE @Err              int
+     ,  @ErrorMessage     varchar(Max)
+     ,  @ErrorLine        varchar(128)
+     ,  @Workstation      varchar(128) = @Application
+     ,  @Procedure        VARCHAR(500)
+
+    IF ERROR_NUMBER() IS NULL 
+      SET @Err =0;
+    ELSE
+      SET @Err = ERROR_NUMBER();
+
+    SET @ErrorMessage = ERROR_MESSAGE()
+    SET @ErrorLine    = 'SP Line Number: ' + CAST(ERROR_LINE() as varchar(10)) 
+	SET @Workstation  = HOST_NAME()
+    SET @Procedure    = @@SERVERNAME + '.' + DB_NAME() + '.' + OBJECT_SCHEMA_NAME(@@ProcID) + '.' + OBJECT_NAME(@@ProcID) + ' - ' + @ErrorLine + ' - ' + LEFT(@BatchDetailDescription, 7)
+    EXEC Admin.Utilities.administration.di_ErrorLog  @Application ,@Process, @Version ,0, @ErrorMessage, @Procedure,  @User , @Workstation
+
+    SET @BatchMessage = 'Process Failed:  ' +  @ErrorMessage
+    
+    EXEC Admin.Utilities.logs.di_batch @BatchOutID OUTPUT, @BatchOutID, 'BatchEnd', @BatchMessage
+        
+    set @IsOk = 0
+    select @IsOk as [IsOk]
+    
+    RAISERROR(@ErrorMessage, 16,1)
+
+END CATCH
+
+END
+
+
+
+  

@@ -1,0 +1,1249 @@
+﻿using log4net;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Newtonsoft.Json;
+using TennCareWith2PassAuth9.Data;
+using TennCareWith2PassAuth9.Data.Models;
+
+namespace TennCareWith2PassAuth9.CallWebApiLand
+{
+    public class CallWebApiLandClass
+    {
+        private static readonly ILog log = LogManager.GetLogger(typeof(CallWebApiLandClass));
+
+        public CallWebApiLandClass
+        (
+            string inputBaseWebApiUrl
+        )
+        {
+            MyBaseWebApiUrl = inputBaseWebApiUrl;
+        }
+        public string MyBaseWebApiUrl { get; set; }
+
+
+        // GET /api/Ops/du_MarkCollectionsEntryLookedUpTodayAsLookedUp?inputCollectionsEntriesLookedUpTodayID=1
+        public du_MarkCollectionsEntryLookedUpTodayAsLookedUpOutput
+                    du_MarkCollectionsEntryLookedUpTodayAsLookedUp
+                    (
+                        int inputCollectionsEntriesLookedUpTodayID
+                    )
+        {
+            du_MarkCollectionsEntryLookedUpTodayAsLookedUpOutput
+                returnOutput =
+                    du_MarkCollectionsEntryLookedUpTodayAsLookedUpAsync(inputCollectionsEntriesLookedUpTodayID)
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<du_MarkCollectionsEntryLookedUpTodayAsLookedUpOutput>
+                        du_MarkCollectionsEntryLookedUpTodayAsLookedUpAsync
+                        (
+                            int inputCollectionsEntriesLookedUpTodayID
+                        )
+        {
+            du_MarkCollectionsEntryLookedUpTodayAsLookedUpOutput
+                returnOutput =
+                    new du_MarkCollectionsEntryLookedUpTodayAsLookedUpOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/du_MarkCollectionsEntryLookedUpTodayAsLookedUp?inputCollectionsEntriesLookedUpTodayID={inputCollectionsEntriesLookedUpTodayID}";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<du_MarkCollectionsEntryLookedUpTodayAsLookedUpOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+
+
+
+
+
+
+        // GET /api/Ops/du_MarkDunningEntryLookedUpTodayAsLookedUp?inputDunningEntriesLookedUpTodayID=1
+        public du_MarkDunningEntryLookedUpTodayAsLookedUpOutput
+                    du_MarkDunningEntryLookedUpTodayAsLookedUp
+                    (
+                        int inputDunningEntriesLookedUpTodayID
+                    )
+        {
+            du_MarkDunningEntryLookedUpTodayAsLookedUpOutput
+                returnOutput =
+                    du_MarkDunningEntryLookedUpTodayAsLookedUpAsync(inputDunningEntriesLookedUpTodayID)
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<du_MarkDunningEntryLookedUpTodayAsLookedUpOutput>
+                        du_MarkDunningEntryLookedUpTodayAsLookedUpAsync
+                        (
+                            int inputDunningEntriesLookedUpTodayID
+                        )
+        {
+            du_MarkDunningEntryLookedUpTodayAsLookedUpOutput
+                returnOutput =
+                    new du_MarkDunningEntryLookedUpTodayAsLookedUpOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/du_MarkDunningEntryLookedUpTodayAsLookedUp?inputDunningEntriesLookedUpTodayID={inputDunningEntriesLookedUpTodayID}";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<du_MarkDunningEntryLookedUpTodayAsLookedUpOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+        // GET /api/Ops/du_MarkMonthlyEntryLookedUpTodayAsLookedUp?inputMonthlyEntriesLookedUpTodayID=1
+        public du_MarkMonthlyEntryLookedUpTodayAsLookedUpOutput
+                    du_MarkMonthlyEntryLookedUpTodayAsLookedUp
+                    (
+                        int inputMonthlyEntriesLookedUpTodayID
+                    )
+        {
+            du_MarkMonthlyEntryLookedUpTodayAsLookedUpOutput
+                returnOutput =
+                    du_MarkMonthlyEntryLookedUpTodayAsLookedUpAsync(inputMonthlyEntriesLookedUpTodayID)
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<du_MarkMonthlyEntryLookedUpTodayAsLookedUpOutput>
+                        du_MarkMonthlyEntryLookedUpTodayAsLookedUpAsync
+                        (
+                            int inputMonthlyEntriesLookedUpTodayID
+                        )
+        {
+            du_MarkMonthlyEntryLookedUpTodayAsLookedUpOutput
+                returnOutput =
+                    new du_MarkMonthlyEntryLookedUpTodayAsLookedUpOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/du_MarkMonthlyEntryLookedUpTodayAsLookedUp?inputMonthlyEntriesLookedUpTodayID={inputMonthlyEntriesLookedUpTodayID}";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<du_MarkMonthlyEntryLookedUpTodayAsLookedUpOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+
+
+
+
+        // GET /api/Ops/dd_TruncateMonthlyEntriesLookedUpTodayRaw
+        public dd_TruncateMonthlyEntriesLookedUpTodayRawOutput
+                    dd_TruncateMonthlyEntriesLookedUpTodayRaw()
+        {
+            dd_TruncateMonthlyEntriesLookedUpTodayRawOutput
+                returnOutput =
+                    dd_TruncateMonthlyEntriesLookedUpTodayRawAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<dd_TruncateMonthlyEntriesLookedUpTodayRawOutput>
+                        dd_TruncateMonthlyEntriesLookedUpTodayRawAsync()
+        {
+            log.Info($"In dd_TruncateMonthlyEntriesLookedUpTodayRawAsync");
+            dd_TruncateMonthlyEntriesLookedUpTodayRawOutput
+                returnOutput =
+                    new dd_TruncateMonthlyEntriesLookedUpTodayRawOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/dd_TruncateMonthlyEntriesLookedUpTodayRaw";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<dd_TruncateMonthlyEntriesLookedUpTodayRawOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+        // GET /api/Ops/di_FinalizeMonthlyEntriesLookedUpTodayRaw
+        public di_FinalizeMonthlyEntriesLookedUpTodayRawOutput
+                    di_FinalizeMonthlyEntriesLookedUpTodayRaw()
+        {
+            di_FinalizeMonthlyEntriesLookedUpTodayRawOutput
+                returnOutput =
+                    di_FinalizeMonthlyEntriesLookedUpTodayRawAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<di_FinalizeMonthlyEntriesLookedUpTodayRawOutput>
+                        di_FinalizeMonthlyEntriesLookedUpTodayRawAsync()
+        {
+            log.Info($"In di_FinalizeMonthlyEntriesLookedUpTodayRawAsync");
+            di_FinalizeMonthlyEntriesLookedUpTodayRawOutput
+                returnOutput =
+                    new di_FinalizeMonthlyEntriesLookedUpTodayRawOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/di_FinalizeMonthlyEntriesLookedUpTodayRaw";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<di_FinalizeMonthlyEntriesLookedUpTodayRawOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+
+        // GET /api/Ops/qy_GetImportAllEmployeesConfig
+        public qy_GetTennCareWith2PassAuthConfigOutput
+                    qy_GetTennCareWith2PassAuthConfig
+                    (
+                        string inputApplicationName
+                        , string inputType
+                        , string inputProcessName
+                        , string inputNameFilter
+                        , string inputUser
+                    )
+        {
+            qy_GetTennCareWith2PassAuthConfigOutput
+                returnOutput =
+                    qy_GetTennCareWith2PassAuthConfigAsync
+                    (
+                        inputApplicationName
+                        , inputType
+                        , inputProcessName
+                        , inputNameFilter
+                        , inputUser
+                    ).Result;
+
+            return returnOutput;
+        }
+
+        public async Task<qy_GetTennCareWith2PassAuthConfigOutput>
+                        qy_GetTennCareWith2PassAuthConfigAsync
+                        (
+                            string inputApplicationName
+                            , string inputType
+                            , string inputProcessName
+                            , string inputNameFilter
+                            , string inputUser
+                        )
+        {
+            log.Info($"In qy_GetTennCareWith2PassAuthConfigAsync");
+            qy_GetTennCareWith2PassAuthConfigOutput
+                returnOutput =
+                    new qy_GetTennCareWith2PassAuthConfigOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/qy_GetTennCareWith2PassAuthConfig?inputApplicationName={inputApplicationName}&inputType={inputType}&inputProcessName={inputProcessName}&inputNameFilter={inputNameFilter}&inputUser={inputUser}";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<qy_GetTennCareWith2PassAuthConfigOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+        // GET /api/Ops/dd_TruncateDailyFileCollectionsComparisonRaw
+        public dd_TruncateDailyFileCollectionsComparisonRawOutput
+            dd_TruncateDailyFileCollectionsComparisonRaw()
+        {
+            dd_TruncateDailyFileCollectionsComparisonRawOutput
+                returnOutput =
+                    dd_TruncateDailyFileCollectionsComparisonRawAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<dd_TruncateDailyFileCollectionsComparisonRawOutput>
+                        dd_TruncateDailyFileCollectionsComparisonRawAsync()
+        {
+            log.Info($"In dd_TruncateDailyFileCollectionsComparisonRawAsync");
+            dd_TruncateDailyFileCollectionsComparisonRawOutput
+                returnOutput =
+                    new dd_TruncateDailyFileCollectionsComparisonRawOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/dd_TruncateDailyFileCollectionsComparisonRaw";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<dd_TruncateDailyFileCollectionsComparisonRawOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+        // GET /api/Ops/di_FinalizeDailyFileCollectionsComparisonRaw
+        public di_FinalizeDailyFileCollectionsComparisonRawOutput
+            di_FinalizeDailyFileCollectionsComparisonRaw()
+        {
+            di_FinalizeDailyFileCollectionsComparisonRawOutput
+                returnOutput =
+                    di_FinalizeDailyFileCollectionsComparisonRawAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<di_FinalizeDailyFileCollectionsComparisonRawOutput>
+                        di_FinalizeDailyFileCollectionsComparisonRawAsync()
+        {
+            log.Info($"In di_FinalizeDailyFileCollectionsComparisonRawAsync");
+            di_FinalizeDailyFileCollectionsComparisonRawOutput
+                returnOutput =
+                    new di_FinalizeDailyFileCollectionsComparisonRawOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/di_FinalizeDailyFileCollectionsComparisonRaw";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<di_FinalizeDailyFileCollectionsComparisonRawOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+        // GET /api/Ops/dd_TruncateDailyFileDunningComparisonRaw
+        public dd_TruncateDailyFileDunningComparisonRawOutput
+            dd_TruncateDailyFileDunningComparisonRaw()
+        {
+            dd_TruncateDailyFileDunningComparisonRawOutput
+                returnOutput =
+                    dd_TruncateDailyFileDunningComparisonRawAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<dd_TruncateDailyFileDunningComparisonRawOutput>
+                        dd_TruncateDailyFileDunningComparisonRawAsync()
+        {
+            log.Info($"In dd_TruncateDailyFileDunningComparisonRawAsync");
+            dd_TruncateDailyFileDunningComparisonRawOutput
+                returnOutput =
+                    new dd_TruncateDailyFileDunningComparisonRawOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/dd_TruncateDailyFileDunningComparisonRaw";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<dd_TruncateDailyFileDunningComparisonRawOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+        // GET /api/Ops/di_FinalizeDailyFileDunningComparisonRaw
+        public di_FinalizeDailyFileDunningComparisonRawOutput
+            di_FinalizeDailyFileDunningComparisonRaw()
+        {
+            di_FinalizeDailyFileDunningComparisonRawOutput
+                returnOutput =
+                    di_FinalizeDailyFileDunningComparisonRawAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<di_FinalizeDailyFileDunningComparisonRawOutput>
+                        di_FinalizeDailyFileDunningComparisonRawAsync()
+        {
+            log.Info($"In di_FinalizeDailyFileDunningComparisonRawAsync");
+            di_FinalizeDailyFileDunningComparisonRawOutput
+                returnOutput =
+                    new di_FinalizeDailyFileDunningComparisonRawOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/di_FinalizeDailyFileDunningComparisonRaw";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<di_FinalizeDailyFileDunningComparisonRawOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+
+        // GET /api/Ops/qy_GetAllCollectionsEntriesLookedUpToday
+        public qy_GetAllCollectionsEntriesLookedUpTodayOutput
+            qy_GetAllCollectionsEntriesLookedUpToday()
+        {
+            qy_GetAllCollectionsEntriesLookedUpTodayOutput
+                returnOutput =
+                    qy_GetAllCollectionsEntriesLookedUpTodayAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<qy_GetAllCollectionsEntriesLookedUpTodayOutput>
+                        qy_GetAllCollectionsEntriesLookedUpTodayAsync()
+        {
+            log.Info($"In qy_GetAllCollectionsEntriesLookedUpTodayAsync");
+            qy_GetAllCollectionsEntriesLookedUpTodayOutput
+                returnOutput =
+                    new qy_GetAllCollectionsEntriesLookedUpTodayOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/qy_GetAllCollectionsEntriesLookedUpToday";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<qy_GetAllCollectionsEntriesLookedUpTodayOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+
+        // GET /api/Ops/qy_GetAllDunningEntriesLookedUpToday
+        public qy_GetAllDunningEntriesLookedUpTodayOutput
+            qy_GetAllDunningEntriesLookedUpToday()
+        {
+            qy_GetAllDunningEntriesLookedUpTodayOutput
+                returnOutput =
+                    qy_GetAllDunningEntriesLookedUpTodayAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<qy_GetAllDunningEntriesLookedUpTodayOutput>
+                        qy_GetAllDunningEntriesLookedUpTodayAsync()
+        {
+            log.Info($"In qy_GetAllDunningEntriesLookedUpTodayAsync");
+            qy_GetAllDunningEntriesLookedUpTodayOutput
+                returnOutput =
+                    new qy_GetAllDunningEntriesLookedUpTodayOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/qy_GetAllDunningEntriesLookedUpToday";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<qy_GetAllDunningEntriesLookedUpTodayOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+
+
+
+
+        // GET /api/Ops/qy_GetAllMonthlyEntriesLookedUpToday
+        public qy_GetAllMonthlyEntriesLookedUpTodayOutput
+            qy_GetAllMonthlyEntriesLookedUpToday()
+        {
+            qy_GetAllMonthlyEntriesLookedUpTodayOutput
+                returnOutput =
+                    qy_GetAllMonthlyEntriesLookedUpTodayAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<qy_GetAllMonthlyEntriesLookedUpTodayOutput>
+                        qy_GetAllMonthlyEntriesLookedUpTodayAsync()
+        {
+            log.Info($"In qy_GetAllMonthlyEntriesLookedUpTodayAsync");
+            qy_GetAllMonthlyEntriesLookedUpTodayOutput
+                returnOutput =
+                    new qy_GetAllMonthlyEntriesLookedUpTodayOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/qy_GetAllMonthlyEntriesLookedUpToday";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<qy_GetAllMonthlyEntriesLookedUpTodayOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+
+        // GET /api/Ops/dd_TruncateCollectionsEntriesYieldingEligInfoToday
+        public dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutput
+            dd_TruncateCollectionsEntriesYieldingEligInfoToday()
+        {
+            dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    dd_TruncateCollectionsEntriesYieldingEligInfoTodayAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutput>
+                        dd_TruncateCollectionsEntriesYieldingEligInfoTodayAsync()
+        {
+            log.Info($"In dd_TruncateCollectionsEntriesYieldingEligInfoTodayAsync");
+            dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    new dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/dd_TruncateCollectionsEntriesYieldingEligInfoToday";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+
+
+
+
+
+
+
+
+        // GET /api/Ops/dd_TruncateDunningEntriesYieldingEligInfoToday
+        public dd_TruncateDunningEntriesYieldingEligInfoTodayOutput
+            dd_TruncateDunningEntriesYieldingEligInfoToday()
+        {
+            dd_TruncateDunningEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    dd_TruncateDunningEntriesYieldingEligInfoTodayAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<dd_TruncateDunningEntriesYieldingEligInfoTodayOutput>
+                        dd_TruncateDunningEntriesYieldingEligInfoTodayAsync()
+        {
+            log.Info($"In dd_TruncateDunningEntriesYieldingEligInfoTodayAsync");
+            dd_TruncateDunningEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    new dd_TruncateDunningEntriesYieldingEligInfoTodayOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/dd_TruncateDunningEntriesYieldingEligInfoToday";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<dd_TruncateDunningEntriesYieldingEligInfoTodayOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+
+
+
+        // GET /api/Ops/dd_TruncateMonthlyEntriesYieldingEligInfoToday
+        public dd_TruncateMonthlyEntriesYieldingEligInfoTodayOutput
+            dd_TruncateMonthlyEntriesYieldingEligInfoToday()
+        {
+            dd_TruncateMonthlyEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    dd_TruncateMonthlyEntriesYieldingEligInfoTodayAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<dd_TruncateMonthlyEntriesYieldingEligInfoTodayOutput>
+                        dd_TruncateMonthlyEntriesYieldingEligInfoTodayAsync()
+        {
+            log.Info($"In dd_TruncateMonthlyEntriesYieldingEligInfoTodayAsync");
+            dd_TruncateMonthlyEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    new dd_TruncateMonthlyEntriesYieldingEligInfoTodayOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/dd_TruncateMonthlyEntriesYieldingEligInfoToday";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<dd_TruncateMonthlyEntriesYieldingEligInfoTodayOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+        // GET /api/Ops/di_InsertCollectionsEntriesYieldingEligInfoToday?inputImportFileName=C:\temp\importFile.xlsx&inputPatientIDString=777777&inputDOBInyyyyMMdd=19620913&inputSSN=444444444&inputDOSInyyyyMMdd=20250418&inputDateImportedInyyyyMMdd=20250418&inputMCO=myMCO&inputMedicare=MyMedicare&inputPCP=myPCP&inputStatus=myStatus&inputTennCareEligibility=myTennCareEligibility&inputOutputFileDateInyyyyMMdd=20250418&inputOutputFileName=MyFilename
+        public di_InsertCollectionsEntriesYieldingEligInfoTodayOutput
+            di_InsertCollectionsEntriesYieldingEligInfoToday
+            (
+                string inputImportFileName
+                , string inputPatientIDString
+                , string inputDOBInyyyyMMdd
+                , string inputSSN
+                , string inputDOSInyyyyMMdd
+                , string inputDateImportedInyyyyMMdd
+                , string inputMCO
+                , string inputMedicare
+                , string inputPCP
+                , string inputStatus
+                , string inputTennCareEligibility
+                , string inputOutputFileDateInyyyyMMdd
+                , string inputOutputFileName
+            )
+        {
+            di_InsertCollectionsEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    di_InsertCollectionsEntriesYieldingEligInfoTodayAsync
+                    (
+                        inputImportFileName
+                        , inputPatientIDString
+                        , inputDOBInyyyyMMdd
+                        , inputSSN
+                        , inputDOSInyyyyMMdd
+                        , inputDateImportedInyyyyMMdd
+                        , inputMCO
+                        , inputMedicare
+                        , inputPCP
+                        , inputStatus
+                        , inputTennCareEligibility
+                        , inputOutputFileDateInyyyyMMdd
+                        , inputOutputFileName
+                    )
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<di_InsertCollectionsEntriesYieldingEligInfoTodayOutput>
+                        di_InsertCollectionsEntriesYieldingEligInfoTodayAsync
+                        (
+                            string inputImportFileName
+                            , string inputPatientIDString
+                            , string inputDOBInyyyyMMdd
+                            , string inputSSN
+                            , string inputDOSInyyyyMMdd
+                            , string inputDateImportedInyyyyMMdd
+                            , string inputMCO
+                            , string inputMedicare
+                            , string inputPCP
+                            , string inputStatus
+                            , string inputTennCareEligibility
+                            , string inputOutputFileDateInyyyyMMdd
+                            , string inputOutputFileName
+                        )
+        {
+            log.Info($"In di_InsertCollectionsEntriesYieldingEligInfoTodayAsync");
+            di_InsertCollectionsEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    new di_InsertCollectionsEntriesYieldingEligInfoTodayOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/di_InsertCollectionsEntriesYieldingEligInfoToday?inputImportFileName={inputImportFileName}&inputPatientIDString={inputPatientIDString}&inputDOBInyyyyMMdd={inputDOBInyyyyMMdd}&inputSSN={inputSSN}&inputDOSInyyyyMMdd={inputDOSInyyyyMMdd}&inputDateImportedInyyyyMMdd={inputDateImportedInyyyyMMdd}&inputMCO={inputMCO}&inputMedicare={inputMedicare}&inputPCP={inputPCP}&inputStatus={inputStatus}&inputTennCareEligibility={inputTennCareEligibility}&inputOutputFileDateInyyyyMMdd={inputOutputFileDateInyyyyMMdd}&inputOutputFileName={inputOutputFileName}";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<di_InsertCollectionsEntriesYieldingEligInfoTodayOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+        // GET /api/Ops/di_InsertDunningEntriesYieldingEligInfoToday?inputImportFileName=C:\temp\importFile.xlsx&inputPatientIDString=777777&inputDOBInyyyyMMdd=19620913&inputSSN=444444444&inputDOSInyyyyMMdd=20250418&inputDateImportedInyyyyMMdd=20250418&inputMCO=myMCO&inputMedicare=MyMedicare&inputPCP=myPCP&inputStatus=myStatus&inputTennCareEligibility=myTennCareEligibility&inputOutputFileDateInyyyyMMdd=20250418&inputOutputFileName=MyFilename
+        public di_InsertDunningEntriesYieldingEligInfoTodayOutput
+            di_InsertDunningEntriesYieldingEligInfoToday
+            (
+                string inputImportFileName
+                , string inputPatientIDString
+                , string inputDOBInyyyyMMdd
+                , string inputSSN
+                , string inputDOSInyyyyMMdd
+                , string inputDateImportedInyyyyMMdd
+                , string inputMCO
+                , string inputMedicare
+                , string inputPCP
+                , string inputStatus
+                , string inputTennCareEligibility
+                , string inputOutputFileDateInyyyyMMdd
+                , string inputOutputFileName
+            )
+        {
+            di_InsertDunningEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    di_InsertDunningEntriesYieldingEligInfoTodayAsync
+                    (
+                        inputImportFileName
+                        , inputPatientIDString
+                        , inputDOBInyyyyMMdd
+                        , inputSSN
+                        , inputDOSInyyyyMMdd
+                        , inputDateImportedInyyyyMMdd
+                        , inputMCO
+                        , inputMedicare
+                        , inputPCP
+                        , inputStatus
+                        , inputTennCareEligibility
+                        , inputOutputFileDateInyyyyMMdd
+                        , inputOutputFileName
+                    )
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<di_InsertDunningEntriesYieldingEligInfoTodayOutput>
+                        di_InsertDunningEntriesYieldingEligInfoTodayAsync
+                        (
+                            string inputImportFileName
+                            , string inputPatientIDString
+                            , string inputDOBInyyyyMMdd
+                            , string inputSSN
+                            , string inputDOSInyyyyMMdd
+                            , string inputDateImportedInyyyyMMdd
+                            , string inputMCO
+                            , string inputMedicare
+                            , string inputPCP
+                            , string inputStatus
+                            , string inputTennCareEligibility
+                            , string inputOutputFileDateInyyyyMMdd
+                            , string inputOutputFileName
+                        )
+        {
+            di_InsertDunningEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    new di_InsertDunningEntriesYieldingEligInfoTodayOutput();
+           
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/di_InsertDunningEntriesYieldingEligInfoToday?inputImportFileName={inputImportFileName}&inputPatientIDString={inputPatientIDString}&inputDOBInyyyyMMdd={inputDOBInyyyyMMdd}&inputSSN={inputSSN}&inputDOSInyyyyMMdd={inputDOSInyyyyMMdd}&inputDateImportedInyyyyMMdd={inputDateImportedInyyyyMMdd}&inputMCO={inputMCO}&inputMedicare={inputMedicare}&inputPCP={inputPCP}&inputStatus={inputStatus}&inputTennCareEligibility={inputTennCareEligibility}&inputOutputFileDateInyyyyMMdd={inputOutputFileDateInyyyyMMdd}&inputOutputFileName={inputOutputFileName}";
+            if (!myCompleteUrl.Contains("=&"))
+            {
+                try
+                {
+                    using (var client = new HttpClient())
+                    {
+                        client.Timeout = TimeSpan.FromHours(1);
+
+                        var result = await client.GetAsync(myCompleteUrl);
+                        var response = await result.Content.ReadAsStringAsync();
+                        returnOutput = JsonConvert.DeserializeObject<di_InsertDunningEntriesYieldingEligInfoTodayOutput>(response);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    returnOutput.IsOk = false;
+                    string myErrorMessage = ex.Message;
+                    if (ex.InnerException != null)
+                    {
+                        myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                    }
+                    return returnOutput;
+                }
+            }
+
+            return returnOutput;
+        }
+
+
+
+        // GET /api/Ops/di_InsertMonthlyEntriesYieldingEligInfoToday?inputPatientIDString=234254&inputDOSInyyyyMMdd=20250430&inputPatientName=MIckey&inputDOBInyyyyMMdd=19620913&inputSSN=444444444&inputImportFullFileName=C:\temp\importFile.xlsx&inputDateImportedInyyyyMMdd=20250430&inputMCO=MCO&inputMedicare=Medicare&inputPCP=PCP&inputStatus=Status&inputTennCareEligibility=Elig&inputOutputFileDateInyyyyMMdd=20250430&inputOutputFileName=Output.txt
+        public di_InsertMonthlyEntriesYieldingEligInfoTodayOutput
+            di_InsertMonthlyEntriesYieldingEligInfoToday
+            (
+                         string inputPatientIDString
+                        , string inputDOSInyyyyMMdd
+                        , string inputPatientName
+                        , string inputDOBInyyyyMMdd
+                        , string inputSSN
+                        , string inputImportFullFileName
+                        , string inputDateImportedInyyyyMMdd
+                        , string inputMCO
+                        , string inputMedicare
+                        , string inputPCP
+                        , string inputStatus
+                        , string inputTennCareEligibility
+                        , string inputOutputFileDateInyyyyMMdd
+                        , string inputOutputFileName
+            )
+        {
+            di_InsertMonthlyEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    di_InsertMonthlyEntriesYieldingEligInfoTodayAsync
+                    (
+                         inputPatientIDString
+                        , inputDOSInyyyyMMdd
+                        , inputPatientName
+                        , inputDOBInyyyyMMdd
+                        , inputSSN
+                        , inputImportFullFileName
+                        , inputDateImportedInyyyyMMdd
+                        , inputMCO
+                        , inputMedicare
+                        , inputPCP
+                        , inputStatus
+                        , inputTennCareEligibility
+                        , inputOutputFileDateInyyyyMMdd
+                        , inputOutputFileName
+                    )
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<di_InsertMonthlyEntriesYieldingEligInfoTodayOutput>
+                        di_InsertMonthlyEntriesYieldingEligInfoTodayAsync
+                        (
+                            string inputPatientIDString
+                            , string inputDOSInyyyyMMdd
+                            , string inputPatientName
+                            , string inputDOBInyyyyMMdd
+                            , string inputSSN
+                            , string inputImportFullFileName
+                            , string inputDateImportedInyyyyMMdd
+                            , string inputMCO
+                            , string inputMedicare
+                            , string inputPCP
+                            , string inputStatus
+                            , string inputTennCareEligibility
+                            , string inputOutputFileDateInyyyyMMdd
+                            , string inputOutputFileName
+                        )
+        {
+            di_InsertMonthlyEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    new di_InsertMonthlyEntriesYieldingEligInfoTodayOutput();
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/di_InsertMonthlyEntriesYieldingEligInfoToday?inputPatientIDString={inputPatientIDString}&inputDOSInyyyyMMdd={inputDOSInyyyyMMdd}&inputPatientName={inputPatientName}&inputDOBInyyyyMMdd={inputDOBInyyyyMMdd}&inputSSN={inputSSN}&inputImportFullFileName={inputImportFullFileName}&inputDateImportedInyyyyMMdd={inputDateImportedInyyyyMMdd}&inputMCO={inputMCO}&inputMedicare={inputMedicare}&inputPCP={inputPCP}&inputStatus={inputStatus}&inputTennCareEligibility={inputTennCareEligibility}&inputOutputFileDateInyyyyMMdd={inputOutputFileDateInyyyyMMdd}&inputOutputFileName={inputOutputFileName}";
+            
+
+            if (!myCompleteUrl.Contains("=&"))
+            {
+                log.Info($"trying insert\r\n\r\ninputPatientID = {inputPatientIDString} ");
+                try
+                {
+                    using (var client = new HttpClient())
+                    {
+                        client.Timeout = TimeSpan.FromHours(1);
+
+                        var result = await client.GetAsync(myCompleteUrl);
+                        var response = await result.Content.ReadAsStringAsync();
+                        returnOutput = JsonConvert.DeserializeObject<di_InsertMonthlyEntriesYieldingEligInfoTodayOutput>(response);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    returnOutput.IsOk = false;
+                    string myErrorMessage = ex.Message;
+                    if (ex.InnerException != null)
+                    {
+                        myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                    }
+                    return returnOutput;
+                }
+            }
+            return returnOutput;
+        }
+
+
+
+
+        // GET /api/Ops/qy_GetCollectionsEntriesYieldingEligInfoToday
+        public qy_GetCollectionsEntriesYieldingEligInfoTodayOutput
+            qy_GetCollectionsEntriesYieldingEligInfoToday()
+        {
+            qy_GetCollectionsEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    qy_GetCollectionsEntriesYieldingEligInfoTodayAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<qy_GetCollectionsEntriesYieldingEligInfoTodayOutput>
+                        qy_GetCollectionsEntriesYieldingEligInfoTodayAsync()
+        {
+            log.Info($"In qy_GetCollectionsEntriesYieldingEligInfoTodayAsync");
+            qy_GetCollectionsEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    new qy_GetCollectionsEntriesYieldingEligInfoTodayOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/qy_GetCollectionsEntriesYieldingEligInfoToday";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<qy_GetCollectionsEntriesYieldingEligInfoTodayOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+
+        // GET /api/Ops/qy_GetDunningEntriesYieldingEligInfoToday
+        public qy_GetDunningEntriesYieldingEligInfoTodayOutput
+            qy_GetDunningEntriesYieldingEligInfoToday()
+        {
+            qy_GetDunningEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    qy_GetDunningEntriesYieldingEligInfoTodayAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<qy_GetDunningEntriesYieldingEligInfoTodayOutput>
+                        qy_GetDunningEntriesYieldingEligInfoTodayAsync()
+        {
+            log.Info($"In qy_GetDunningEntriesYieldingEligInfoTodayAsync");
+            qy_GetDunningEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    new qy_GetDunningEntriesYieldingEligInfoTodayOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/qy_GetDunningEntriesYieldingEligInfoToday";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<qy_GetDunningEntriesYieldingEligInfoTodayOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+        // GET /api/Ops/qy_GetMonthlyEntriesYieldingEligInfoToday
+        public qy_GetMonthlyEntriesYieldingEligInfoTodayOutput
+            qy_GetMonthlyEntriesYieldingEligInfoToday()
+        {
+            qy_GetMonthlyEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    qy_GetMonthlyEntriesYieldingEligInfoTodayAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<qy_GetMonthlyEntriesYieldingEligInfoTodayOutput>
+                        qy_GetMonthlyEntriesYieldingEligInfoTodayAsync()
+        {
+            log.Info($"In qy_GetMonthlyEntriesYieldingEligInfoTodayAsync");
+            qy_GetMonthlyEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    new qy_GetMonthlyEntriesYieldingEligInfoTodayOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/qy_GetMonthlyEntriesYieldingEligInfoToday";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<qy_GetMonthlyEntriesYieldingEligInfoTodayOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+    }
+}

@@ -1,0 +1,8 @@
+-- SQL Server Instance:  smg-sql01
+-----------------------------------------------------------------------
+-- Grant Execute Authority on [tc].[du_MarkMonthlyEntryLookedUpTodayAsLookedUp]
+-- to AppUser
+-----------------------------------------------------------------------
+USE [Utilities];
+GRANT EXECUTE ON OBJECT::[tc].[du_MarkMonthlyEntryLookedUpTodayAsLookedUp]
+   TO AppUser;  

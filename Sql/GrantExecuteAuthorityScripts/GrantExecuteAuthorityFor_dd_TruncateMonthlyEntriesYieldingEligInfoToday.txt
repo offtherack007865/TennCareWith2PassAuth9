@@ -1,0 +1,8 @@
+-- SQL Server Instance:  smg-sql01
+-----------------------------------------------------------------------
+-- Grant Execute Authority on dd_TruncateMonthlyEntriesYieldingEligInfoToday
+-- to AppUser
+-----------------------------------------------------------------------
+USE [Utilities];
+GRANT EXECUTE ON OBJECT::[tc].[dd_TruncateMonthlyEntriesYieldingEligInfoToday]
+   TO AppUser;  

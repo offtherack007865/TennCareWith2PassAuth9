@@ -1,0 +1,840 @@
+-- SQL Server Instance:  smg-sql01
+USE [Utilities];
+IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND OBJECT_ID = OBJECT_ID('tc.qy_GetTennCareWith2PassAuthConfig'))
+   DROP PROC [tc].[qy_GetTennCareWith2PassAuthConfig]
+GO
+CREATE PROCEDURE [tc].[qy_GetTennCareWith2PassAuthConfig]
+(
+  @inputApplicationName [varchar] (128)
+  ,@inputType [varchar] (50)  
+  ,@inputProcessName [varchar] (128)
+  ,@inputNameFilter [varchar] (128)
+  ,@inputUser [varchar] (50)
+)
+/* -----------------------------------------------------------------------------------------------------------
+   Procedure Name  :  tc.qy_GetTennCareWith2PassAuthConfig
+   Business Analyis:
+   Project/Process :   
+   Description     :  Get configuration settings for the 
+                      'TennCareWith2PassAuth' application.
+	  
+   Author          :  Philip Morrison 
+   Create Date     :  04/04/2025
+
+   ***********************************************************************************************************
+   **         Change History                                                                                **
+   ***********************************************************************************************************
+
+   Date       Version    Author             Description
+   --------   --------   -----------        ------------
+   04/04/2025 1.01.001   Philip Morrison    Created
+
+*/ -----------------------------------------------------------------------------------------------------------                                   
+
+AS
+BEGIN
+
+  -- KeyValueTable
+  DECLARE @KeyValueTable Table
+  (
+    [Name] [nvarchar] (1000)
+	,[Value] [nvarchar] (1000)
+  );
+/*	
+    [CollectionsReadDirectory] [nvarchar] (200) NOT NULL
+	,[DunningReadDirectory] [nvarchar] (200) NOT NULL
+	,[MonthlyReadDirectory] [nvarchar] (200) NOT NULL
+	,[CollectionsInputArchiveDirectory] [nvarchar] (200) NOT NULL
+	,[DunningInputArchiveDirectory] [nvarchar] (200) NOT NULL
+	,[MonthlyInputArchiveDirectory] [nvarchar] (200) NOT NULL
+	,[CollectionsOutputArchiveDirectory] [nvarchar] (200) NOT NULL
+	,[DunningOutputArchiveDirectory] [nvarchar] (200) NOT NULL
+	,[MonthlyOutputArchiveDirectory] [nvarchar] (200) NOT NULL
+	,[CollectionsFilenameContainsString] [nvarchar] (200) NOT NULL
+	,[DunningFilenameContainsString] [nvarchar] (200) NOT NULL
+	,[MonthlyAgencyFilenameContainsString] [nvarchar] (200) NOT NULL
+	,[MonthlyDeceasedFilenameContainsString] [nvarchar] (200) NOT NULL
+	,[MonthlyInHouseFilenameContainsString] [nvarchar] (200) NOT NULL
+	,[MonthlyCollectionsFilenameContainsString] [nvarchar] (200) NOT NULL
+	,[MonthlyDunningFilenameContainsString] [nvarchar] (200) NOT NULL
+	,[CollectionsLineWhereDataStarts] [int] NOT NULL 
+	,[DunningLineWhereDataStarts] [int] NOT NULL 
+	,[MonthlyAgencyLineWhereDataStarts] [int] NOT NULL
+	,[MonthlyDeceasedLineWhereDataStarts] [int] NOT NULL
+	,[MonthlyInHouseLineWhereDataStarts] [int] NOT NULL
+	,[MonthlyCollectionsLineWhereDataStarts] [int] NOT NULL
+	,[MonthlyDunningLineWhereDataStarts] [int] NOT NULL
+	,[BaseWebApiUrl] [nvarchar] (200) NOT NULL 
+	,[BulkInsertBaseWebApiUrl] [nvarchar] (200) NOT NULL 
+	,[BulkInsertConnectionString] [nvarchar] (200) NOT NULL 
+	,[BulkInsertDbName] [nvarchar] (200) NOT NULL 
+	,[CollectionsBulkInsertDbTableName] [nvarchar] (200) NOT NULL 
+	,[DunningBulkInsertDbTableName] [nvarchar] (200) NOT NULL 
+	,[MonthlyBulkInsertDbTableName] [nvarchar] (200) NOT NULL 
+    ,[ToEmailAddressList] [nvarchar] (200) NOT NULL 
+	,[EmailBaseWebApiUrl] [nvarchar] (200) NOT NULL 
+	,[EmailFromAddress] [nvarchar] (200) NOT NULL 
+*/
+
+
+  
+  
+  DECLARE @CollectionsReadDirectory [nvarchar] (1000) = ''
+  DECLARE @DunningReadDirectory [nvarchar] (1000) = ''
+  DECLARE @MonthlyReadDirectory [nvarchar] (1000) = ''
+  
+  DECLARE @CollectionsInputArchiveDirectory [nvarchar] (1000) = ''
+  DECLARE @DunningInputArchiveDirectory [nvarchar] (1000) = ''
+  DECLARE @MonthlyInputArchiveDirectory [nvarchar] (1000) = ''
+  
+  DECLARE @CollectionsOutputArchiveDirectory [nvarchar] (1000) = ''
+  DECLARE @DunningOutputArchiveDirectory [nvarchar] (1000) = ''
+  DECLARE @MonthlyOutputArchiveDirectory [nvarchar] (1000) = ''
+  
+  DECLARE @CollectionsFilenameContainsString [nvarchar] (1000) = ''
+  DECLARE @DunningFilenameContainsString [nvarchar] (1000) = ''
+  DECLARE @MonthlyAgencyFilenameContainsString [nvarchar] (1000) = ''
+  DECLARE @MonthlyDeceasedFilenameContainsString [nvarchar] (1000) = ''
+  DECLARE @MonthlyInHouseFilenameContainsString [nvarchar] (1000) = ''
+  DECLARE @MonthlyCollectionsFilenameContainsString [nvarchar] (1000) = ''
+  DECLARE @MonthlyDunningFilenameContainsString [nvarchar] (1000) = ''
+  
+  DECLARE @CollectionsLineWhereDataStarts [int] = ''
+  DECLARE @DunningLineWhereDataStarts [int] = '' 
+  DECLARE @MonthlyAgencyLineWhereDataStarts [int] = '' 
+  DECLARE @MonthlyDeceasedLineWhereDataStarts [int] = '' 
+  DECLARE @MonthlyInHouseLineWhereDataStarts [int] = '' 
+  DECLARE @MonthlyCollectionsLineWhereDataStarts [int] = '' 
+  DECLARE @MonthlyDunningLineWhereDataStarts [int] = '' 
+
+  DECLARE @BaseWebApiUrl [nvarchar] (1000) = ''
+  DECLARE @BulkInsertBaseWebApiUrl [nvarchar] (1000) = ''
+  DECLARE @BulkInsertConnectionString [nvarchar] (1000) = ''
+  DECLARE @BulkInsertDbName [nvarchar] (1000) = ''
+  
+  DECLARE @CollectionsBulkInsertDbTableName [nvarchar] (1000) = ''
+  DECLARE @DunningBulkInsertDbTableName [nvarchar] (1000) = ''
+  DECLARE @MonthlyBulkInsertDbTableName [nvarchar] (1000) = ''
+  
+  DECLARE @ToEmailAddressList [nvarchar] (1000) = ''
+  DECLARE @EmailBaseWebApiUrl [nvarchar] (1000) = ''
+  DECLARE @EmailFromAddress [nvarchar] (1000) = ''
+  
+
+-- Template Declarations
+DECLARE @Application            varchar(128) = 'TennCareEligility' 
+DECLARE @Version                varchar(25)  = '1.00.001'
+
+DECLARE @ProcessID              int          = 212
+DECLARE @Process                varchar(128) = 'Import'
+
+DECLARE @BatchOutID             int
+DECLARE @BatchDescription       varchar(1000) = @@ServerName + '  - ' + @Version
+DECLARE @BatchDetailDescription varchar(1000)
+DECLARE @BatchMessage           varchar(MAX)
+DECLARE @User                   varchar(128) = SUSER_NAME()
+
+DECLARE @AnticipatedRecordCount int 
+DECLARE @ActualRecordCount      int
+
+
+SET NOCOUNT ON
+
+BEGIN TRY
+
+--  Initialize Batch
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  NULL, 'BatchStart', @BatchDescription, @ProcessID, @Process
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    SET @BatchDetailDescription = 'Populate KeyValueTable with call to [administration].[qy_GetApplicationSettings]'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+	                                   FROM @KeyValueTable;
+	  
+      -- Populate KeyValueTable with call to [administration].[qy_GetApplicationSettings]
+      INSERT INTO @KeyValueTable
+      (
+        [Name]
+	    ,[Value]
+      )
+      EXEC [Admin].[Utilities].[administration].[qy_GetApplicationSettings] @inputApplicationName, @inputType, @inputProcessName, NULL, @inputUser;
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    SET @BatchDetailDescription = 'Populate KeyValueTable with call to [administration].[qy_GetApplicationSettings]'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+	                                   FROM @KeyValueTable;
+	  
+      -- Populate KeyValueTable with call to [administration].[qy_GetApplicationSettings]
+      INSERT INTO @KeyValueTable
+      (
+        [Name]
+	    ,[Value]
+      )
+      EXEC [Admin].[Utilities].[administration].[qy_GetApplicationSettings] @inputApplicationName, @inputType, @inputProcessName, NULL, @inputUser;
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    SET @BatchDetailDescription = 'Populate @CollectionsReadDirectory'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'CollectionsReadDirectory';	
+	  
+      -- Populate @CollectionsReadDirectory
+      SELECT @CollectionsReadDirectory = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'CollectionsReadDirectory';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    SET @BatchDetailDescription = 'Populate @DunningReadDirectory'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = '@DunningReadDirectory';	
+	  
+      -- Populate @DunningReadDirectory
+      SELECT @DunningReadDirectory = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'DunningReadDirectory';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    SET @BatchDetailDescription = 'Populate @MonthlyReadDirectory'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyReadDirectory';	
+	  
+      -- Populate @MonthlyReadDirectory
+      SELECT @MonthlyReadDirectory = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyReadDirectory';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    SET @BatchDetailDescription = 'Populate @CollectionsInputArchiveDirectory'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'CollectionsInputArchiveDirectory';	
+	  
+      -- Populate @CollectionsInputArchiveDirectory
+      SELECT @CollectionsInputArchiveDirectory = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'CollectionsInputArchiveDirectory';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    SET @BatchDetailDescription = 'Populate @DunningInputArchiveDirectory'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'DunningInputArchiveDirectory';	
+	  
+      -- Populate @DunningInputArchiveDirectory
+      SELECT @DunningInputArchiveDirectory = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'DunningInputArchiveDirectory';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @MonthlyInputArchiveDirectory'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyInputArchiveDirectory';	
+	  
+      -- Populate @DunningInputArchiveDirectory
+      SELECT @MonthlyInputArchiveDirectory = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyInputArchiveDirectory';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @CollectionsOutputArchiveDirectory'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'CollectionsOutputArchiveDirectory';	
+	  
+      -- Populate @CollectionsOutputArchiveDirectory
+      SELECT @CollectionsOutputArchiveDirectory = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'CollectionsOutputArchiveDirectory';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @DunningOutputArchiveDirectory'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'DunningOutputArchiveDirectory';	
+	  
+      -- Populate @DunningOutputArchiveDirectory
+      SELECT @DunningOutputArchiveDirectory = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'DunningOutputArchiveDirectory';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @MonthlyOutputArchiveDirectory'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyOutputArchiveDirectory';	
+	  
+      -- Populate @MonthlyOutputArchiveDirectory
+      SELECT @MonthlyOutputArchiveDirectory = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyOutputArchiveDirectory';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @CollectionsFilenameContainsString'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'CollectionsFilenameContainsString';	
+	  
+      -- Populate @CollectionsFilenameContainsString
+      SELECT @CollectionsFilenameContainsString = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'CollectionsFilenameContainsString';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @DunningFilenameContainsString'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'DunningFilenameContainsString';	
+	  
+      -- Populate @DunningFilenameContainsString
+      SELECT @DunningFilenameContainsString = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'DunningFilenameContainsString';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @MonthlyAgencyFilenameContainsString'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyAgencyFilenameContainsString';	
+	  
+      -- Populate @MonthlyAgencyFilenameContainsString
+      SELECT @MonthlyAgencyFilenameContainsString = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyAgencyFilenameContainsString';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @MonthlyDeceasedFilenameContainsString'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyDeceasedFilenameContainsString';	
+	  
+      -- Populate @MonthlyDeceasedFilenameContainsString
+      SELECT @MonthlyDeceasedFilenameContainsString = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyDeceasedFilenameContainsString';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @MonthlyInHouseFilenameContainsString'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyInHouseFilenameContainsString';	
+	  
+      -- Populate @MonthlyInHouseFilenameContainsString
+      SELECT @MonthlyInHouseFilenameContainsString = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyInHouseFilenameContainsString';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @MonthlyCollectionsFilenameContainsString'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyCollectionsFilenameContainsString';	
+	  
+      -- Populate @MonthlyCollectionsFilenameContainsString
+      SELECT @MonthlyCollectionsFilenameContainsString = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyCollectionsFilenameContainsString';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @MonthlyDunningFilenameContainsString'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyDunningFilenameContainsString';	
+	  
+      -- Populate @MonthlyDunningFilenameContainsString
+      SELECT @MonthlyDunningFilenameContainsString = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyDunningFilenameContainsString';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+    SET @BatchDetailDescription = 'Populate @CollectionsLineWhereDataStarts'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'CollectionsLineWhereDataStarts';	
+	  
+      -- Populate @CollectionsLineWhereDataStarts
+      SELECT @CollectionsLineWhereDataStarts = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'CollectionsLineWhereDataStarts';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @DunningLineWhereDataStarts'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'DunningLineWhereDataStarts';	
+	  
+      -- Populate @DunningLineWhereDataStarts
+      SELECT @DunningLineWhereDataStarts = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'DunningLineWhereDataStarts';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @MonthlyAgencyLineWhereDataStarts'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyAgencyLineWhereDataStarts';	
+	  
+      -- Populate @MonthlyAgencyLineWhereDataStarts
+      SELECT @MonthlyAgencyLineWhereDataStarts = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyAgencyLineWhereDataStarts';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @MonthlyDeceasedLineWhereDataStarts'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyDeceasedLineWhereDataStarts';	
+	  
+      -- Populate @MonthlyDeceasedLineWhereDataStarts
+      SELECT @MonthlyDeceasedLineWhereDataStarts = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyDeceasedLineWhereDataStarts';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @MonthlyInHouseLineWhereDataStarts'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyInHouseLineWhereDataStarts';	
+	  
+      -- Populate @MonthlyInHouseLineWhereDataStarts
+      SELECT @MonthlyInHouseLineWhereDataStarts = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyInHouseLineWhereDataStarts';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @MonthlyCollectionsLineWhereDataStarts'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyCollectionsLineWhereDataStarts';	
+	  
+      -- Populate @MonthlyCollectionsLineWhereDataStarts
+      SELECT @MonthlyCollectionsLineWhereDataStarts = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyCollectionsLineWhereDataStarts';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @MonthlyDunningLineWhereDataStarts'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyDunningLineWhereDataStarts';	
+	  
+      -- Populate @MonthlyDunningLineWhereDataStarts
+      SELECT @MonthlyDunningLineWhereDataStarts = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyDunningLineWhereDataStarts';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @BaseWebApiUrl'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'BaseWebApiUrl';	
+	  
+      -- Populate @BaseWebApiUrl
+      SELECT @BaseWebApiUrl = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'BaseWebApiUrl';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @BulkInsertBaseWebApiUrl'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'BulkInsertBaseWebApiUrl';	
+	  
+      -- Populate @BulkInsertBaseWebApiUrl
+      SELECT @BulkInsertBaseWebApiUrl = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'BulkInsertBaseWebApiUrl';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @BulkInsertConnectionString'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'BulkInsertConnectionString';	
+	  
+      -- Populate @BulkInsertConnectionString
+      SELECT @BulkInsertConnectionString = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'BulkInsertConnectionString';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @BulkInsertDbName'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'BulkInsertDbName';	
+	  
+      -- Populate @BulkInsertDbName
+      SELECT @BulkInsertDbName = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'BulkInsertDbName';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @CollectionsBulkInsertDbTableName'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'CollectionsBulkInsertDbTableName';	
+	  
+      -- Populate @CollectionsBulkInsertDbTableName
+      SELECT @CollectionsBulkInsertDbTableName = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'CollectionsBulkInsertDbTableName';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @DunningBulkInsertDbTableName'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'DunningBulkInsertDbTableName';	
+	  
+      -- Populate @DunningBulkInsertDbTableName
+      SELECT @DunningBulkInsertDbTableName = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'DunningBulkInsertDbTableName';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @MonthlyBulkInsertDbTableName'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyBulkInsertDbTableName';	
+	  
+      -- Populate @MonthlyBulkInsertDbTableName
+      SELECT @MonthlyBulkInsertDbTableName = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'MonthlyBulkInsertDbTableName';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @ToEmailAddressList'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'ToEmailAddressList';	
+	  
+      -- Populate @ToEmailAddressList
+      SELECT @ToEmailAddressList = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'ToEmailAddressList';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  
+
+    SET @BatchDetailDescription = 'Populate @EmailBaseWebApiUrl'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'EmailBaseWebApiUrl';	
+	  
+      -- Populate @EmailBaseWebApiUrl
+      SELECT @EmailBaseWebApiUrl = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'EmailBaseWebApiUrl';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  	
+
+    SET @BatchDetailDescription = 'Populate @EmailFromAddress'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'EmailFromAddress';	
+	  
+      -- Populate @EmailFromAddress
+      SELECT @EmailFromAddress = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'EmailFromAddress';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  	
+
+    SET @BatchDetailDescription = 'Populate @EmailFromAddress'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'EmailFromAddress';	
+	  
+      -- Populate @EmailFromAddress
+      SELECT @EmailFromAddress = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'EmailFromAddress';	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  	
+
+
+    SET @BatchDetailDescription = 'SELECT 1 Output Record of Config Options'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = 1
+      FROM @KeyValueTable;	
+	  
+      -- SELECT 1 Output Record of Config Options
+      SELECT
+	    @CollectionsReadDirectory AS [CollectionsReadDirectory]
+	   ,@DunningReadDirectory AS [DunningReadDirectory]
+	   ,@MonthlyReadDirectory AS [MonthlyReadDirectory]
+       ,@CollectionsInputArchiveDirectory AS [CollectionsInputArchiveDirectory]
+       ,@DunningInputArchiveDirectory AS [DunningInputArchiveDirectory]
+       ,@MonthlyInputArchiveDirectory AS [MonthlyInputArchiveDirectory]
+       ,@CollectionsOutputArchiveDirectory AS [CollectionsOutputArchiveDirectory]
+       ,@DunningOutputArchiveDirectory AS [DunningOutputArchiveDirectory]
+       ,@MonthlyOutputArchiveDirectory AS [MonthlyOutputArchiveDirectory]
+       ,@CollectionsFilenameContainsString AS [CollectionsFilenameContainsString]
+       ,@DunningFilenameContainsString AS [DunningFilenameContainsString]
+	   ,@MonthlyAgencyFilenameContainsString AS [MonthlyAgencyFilenameContainsString]
+	   ,@MonthlyDeceasedFilenameContainsString AS [MonthlyDeceasedFilenameContainsString]
+	   ,@MonthlyInHouseFilenameContainsString AS [MonthlyInHouseFilenameContainsString]	   
+	   ,@MonthlyCollectionsFilenameContainsString AS [MonthlyCollectionsFilenameContainsString]	   	   
+	   ,@MonthlyDunningFilenameContainsString AS [MonthlyDunningFilenameContainsString]	   	   
+       ,@CollectionsLineWhereDataStarts AS [CollectionsLineWhereDataStarts]
+       ,@DunningLineWhereDataStarts AS [DunningLineWhereDataStarts]
+       ,@MonthlyAgencyLineWhereDataStarts AS [MonthlyAgencyLineWhereDataStarts]
+       ,@MonthlyDeceasedLineWhereDataStarts AS [MonthlyDeceasedLineWhereDataStarts]
+       ,@MonthlyInHouseLineWhereDataStarts AS [MonthlyInHouseLineWhereDataStarts]
+       ,@MonthlyCollectionsLineWhereDataStarts AS [MonthlyCollectionsLineWhereDataStarts]
+       ,@MonthlyDunningLineWhereDataStarts AS [MonthlyDunningLineWhereDataStarts]
+       ,@BaseWebApiUrl AS [BaseWebApiUrl]
+       ,@BulkInsertBaseWebApiUrl AS [BulkInsertBaseWebApiUrl]
+       ,@BulkInsertConnectionString AS [BulkInsertConnectionString]
+       ,@BulkInsertDbName AS [BulkInsertDbName]
+       ,@CollectionsBulkInsertDbTableName AS [CollectionsBulkInsertDbTableName]
+       ,@DunningBulkInsertDbTableName AS [DunningBulkInsertDbTableName]
+       ,@MonthlyBulkInsertDbTableName AS [MonthlyBulkInsertDbTableName]
+       ,@ToEmailAddressList AS [ToEmailAddressList]
+       ,@EmailBaseWebApiUrl AS [EmailBaseWebApiUrl]
+       ,@EmailFromAddress AS [EmailFromAddress];
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------  	
+
+--  Close batch
+    EXEC Admin.Utilities.logs.di_batch @BatchOutID OUTPUT, @BatchOutID, 'BatchEnd'
+
+END TRY
+
+BEGIN CATCH
+DECLARE @Err              int
+     ,  @ErrorMessage     varchar(Max)
+     ,  @ErrorLine        varchar(128)
+     ,  @Workstation      varchar(128) = @Application
+     ,  @Procedure        VARCHAR(500)
+
+    IF ERROR_NUMBER() IS NULL 
+      SET @Err =0;
+    ELSE
+      SET @Err = ERROR_NUMBER();
+
+    SET @ErrorMessage = ERROR_MESSAGE()
+    SET @ErrorLine    = 'SP Line Number: ' + CAST(ERROR_LINE() as varchar(10)) 
+    SET @Workstation  = HOST_NAME()
+    SET @Procedure    = @@SERVERNAME + '.' + DB_NAME() + '.' + OBJECT_SCHEMA_NAME(@@ProcID) + '.' + OBJECT_NAME(@@ProcID) + ' - ' + @ErrorLine + ' - ' + LEFT(@BatchDetailDescription, 7)
+
+    EXEC Admin.Utilities.administration.di_ErrorLog  @Application ,@Process, @Version ,@Err, @ErrorMessage, @Procedure,  @User , @Workstation
+
+    SET @BatchMessage = 'Process Failed:  ' +  @ErrorMessage
+    EXEC Admin.Utilities.logs.di_batch @BatchOutID OUTPUT, @BatchOutID, 'BatchEnd', @BatchMessage
+    RAISERROR(@ErrorMessage, 16,1)
+END CATCH
+END

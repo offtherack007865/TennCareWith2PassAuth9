@@ -1,0 +1,228 @@
+-- SQL Server Instance:  smg-sql01
+USE [Utilities];
+IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND OBJECT_ID = OBJECT_ID('tc.di_FinalizeMonthlyToLookUp'))
+   DROP PROC [tc].[di_FinalizeMonthlyToLookUp]
+GO
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+                       
+CREATE PROCEDURE [tc].[di_FinalizeMonthlyToLookUp]
+/* -----------------------------------------------------------------------------------------------------------
+   Procedure Name  :  tc.di_FinalizeMonthlyToLookUp
+   Business Analyis:
+   Project/Process :   
+   Description     :  Finalize MonthlyToLookUp table.
+	  
+   Author          :  Philip Morrison 
+   Create Date     :  07/15/2025
+
+   ***********************************************************************************************************
+   **         Change History                                                                                **
+   ***********************************************************************************************************
+
+   Date       Version    Author             Description
+   --------   --------   -----------        ------------
+   07/15/2025 1.01.001   Philip Morrison    Created
+
+*/ -----------------------------------------------------------------------------------------------------------                                      
+AS
+BEGIN
+
+-- Instance Declarations.
+declare @IsOk [bit] 
+declare @MyCount [int] 
+
+-- Template Declarations
+DECLARE @Application            varchar(128) = 'TennCareEligility' 
+DECLARE @Version                varchar(25)  = '1.00.001'
+
+DECLARE @ProcessID              int          = 212
+DECLARE @Process                varchar(128) = 'Import'
+
+DECLARE @BatchOutID             int
+DECLARE @BatchDescription       varchar(1000) = @@ServerName + '  - ' + @Version
+DECLARE @BatchDetailDescription varchar(1000)
+DECLARE @BatchMessage           varchar(MAX)
+DECLARE @User                   varchar(128) = SUSER_NAME()
+
+DECLARE @AnticipatedRecordCount int 
+DECLARE @ActualRecordCount      int
+
+
+SET NOCOUNT ON
+
+BEGIN TRY
+
+--  Initialize Batch
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  NULL, 'BatchStart', @BatchDescription, @ProcessID, @Process
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    SET @BatchDetailDescription = '010/040:  Truncate Monthly Entries Looked Up Today'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+	                                   FROM [TennCareEligibility].[tc].[MonthlyToLookUp];
+	  
+    -- Truncate Monthly Entries Looked Up Today
+    TRUNCATE TABLE [TennCareEligibility].[tc].[MonthlyToLookUp];
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    SET @BatchDetailDescription = '020/040:  Store only the new Entries from the Monthly file.'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+	  FROM [Staging].[tc].[MonthlyToLookUp];
+
+	  
+    -- Store only the new Entries from the monthly files.
+    INSERT INTO [TennCareEligibility].[tc].[MonthlyToLookUp]
+    (
+       [PatientID]
+	    ,[DOS]
+	    ,[PatientName]
+	    ,[DOB]
+	    ,[SSN]
+	    ,[ImportFullFilename]
+	    ,[DateImported]
+	    ,[LookedUp]
+    )
+    SELECT 
+	  todays.[PatientID]
+	  ,todays.[DOS]
+	  ,todays.[PatientName]
+	  ,todays.[DOB]
+	  ,LTRIM(RTRIM(todays.[SSN]))
+	  ,todays.[ImportFullFilename]
+	  ,todays.[DateImported]
+	  ,0
+    FROM [Staging].[tc].[MonthlyToLookUp] todays
+    WHERE LEN(LTRIM(RTRIM(todays.[SSN]))) >= 9;	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    SET @BatchDetailDescription = '030/040:  Delete of todays Monthly entries from todays Monthly files History'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+	  FROM [TennCareEligibility].[tc].[MonthlyToLookUpHistory] todayHistory
+	  JOIN [TennCareEligibility].[tc].[MonthlyToLookUp] today
+      ON today.[PatientID] = todayHistory.[PatientID]    
+         AND today.[DOB] = todayHistory.[DOB]
+	     AND today.[SSN] = todayHistory.[SSN]
+	     AND today.[DOS] = todayHistory.[DOS] 	 
+		 AND today.[ImportFullFilename] = todayHistory.[ImportFullFilename]; 	 
+
+	  
+     -- Delete of todays Monthly entries from todays Monthly history
+	 DELETE [TennCareEligibility].[tc].[MonthlyToLookUpHistory]
+	 FROM [TennCareEligibility].[tc].[MonthlyToLookUpHistory] todayHistory
+	 JOIN [TennCareEligibility].[tc].[MonthlyToLookUp] today
+       ON today.[PatientID] = todayHistory.[PatientID]    
+          AND today.[DOB] = todayHistory.[DOB]
+	      AND today.[SSN] = todayHistory.[SSN]
+	      AND today.[DOS] = todayHistory.[DOS] 	 
+		  AND today.[ImportFullFilename] = todayHistory.[ImportFullFilename]; 	 
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+	
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    SET @BatchDetailDescription = '040/040:  Copy Todays Monthly entries to History'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+	  FROM [TennCareEligibility].[tc].[MonthlyToLookUp]
+
+	  
+    -- Store only the new Entries from the Monthly file.
+    INSERT INTO [TennCareEligibility].[tc].[MonthlyToLookUpHistory]
+    (
+       [PatientID]
+	    ,[DOS]
+	    ,[PatientName]
+	    ,[DOB]
+	    ,[SSN]
+	    ,[ImportFullFilename]
+	    ,[DateImported]
+	    ,[LookedUp]
+    )
+    SELECT 
+       [PatientID]
+	    ,[DOS]
+	    ,[PatientName]
+	    ,[DOB]
+	    ,[SSN]
+	    ,[ImportFullFilename]
+	    ,[DateImported]
+	    ,[LookedUp]
+    FROM [TennCareEligibility].[tc].[MonthlyToLookUp];
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+	
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+--  Close batch
+    EXEC Admin.Utilities.logs.di_batch @BatchOutID OUTPUT, @BatchOutID, 'BatchEnd'
+
+
+set @MyCount = 0
+select @MyCount = count(*)
+  from [Staging].[tc].[MonthlyToLookUp];
+
+if (@MyCount > 0) begin
+  set @IsOk = 1
+  select @IsOk as [IsOk]
+  return
+end  
+
+set @IsOk = 0
+select @IsOk as [IsOk]
+    
+
+END TRY
+
+BEGIN CATCH
+DECLARE @Err              int
+     ,  @ErrorMessage     varchar(Max)
+     ,  @ErrorLine        varchar(128)
+     ,  @Workstation      varchar(128) = @Application
+     ,  @Procedure        VARCHAR(500)
+
+    IF ERROR_NUMBER() IS NULL 
+      SET @Err =0;
+    ELSE
+      SET @Err = ERROR_NUMBER();
+
+    SET @ErrorMessage = ERROR_MESSAGE()
+    SET @ErrorLine    = 'SP Line Number: ' + CAST(ERROR_LINE() as varchar(10)) 
+	SET @Workstation  = HOST_NAME()
+    SET @Procedure    = @@SERVERNAME + '.' + DB_NAME() + '.' + OBJECT_SCHEMA_NAME(@@ProcID) + '.' + OBJECT_NAME(@@ProcID) + ' - ' + @ErrorLine + ' - ' + LEFT(@BatchDetailDescription, 7)
+    EXEC Admin.Utilities.administration.di_ErrorLog  @Application ,@Process, @Version ,0, @ErrorMessage, @Procedure,  @User , @Workstation
+
+    SET @BatchMessage = 'Process Failed:  ' +  @ErrorMessage
+    
+    EXEC Admin.Utilities.logs.di_batch @BatchOutID OUTPUT, @BatchOutID, 'BatchEnd', @BatchMessage
+        
+    set @IsOk = 0
+    select @IsOk as [IsOk]
+    
+    RAISERROR(@ErrorMessage, 16,1)
+
+END CATCH
+
+END
+
+
+
+  

@@ -1,0 +1,1867 @@
+﻿using System.Data;
+using log4net;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using TennCareWith2PassAuth9.Data.Models;
+
+namespace TennCareWith2PassAuth9.WebApiLand.Controllers
+{
+    [EnableCors("MyPolicy")]
+    [Route("api/[controller]/[action]")]
+    [ApiController]
+    public class OpsController : ControllerBase
+    {
+        private static readonly ILog log = LogManager.GetLogger(typeof(OpsController));
+
+        public OpsController(TennCareEligibilityContext inputDsSummitLifeContext)
+        {
+            MyContext = inputDsSummitLifeContext;
+
+            log.Info($"Start of OpsController Connection String:  {MyContext.MyConnectionString}");
+
+        }
+        public TennCareEligibilityContext MyContext { get; set; }
+
+
+        // GET /api/Ops/di_InsertCollectionsEntriesYieldingEligInfoToday?inputImportFileName=C:\temp\importFile.xlsx&inputPatientIDString=777777&inputDOBInyyyyMMdd=19620913&inputSSN=444444444&inputDOSInyyyyMMdd=20250418&inputDateImportedInyyyyMMdd=20250418&inputMCO=myMCO&inputMedicare=MyMedicare&inputPCP=myPCP&inputStatus=myStatus&inputTennCareEligibility=myTennCareEligibility&inputOutputFileDateInyyyyMMdd=20250418&inputOutputFileName=MyFilename
+        [HttpGet]
+        public di_InsertCollectionsEntriesYieldingEligInfoTodayOutput
+                    di_InsertCollectionsEntriesYieldingEligInfoToday
+                    (
+                        [FromQuery] string inputImportFileName
+                        , [FromQuery] string inputPatientIDString
+                        , [FromQuery] string inputDOBInyyyyMMdd
+                        , [FromQuery] string inputSSN
+                        , [FromQuery] string inputDOSInyyyyMMdd
+                        , [FromQuery] string inputDateImportedInyyyyMMdd
+                        , [FromQuery] string inputMCO
+                        , [FromQuery] string inputMedicare
+                        , [FromQuery] string inputPCP
+                        , [FromQuery] string inputStatus
+                        , [FromQuery] string inputTennCareEligibility
+                        , [FromQuery] string inputOutputFileDateInyyyyMMdd
+                        , [FromQuery] string inputOutputFileName
+                    )
+        {
+            di_InsertCollectionsEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    new di_InsertCollectionsEntriesYieldingEligInfoTodayOutput();
+
+            string sql = $"tc.di_InsertCollectionsEntriesYieldingEligInfoToday   @inputImportFileName, @inputPatientID, @inputDOB, @inputSSN, @inputDOS, @inputDateImported, @inputMCO, @inputMedicare, @inputPCP, @inputStatus, @inputTennCareEligibility, @inputOutputFileDate, @inputOutputFileName";
+
+            List<SqlParameter> parms = new List<SqlParameter>();
+            /*@inputImportFileName [varchar](300)
+  ,@inputPatientID [int]
+  ,@inputDOB [datetime]
+  ,@inputSSN [varchar](10)
+  ,@inputDOS [datetime]
+  ,@inputDateImported [datetime]
+  ,@inputMCO [nvarchar](100)
+  ,@inputMedicare [nvarchar](100)
+  ,@inputPCP [nvarchar](100)
+  ,@inputStatus [nvarchar](100)
+  ,@inputTennCareEligibility [nvarchar](300)
+  ,@inputOutputFileDate [datetime]
+  ,@inputOutputFileName [varchar](300)
+             */
+
+            // @inputImportFileName [varchar](300)
+            SqlParameter parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputImportFileName",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 300,
+                    Value = inputImportFileName
+                };
+            parms.Add(parm);
+
+            // @inputPatientID [int]
+
+            int tempInt = 0;
+            if (inputPatientIDString.Length > 0)
+            {
+                Int32.TryParse(inputPatientIDString, out tempInt);
+            }
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputPatientID",
+                    SqlDbType = System.Data.SqlDbType.Int,
+                    Size = 1,
+                    Value = tempInt
+                };
+            parms.Add(parm);
+
+            string yyyyString = string.Empty;
+            string MMString = string.Empty;
+            string ddString = string.Empty;
+            int yyyy = 0;
+            int MM = 0;
+            int dd = 0;
+            DateTime tempDateTime = new DateTime(1900, 1, 1);
+
+            // @inputDOB [datetime]
+            tempDateTime = new DateTime(1900, 1, 1);
+            if (inputDOBInyyyyMMdd.Length == 8)
+            {
+                yyyyString = inputDOBInyyyyMMdd.Substring(0, 4);
+                MMString = inputDOBInyyyyMMdd.Substring(4, 2);
+                ddString = inputDOBInyyyyMMdd.Substring(6, 2);
+                yyyy = 0;
+                MM = 0;
+                dd = 0;
+                Int32.TryParse(yyyyString, out yyyy);
+                Int32.TryParse(MMString, out MM);
+                Int32.TryParse(ddString, out dd);
+
+                if (yyyy != 0 && MM != 0 && dd != 0)
+                {
+                    DateTime.TryParse($"{MM}/{dd}/{yyyy}", out tempDateTime);
+                }
+            }
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputDOB",
+                    SqlDbType = System.Data.SqlDbType.DateTime,
+                    Size = 1,
+                    Value = tempDateTime
+                };
+            parms.Add(parm);
+
+            // @inputSSN [varchar](10)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputSSN",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 10,
+                    Value = inputSSN
+                };
+            parms.Add(parm);
+
+            // @inputDOS [datetime]
+            tempDateTime = new DateTime(1900, 1, 1);
+            if (inputDOSInyyyyMMdd.Length == 8)
+            {
+                yyyyString = inputDOSInyyyyMMdd.Substring(0, 4);
+                MMString = inputDOSInyyyyMMdd.Substring(4, 2);
+                ddString = inputDOSInyyyyMMdd.Substring(6, 2);
+                yyyy = 0;
+                MM = 0;
+                dd = 0;
+                Int32.TryParse(yyyyString, out yyyy);
+                Int32.TryParse(MMString, out MM);
+                Int32.TryParse(ddString, out dd);
+
+                if (yyyy != 0 && MM != 0 && dd != 0)
+                {
+                    DateTime.TryParse($"{MM}/{dd}/{yyyy}", out tempDateTime);
+                }
+            }
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputDOS",
+                    SqlDbType = System.Data.SqlDbType.DateTime,
+                    Size = 1,
+                    Value = tempDateTime
+                };
+            parms.Add(parm);
+
+            // @inputDateImported [datetime]
+            tempDateTime = new DateTime(1900, 1, 1);
+            if (inputDateImportedInyyyyMMdd.Length == 8)
+            {
+                yyyyString = inputDateImportedInyyyyMMdd.Substring(0, 4);
+                MMString = inputDateImportedInyyyyMMdd.Substring(4, 2);
+                ddString = inputDateImportedInyyyyMMdd.Substring(6, 2);
+                yyyy = 0;
+                MM = 0;
+                dd = 0;
+                Int32.TryParse(yyyyString, out yyyy);
+                Int32.TryParse(MMString, out MM);
+                Int32.TryParse(ddString, out dd);
+
+                if (yyyy != 0 && MM != 0 && dd != 0)
+                {
+                    DateTime.TryParse($"{MM}/{dd}/{yyyy}", out tempDateTime);
+                }
+            }
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputDateImported",
+                    SqlDbType = System.Data.SqlDbType.DateTime,
+                    Size = 1,
+                    Value = tempDateTime
+                };
+            parms.Add(parm);
+
+            // @inputMCO [nvarchar](100)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputMCO",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 100,
+                    Value = inputMCO
+                };
+            parms.Add(parm);
+
+            // @inputMedicare [nvarchar](100)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputMedicare",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 100,
+                    Value = inputMedicare
+                };
+            parms.Add(parm);
+
+            // @inputPCP [nvarchar](100)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputPCP",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 100,
+                    Value = inputPCP
+                };
+            parms.Add(parm);
+
+            // @inputStatus [nvarchar](100)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputStatus",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 100,
+                    Value = inputStatus
+                };
+            parms.Add(parm);
+
+            // @inputTennCareEligibility [nvarchar](300)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputTennCareEligibility",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 300,
+                    Value = inputTennCareEligibility
+                };
+            parms.Add(parm);
+
+            // @inputOutputFileDate [datetime]
+            tempDateTime = new DateTime(1900, 1, 1);
+
+            if (inputOutputFileDateInyyyyMMdd.Length == 8)
+            {
+                yyyyString = inputOutputFileDateInyyyyMMdd.Substring(0, 4);
+                MMString = inputOutputFileDateInyyyyMMdd.Substring(4, 2);
+                ddString = inputOutputFileDateInyyyyMMdd.Substring(6, 2);
+                yyyy = 0;
+                MM = 0;
+                dd = 0;
+                Int32.TryParse(yyyyString, out yyyy);
+                Int32.TryParse(MMString, out MM);
+                Int32.TryParse(ddString, out dd);
+
+                if (yyyy != 0 && MM != 0 && dd != 0)
+                {
+                    DateTime.TryParse($"{MM}/{dd}/{yyyy}", out tempDateTime);
+                }
+            }
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputOutputFileDate",
+                    SqlDbType = System.Data.SqlDbType.DateTime,
+                    Size = 1,
+                    Value = tempDateTime
+                };
+            parms.Add(parm);
+
+            // @inputOutputFileName [varchar](300)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputOutputFileName",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 300,
+                    Value = inputOutputFileName
+                };
+            parms.Add(parm);
+
+            try
+            {
+                returnOutput.di_InsertCollectionsEntriesYieldingEligInfoTodayOutputColumnsList =
+                    MyContext
+                    .di_InsertCollectionsEntriesYieldingEligInfoTodayOutputColumnsList
+                    .FromSqlRaw<di_InsertCollectionsEntriesYieldingEligInfoTodayOutputColumns>
+                    (
+                          sql
+                        , parms.ToArray()
+                    )
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  InnerException:  {ex.InnerException.Message}";
+                }
+                returnOutput.ErrorMessage = myErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // GET /api/Ops/di_InsertDunningEntriesYieldingEligInfoToday? inputImportFileName = C:\temp\importFile.xlsx&inputPatientIDString=777777&inputDOBInyyyyMMdd=19620913&inputSSN=444444444&inputDOSInyyyyMMdd=20250418&inputDateImportedInyyyyMMdd=20250418&inputMCO=myMCO&inputMedicare=MyMedicare&inputPCP=myPCP&inputStatus=myStatus&inputTennCareEligibility=myTennCareEligibility&inputOutputFileDateInyyyyMMdd=20250418&inputOutputFileName=MyFilename
+        [HttpGet]
+        public di_InsertDunningEntriesYieldingEligInfoTodayOutput
+                    di_InsertDunningEntriesYieldingEligInfoToday
+                    (
+                        [FromQuery] string inputImportFileName
+                        , [FromQuery] string inputPatientIDString
+                        , [FromQuery] string inputDOBInyyyyMMdd
+                        , [FromQuery] string inputSSN
+                        , [FromQuery] string inputDOSInyyyyMMdd
+                        , [FromQuery] string inputDateImportedInyyyyMMdd
+                        , [FromQuery] string inputMCO
+                        , [FromQuery] string inputMedicare
+                        , [FromQuery] string inputPCP
+                        , [FromQuery] string inputStatus
+                        , [FromQuery] string inputTennCareEligibility
+                        , [FromQuery] string inputOutputFileDateInyyyyMMdd
+                        , [FromQuery] string inputOutputFileName
+                    )
+        {
+            di_InsertDunningEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    new di_InsertDunningEntriesYieldingEligInfoTodayOutput();
+
+            string sql = $"tc.di_InsertDunningEntriesYieldingEligInfoToday   @inputImportFileName, @inputPatientID, @inputDOB, @inputSSN, @inputDOS, @inputDateImported, @inputMCO, @inputMedicare, @inputPCP, @inputStatus, @inputTennCareEligibility, @inputOutputFileDate, @inputOutputFileName";
+
+            List<SqlParameter> parms = new List<SqlParameter>();
+            /*@inputImportFileName [varchar](300)
+  ,@inputPatientID [int]
+  ,@inputDOB [datetime]
+  ,@inputSSN [varchar](10)
+  ,@inputDOS [datetime]
+  ,@inputDateImported [datetime]
+  ,@inputMCO [nvarchar](100)
+  ,@inputMedicare [nvarchar](100)
+  ,@inputPCP [nvarchar](100)
+  ,@inputStatus [nvarchar](100)
+  ,@inputTennCareEligibility [nvarchar](300)
+  ,@inputOutputFileDate [datetime]
+  ,@inputOutputFileName [varchar](300)
+             */
+
+            // @inputImportFileName [varchar](300)
+            SqlParameter parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputImportFileName",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 300,
+                    Value = inputImportFileName
+                };
+            parms.Add(parm);
+
+            // @inputPatientID [int]
+
+            int tempInt = 0;
+            if (inputPatientIDString.Length > 0)
+            {
+                Int32.TryParse(inputPatientIDString, out tempInt);
+            }
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputPatientID",
+                    SqlDbType = System.Data.SqlDbType.Int,
+                    Size = 1,
+                    Value = tempInt
+                };
+            parms.Add(parm);
+
+            string yyyyString = string.Empty;
+            string MMString = string.Empty;
+            string ddString = string.Empty;
+            int yyyy = 0;
+            int MM = 0;
+            int dd = 0;
+            DateTime tempDateTime = new DateTime(1900, 1, 1);
+
+            // @inputDOB [datetime]
+            tempDateTime = new DateTime(1900, 1, 1);
+            if (inputDOBInyyyyMMdd.Length == 8)
+            {
+                yyyyString = inputDOBInyyyyMMdd.Substring(0, 4);
+                MMString = inputDOBInyyyyMMdd.Substring(4, 2);
+                ddString = inputDOBInyyyyMMdd.Substring(6, 2);
+                yyyy = 0;
+                MM = 0;
+                dd = 0;
+                Int32.TryParse(yyyyString, out yyyy);
+                Int32.TryParse(MMString, out MM);
+                Int32.TryParse(ddString, out dd);
+
+                if (yyyy != 0 && MM != 0 && dd != 0)
+                {
+                    DateTime.TryParse($"{MM}/{dd}/{yyyy}", out tempDateTime);
+                }
+            }
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputDOB",
+                    SqlDbType = System.Data.SqlDbType.DateTime,
+                    Size = 1,
+                    Value = tempDateTime
+                };
+            parms.Add(parm);
+
+            // @inputSSN [varchar](10)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputSSN",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 10,
+                    Value = inputSSN
+                };
+            parms.Add(parm);
+
+            // @inputDOS [datetime]
+            tempDateTime = new DateTime(1900, 1, 1);
+            if (inputDOSInyyyyMMdd.Length == 8)
+            {
+                yyyyString = inputDOSInyyyyMMdd.Substring(0, 4);
+                MMString = inputDOSInyyyyMMdd.Substring(4, 2);
+                ddString = inputDOSInyyyyMMdd.Substring(6, 2);
+                yyyy = 0;
+                MM = 0;
+                dd = 0;
+                Int32.TryParse(yyyyString, out yyyy);
+                Int32.TryParse(MMString, out MM);
+                Int32.TryParse(ddString, out dd);
+
+                if (yyyy != 0 && MM != 0 && dd != 0)
+                {
+                    DateTime.TryParse($"{MM}/{dd}/{yyyy}", out tempDateTime);
+                }
+            }
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputDOS",
+                    SqlDbType = System.Data.SqlDbType.DateTime,
+                    Size = 1,
+                    Value = tempDateTime
+                };
+            parms.Add(parm);
+
+            // @inputDateImported [datetime]
+            tempDateTime = new DateTime(1900, 1, 1);
+            if (inputDateImportedInyyyyMMdd.Length == 8)
+            {
+                yyyyString = inputDateImportedInyyyyMMdd.Substring(0, 4);
+                MMString = inputDateImportedInyyyyMMdd.Substring(4, 2);
+                ddString = inputDateImportedInyyyyMMdd.Substring(6, 2);
+                yyyy = 0;
+                MM = 0;
+                dd = 0;
+                Int32.TryParse(yyyyString, out yyyy);
+                Int32.TryParse(MMString, out MM);
+                Int32.TryParse(ddString, out dd);
+
+                if (yyyy != 0 && MM != 0 && dd != 0)
+                {
+                    DateTime.TryParse($"{MM}/{dd}/{yyyy}", out tempDateTime);
+                }
+            }
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputDateImported",
+                    SqlDbType = System.Data.SqlDbType.DateTime,
+                    Size = 1,
+                    Value = tempDateTime
+                };
+            parms.Add(parm);
+
+            // @inputMCO [nvarchar](100)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputMCO",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 100,
+                    Value = inputMCO
+                };
+            parms.Add(parm);
+
+            // @inputMedicare [nvarchar](100)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputMedicare",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 100,
+                    Value = inputMedicare
+                };
+            parms.Add(parm);
+
+            // @inputPCP [nvarchar](100)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputPCP",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 100,
+                    Value = inputPCP
+                };
+            parms.Add(parm);
+
+            // @inputStatus [nvarchar](100)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputStatus",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 100,
+                    Value = inputStatus
+                };
+            parms.Add(parm);
+
+            // @inputTennCareEligibility [nvarchar](300)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputTennCareEligibility",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 300,
+                    Value = inputTennCareEligibility
+                };
+            parms.Add(parm);
+
+            // @inputOutputFileDate [datetime]
+            tempDateTime = new DateTime(1900, 1, 1);
+
+            if (inputOutputFileDateInyyyyMMdd.Length == 8)
+            {
+                yyyyString = inputOutputFileDateInyyyyMMdd.Substring(0, 4);
+                MMString = inputOutputFileDateInyyyyMMdd.Substring(4, 2);
+                ddString = inputOutputFileDateInyyyyMMdd.Substring(6, 2);
+                yyyy = 0;
+                MM = 0;
+                dd = 0;
+                Int32.TryParse(yyyyString, out yyyy);
+                Int32.TryParse(MMString, out MM);
+                Int32.TryParse(ddString, out dd);
+
+                if (yyyy != 0 && MM != 0 && dd != 0)
+                {
+                    DateTime.TryParse($"{MM}/{dd}/{yyyy}", out tempDateTime);
+                }
+            }
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputOutputFileDate",
+                    SqlDbType = System.Data.SqlDbType.DateTime,
+                    Size = 1,
+                    Value = tempDateTime
+                };
+            parms.Add(parm);
+
+            // @inputOutputFileName [varchar](300)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputOutputFileName",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 300,
+                    Value = inputOutputFileName
+                };
+            parms.Add(parm);
+
+            try
+            {
+                returnOutput.di_InsertDunningEntriesYieldingEligInfoTodayOutputColumnsList =
+                    MyContext
+                    .di_InsertDunningEntriesYieldingEligInfoTodayOutputColumnsList
+                    .FromSqlRaw<di_InsertDunningEntriesYieldingEligInfoTodayOutputColumns>
+                    (
+                          sql
+                        , parms.ToArray()
+                    )
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  InnerException:  {ex.InnerException.Message}";
+                }
+                returnOutput.ErrorMessage = myErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        // GET /api/Ops/di_InsertMonthlyEntriesYieldingEligInfoToday?inputPatientIDString=234254&inputDOSInyyyyMMdd=20250430&inputPatientName=MIckey&inputDOBInyyyyMMdd=19620913&inputSSN=444444444&inputImportFullFileName=C:\temp\importFile.xlsx&inputDateImportedInyyyyMMdd=20250430&inputMCO=MCO&inputMedicare=Medicare&inputPCP=PCP&inputStatus=Status&inputTennCareEligibility=Elig&inputOutputFileDateInyyyyMMdd=20250430&inputOutputFileName=Output.txt
+        [HttpGet]
+        public di_InsertMonthlyEntriesYieldingEligInfoTodayOutput
+                    di_InsertMonthlyEntriesYieldingEligInfoToday
+                    (
+                         [FromQuery] string inputPatientIDString
+                        , [FromQuery] string inputDOSInyyyyMMdd
+                        , [FromQuery] string inputPatientName
+                        , [FromQuery] string inputDOBInyyyyMMdd
+                        , [FromQuery] string inputSSN
+                        , [FromQuery] string inputImportFullFileName
+                        , [FromQuery] string inputDateImportedInyyyyMMdd
+                        , [FromQuery] string inputMCO
+                        , [FromQuery] string inputMedicare
+                        , [FromQuery] string inputPCP
+                        , [FromQuery] string inputStatus
+                        , [FromQuery] string inputTennCareEligibility
+                        , [FromQuery] string inputOutputFileDateInyyyyMMdd
+                        , [FromQuery] string inputOutputFileName
+                    )
+        {
+            di_InsertMonthlyEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    new di_InsertMonthlyEntriesYieldingEligInfoTodayOutput();
+
+            string sql = $"tc.di_InsertMonthlyEntriesYieldingEligInfoToday   " +
+                $"@inputPatientID" +
+                $", @inputDOS" +
+                $", @inputPatientName" +
+                $", @inputDOB" +
+                $", @inputSSN" +
+                $", @inputImportFullFileName" +
+                $", @inputDateImported" +
+                $", @inputMCO" +
+                $", @inputMedicare" +
+                $", @inputPCP" +
+                $", @inputStatus" +
+                $", @inputTennCareEligibility" +
+                $", @inputOutputFileDate" +
+                $", @inputOutputFileName";
+
+            List<SqlParameter> parms = new List<SqlParameter>();
+            /* @inputPatientID [int]
+	,@inputDOS [datetime]
+    ,@inputPatientName [varchar](300)
+	,@inputDOB [datetime]
+	,@inputSSN [varchar](10)
+	,@inputImportFullFilename [varchar] (1000)
+    ,@inputDateImported [datetime]
+	,@inputMCO [nvarchar] (100)
+	,@inputMedicare [nvarchar] (100)
+	,@inputPCP [nvarchar] (100)
+	,@inputStatus [nvarchar] (100)
+    ,@inputTennCareEligibility [nvarchar] (300)
+	,@inputOutputFileDate  [datetime]
+	,@inputOutputFileName [varchar](300)
+             */
+
+            // @inputPatientID [int]
+
+            int tempInt = 0;
+            if (inputPatientIDString.Length > 0)
+            {
+                Int32.TryParse(inputPatientIDString, out tempInt);
+            }
+            SqlParameter
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputPatientID",
+                    SqlDbType = System.Data.SqlDbType.Int,
+                    Size = 1,
+                    Value = tempInt
+                };
+            parms.Add(parm);
+
+            string yyyyString = string.Empty;
+            string MMString = string.Empty;
+            string ddString = string.Empty;
+            int yyyy = 0;
+            int MM = 0;
+            int dd = 0;
+            DateTime tempDateTime = new DateTime(1900, 1, 1);
+
+            // @inputDOS [datetime]
+            tempDateTime = new DateTime(1900, 1, 1);
+            if (inputDOSInyyyyMMdd.Length == 8)
+            {
+                yyyyString = inputDOSInyyyyMMdd.Substring(0, 4);
+                MMString = inputDOSInyyyyMMdd.Substring(4, 2);
+                ddString = inputDOSInyyyyMMdd.Substring(6, 2);
+                yyyy = 0;
+                MM = 0;
+                dd = 0;
+                Int32.TryParse(yyyyString, out yyyy);
+                Int32.TryParse(MMString, out MM);
+                Int32.TryParse(ddString, out dd);
+
+                if (yyyy != 0 && MM != 0 && dd != 0)
+                {
+                    DateTime.TryParse($"{MM}/{dd}/{yyyy}", out tempDateTime);
+                }
+            }
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputDOS",
+                    SqlDbType = System.Data.SqlDbType.DateTime,
+                    Size = 1,
+                    Value = tempDateTime
+                };
+            parms.Add(parm);
+
+            // @inputPatientName [varchar](300)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputPatientName",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 300,
+                    Value = inputPatientName
+                };
+            parms.Add(parm);
+
+            // @inputDOB [datetime]
+            tempDateTime = new DateTime(1900, 1, 1);
+            if (inputDOBInyyyyMMdd.Length == 8)
+            {
+                yyyyString = inputDOBInyyyyMMdd.Substring(0, 4);
+                MMString = inputDOBInyyyyMMdd.Substring(4, 2);
+                ddString = inputDOBInyyyyMMdd.Substring(6, 2);
+                yyyy = 0;
+                MM = 0;
+                dd = 0;
+                Int32.TryParse(yyyyString, out yyyy);
+                Int32.TryParse(MMString, out MM);
+                Int32.TryParse(ddString, out dd);
+
+                if (yyyy != 0 && MM != 0 && dd != 0)
+                {
+                    DateTime.TryParse($"{MM}/{dd}/{yyyy}", out tempDateTime);
+                }
+            }
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputDOB",
+                    SqlDbType = System.Data.SqlDbType.DateTime,
+                    Size = 1,
+                    Value = tempDateTime
+                };
+            parms.Add(parm);
+
+            // @inputSSN [varchar](10)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputSSN",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 10,
+                    Value = inputSSN
+                };
+            parms.Add(parm);
+
+            // @inputImportFullFilename [varchar] (1000)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputImportFullFilename",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 1000,
+                    Value = inputImportFullFileName
+                };
+            parms.Add(parm);
+
+            // @inputDateImported [datetime]
+            tempDateTime = new DateTime(1900, 1, 1);
+            if (inputDateImportedInyyyyMMdd.Length == 8)
+            {
+                yyyyString = inputDateImportedInyyyyMMdd.Substring(0, 4);
+                MMString = inputDateImportedInyyyyMMdd.Substring(4, 2);
+                ddString = inputDateImportedInyyyyMMdd.Substring(6, 2);
+                yyyy = 0;
+                MM = 0;
+                dd = 0;
+                Int32.TryParse(yyyyString, out yyyy);
+                Int32.TryParse(MMString, out MM);
+                Int32.TryParse(ddString, out dd);
+
+                if (yyyy != 0 && MM != 0 && dd != 0)
+                {
+                    DateTime.TryParse($"{MM}/{dd}/{yyyy}", out tempDateTime);
+                }
+            }
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputDateImported",
+                    SqlDbType = System.Data.SqlDbType.DateTime,
+                    Size = 1,
+                    Value = tempDateTime
+                };
+            parms.Add(parm);
+
+            // @inputMCO [nvarchar](100)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputMCO",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 100,
+                    Value = inputMCO
+                };
+            parms.Add(parm);
+
+            // @inputMedicare [nvarchar](100)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputMedicare",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 100,
+                    Value = inputMedicare
+                };
+            parms.Add(parm);
+
+            // @inputPCP [nvarchar](100)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputPCP",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 100,
+                    Value = inputPCP
+                };
+            parms.Add(parm);
+
+            // @inputStatus [nvarchar](100)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputStatus",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 100,
+                    Value = inputStatus
+                };
+            parms.Add(parm);
+
+            // @inputTennCareEligibility [nvarchar](300)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputTennCareEligibility",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 300,
+                    Value = inputTennCareEligibility
+                };
+            parms.Add(parm);
+
+            // @inputOutputFileDate [datetime]
+            tempDateTime = new DateTime(1900, 1, 1);
+
+            if (inputOutputFileDateInyyyyMMdd.Length == 8)
+            {
+                yyyyString = inputOutputFileDateInyyyyMMdd.Substring(0, 4);
+                MMString = inputOutputFileDateInyyyyMMdd.Substring(4, 2);
+                ddString = inputOutputFileDateInyyyyMMdd.Substring(6, 2);
+                yyyy = 0;
+                MM = 0;
+                dd = 0;
+                Int32.TryParse(yyyyString, out yyyy);
+                Int32.TryParse(MMString, out MM);
+                Int32.TryParse(ddString, out dd);
+
+                if (yyyy != 0 && MM != 0 && dd != 0)
+                {
+                    DateTime.TryParse($"{MM}/{dd}/{yyyy}", out tempDateTime);
+                }
+            }
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputOutputFileDate",
+                    SqlDbType = System.Data.SqlDbType.DateTime,
+                    Size = 1,
+                    Value = tempDateTime
+                };
+            parms.Add(parm);
+
+            // @inputOutputFileName [varchar](300)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputOutputFileName",
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 300,
+                    Value = inputOutputFileName
+                };
+            parms.Add(parm);
+
+            try
+            {
+                returnOutput.di_InsertMonthlyEntriesYieldingEligInfoTodayOutputColumnsList =
+                    MyContext
+                    .di_InsertMonthlyEntriesYieldingEligInfoTodayOutputColumnsList
+                    .FromSqlRaw<di_InsertMonthlyEntriesYieldingEligInfoTodayOutputColumns>
+                    (
+                          sql
+                        , parms.ToArray()
+                    )
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  InnerException:  {ex.InnerException.Message}";
+                }
+                returnOutput.ErrorMessage = myErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+        // GET /api/Ops/dd_TruncateCollectionsEntriesYieldingEligInfoToday
+        [HttpGet]
+        public dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutput
+                    dd_TruncateCollectionsEntriesYieldingEligInfoToday()
+        {
+            dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    new dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutput();
+
+            string sql = $"tc.dd_TruncateCollectionsEntriesYieldingEligInfoToday";
+
+            List<SqlParameter> parms = new List<SqlParameter>();
+
+            try
+            {
+                returnOutput.dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutputColumnsList =
+                    MyContext
+                    .dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutputColumnsList
+                    .FromSqlRaw<dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutputColumns>
+                    (
+                          sql
+                        , parms.ToArray()
+                    )
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  InnerException:  {ex.InnerException.Message}";
+                }
+                returnOutput.ErrorMessage = myErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+        // GET /api/Ops/dd_TruncateDunningEntriesYieldingEligInfoToday
+        [HttpGet]
+        public dd_TruncateDunningEntriesYieldingEligInfoTodayOutput
+                    dd_TruncateDunningEntriesYieldingEligInfoToday()
+        {
+            dd_TruncateDunningEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    new dd_TruncateDunningEntriesYieldingEligInfoTodayOutput();
+
+            string sql = $"tc.dd_TruncateDunningEntriesYieldingEligInfoToday";
+
+            List<SqlParameter> parms = new List<SqlParameter>();
+
+            try
+            {
+                returnOutput.dd_TruncateDunningEntriesYieldingEligInfoTodayOutputColumnsList =
+                    MyContext
+                    .dd_TruncateDunningEntriesYieldingEligInfoTodayOutputColumnsList
+                    .FromSqlRaw<dd_TruncateDunningEntriesYieldingEligInfoTodayOutputColumns>
+                    (
+                          sql
+                        , parms.ToArray()
+                    )
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  InnerException:  {ex.InnerException.Message}";
+                }
+                returnOutput.ErrorMessage = myErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+        // GET /api/Ops/dd_TruncateMonthlyEntriesYieldingEligInfoToday
+        [HttpGet]
+        public dd_TruncateMonthlyEntriesYieldingEligInfoTodayOutput
+                    dd_TruncateMonthlyEntriesYieldingEligInfoToday()
+        {
+            dd_TruncateMonthlyEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    new dd_TruncateMonthlyEntriesYieldingEligInfoTodayOutput();
+
+            string sql = $"tc.dd_TruncateMonthlyEntriesYieldingEligInfoToday";
+
+            List<SqlParameter> parms = new List<SqlParameter>();
+
+            try
+            {
+                returnOutput.dd_TruncateMonthlyEntriesYieldingEligInfoTodayOutputColumnsList =
+                    MyContext
+                    .dd_TruncateMonthlyEntriesYieldingEligInfoTodayOutputColumnsList
+                    .FromSqlRaw<dd_TruncateMonthlyEntriesYieldingEligInfoTodayOutputColumns>
+                    (
+                          sql
+                        , parms.ToArray()
+                    )
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  InnerException:  {ex.InnerException.Message}";
+                }
+                returnOutput.ErrorMessage = myErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+        // GET /api/Ops/qy_GetCollectionsEntriesYieldingEligInfoToday
+        [HttpGet]
+        public qy_GetCollectionsEntriesYieldingEligInfoTodayOutput
+                    qy_GetCollectionsEntriesYieldingEligInfoToday()
+        {
+            qy_GetCollectionsEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    new qy_GetCollectionsEntriesYieldingEligInfoTodayOutput();
+
+            string sql = $"tc.qy_GetCollectionsEntriesYieldingEligInfoToday";
+
+            List<SqlParameter> parms = new List<SqlParameter>();
+
+            try
+            {
+                returnOutput.qy_GetCollectionsEntriesYieldingEligInfoTodayOutputColumnsList =
+                    MyContext
+                    .qy_GetCollectionsEntriesYieldingEligInfoTodayOutputColumnsList
+                    .FromSqlRaw<qy_GetCollectionsEntriesYieldingEligInfoTodayOutputColumns>
+                    (
+                          sql
+                        , parms.ToArray()
+                    )
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  InnerException:  {ex.InnerException.Message}";
+                }
+                returnOutput.ErrorMessage = myErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+        // GET /api/Ops/qy_GetDunningEntriesYieldingEligInfoToday
+        [HttpGet]
+        public qy_GetDunningEntriesYieldingEligInfoTodayOutput
+                    qy_GetDunningEntriesYieldingEligInfoToday()
+        {
+            qy_GetDunningEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    new qy_GetDunningEntriesYieldingEligInfoTodayOutput();
+
+            string sql = $"tc.qy_GetDunningEntriesYieldingEligInfoToday";
+
+            List<SqlParameter> parms = new List<SqlParameter>();
+
+            try
+            {
+                returnOutput.qy_GetDunningEntriesYieldingEligInfoTodayOutputColumnsList =
+                    MyContext
+                    .qy_GetDunningEntriesYieldingEligInfoTodayOutputColumnsList
+                    .FromSqlRaw<qy_GetDunningEntriesYieldingEligInfoTodayOutputColumns>
+                    (
+                          sql
+                        , parms.ToArray()
+                    )
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  InnerException:  {ex.InnerException.Message}";
+                }
+                returnOutput.ErrorMessage = myErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+        // GET /api/Ops/qy_GetMonthlyEntriesYieldingEligInfoToday
+        [HttpGet]
+        public qy_GetMonthlyEntriesYieldingEligInfoTodayOutput
+                    qy_GetMonthlyEntriesYieldingEligInfoToday()
+        {
+            qy_GetMonthlyEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    new qy_GetMonthlyEntriesYieldingEligInfoTodayOutput();
+
+            string sql = $"tc.qy_GetMonthlyEntriesYieldingEligInfoToday";
+
+            List<SqlParameter> parms = new List<SqlParameter>();
+
+            try
+            {
+                returnOutput.qy_GetMonthlyEntriesYieldingEligInfoTodayOutputColumnsList =
+                    MyContext
+                    .qy_GetMonthlyEntriesYieldingEligInfoTodayOutputColumnsList
+                    .FromSqlRaw<qy_GetMonthlyEntriesYieldingEligInfoTodayOutputColumns>
+                    (
+                          sql
+                        , parms.ToArray()
+                    )
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  InnerException:  {ex.InnerException.Message}";
+                }
+                returnOutput.ErrorMessage = myErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+
+
+
+
+
+
+
+
+
+
+        // GET /api/Ops/du_MarkCollectionsEntryLookedUpTodayAsLookedUp?inputCollectionsEntriesLookedUpTodayID=1
+        [HttpGet]
+        public du_MarkCollectionsEntryLookedUpTodayAsLookedUpOutput
+                    du_MarkCollectionsEntryLookedUpTodayAsLookedUp
+                    (
+                        [FromQuery] int inputCollectionsEntriesLookedUpTodayID
+                    )
+        {
+            du_MarkCollectionsEntryLookedUpTodayAsLookedUpOutput
+                returnOutput =
+                    new du_MarkCollectionsEntryLookedUpTodayAsLookedUpOutput();
+
+            string sql = $"tc.du_MarkCollectionsEntryLookedUpTodayAsLookedUp @inputCollectionsEntriesLookedUpTodayID";
+
+            List<SqlParameter> parms = new List<SqlParameter>();
+
+            // @inputApplicationName
+            SqlParameter parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputCollectionsEntriesLookedUpTodayID",
+                    SqlDbType = System.Data.SqlDbType.Int,
+                    Size = 1,
+                    Value = inputCollectionsEntriesLookedUpTodayID
+                };
+            parms.Add(parm);
+
+            try
+            {
+                returnOutput.du_MarkCollectionsEntryLookedUpTodayAsLookedUpOutputColumnsList =
+                    MyContext
+                    .du_MarkCollectionsEntryLookedUpTodayAsLookedUpOutputColumnsList
+                    .FromSqlRaw<du_MarkCollectionsEntryLookedUpTodayAsLookedUpOutputColumns>
+                    (
+                          sql
+                        , parms.ToArray()
+                    )
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  InnerException:  {ex.InnerException.Message}";
+                }
+                returnOutput.ErrorMessage = myErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+        // GET /api/Ops/du_MarkDunningEntryLookedUpTodayAsLookedUp?inputDunningEntriesLookedUpTodayID=1
+        [HttpGet]
+        public du_MarkDunningEntryLookedUpTodayAsLookedUpOutput
+                    du_MarkDunningEntryLookedUpTodayAsLookedUp
+                    (
+                        [FromQuery] int inputDunningEntriesLookedUpTodayID
+                    )
+        {
+            du_MarkDunningEntryLookedUpTodayAsLookedUpOutput
+                returnOutput =
+                    new du_MarkDunningEntryLookedUpTodayAsLookedUpOutput();
+
+            string sql = $"tc.du_MarkDunningEntryLookedUpTodayAsLookedUp @inputDunningEntriesLookedUpTodayID";
+
+            List<SqlParameter> parms = new List<SqlParameter>();
+
+            // @inputApplicationName
+            SqlParameter parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputDunningEntriesLookedUpTodayID",
+                    SqlDbType = System.Data.SqlDbType.Int,
+                    Size = 1,
+                    Value = inputDunningEntriesLookedUpTodayID
+                };
+            parms.Add(parm);
+
+            try
+            {
+                returnOutput.du_MarkDunningEntryLookedUpTodayAsLookedUpOutputColumnsList =
+                    MyContext
+                    .du_MarkDunningEntryLookedUpTodayAsLookedUpOutputColumnsList
+                    .FromSqlRaw<du_MarkDunningEntryLookedUpTodayAsLookedUpOutputColumns>
+                    (
+                          sql
+                        , parms.ToArray()
+                    )
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  InnerException:  {ex.InnerException.Message}";
+                }
+                returnOutput.ErrorMessage = myErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+
+        // GET /api/Ops/du_MarkMonthlyEntryLookedUpTodayAsLookedUp?inputMonthlyEntriesLookedUpTodayID=1
+        [HttpGet]
+        public du_MarkMonthlyEntryLookedUpTodayAsLookedUpOutput
+                    du_MarkMonthlyEntryLookedUpTodayAsLookedUp
+                    (
+                        [FromQuery] int inputMonthlyEntriesLookedUpTodayID
+                    )
+        {
+            du_MarkMonthlyEntryLookedUpTodayAsLookedUpOutput
+                returnOutput =
+                    new du_MarkMonthlyEntryLookedUpTodayAsLookedUpOutput();
+
+            string sql = $"tc.du_MarkMonthlyEntryLookedUpTodayAsLookedUp @inputMonthlyEntriesLookedUpTodayID";
+
+            List<SqlParameter> parms = new List<SqlParameter>();
+
+            // @inputApplicationName
+            SqlParameter parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputMonthlyEntriesLookedUpTodayID",
+                    SqlDbType = System.Data.SqlDbType.Int,
+                    Size = 1,
+                    Value = inputMonthlyEntriesLookedUpTodayID
+                };
+            parms.Add(parm);
+
+            try
+            {
+                returnOutput.du_MarkMonthlyEntryLookedUpTodayAsLookedUpOutputColumnsList =
+                    MyContext
+                    .du_MarkMonthlyEntryLookedUpTodayAsLookedUpOutputColumnsList
+                    .FromSqlRaw<du_MarkMonthlyEntryLookedUpTodayAsLookedUpOutputColumns>
+                    (
+                          sql
+                        , parms.ToArray()
+                    )
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  InnerException:  {ex.InnerException.Message}";
+                }
+                returnOutput.ErrorMessage = myErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+
+
+        // GET /api/Ops/qy_GetTennCareWith2PassAuthConfig?inputApplicationName=TennCareEligibility&inputType=Default&inputProcessName=TennCareEligibilityImport&inputNameFilter=NULL&inputUser=AppUser
+        [HttpGet]
+        public qy_GetTennCareWith2PassAuthConfigOutput
+                    qy_GetTennCareWith2PassAuthConfig
+                    (
+                        [FromQuery] string inputApplicationName
+                        , [FromQuery] string inputType
+                        , [FromQuery] string inputProcessName
+                        , [FromQuery] string inputNameFilter
+                        , [FromQuery] string inputUser
+                    )
+        {
+            qy_GetTennCareWith2PassAuthConfigOutput 
+                returnOutput =
+                    new qy_GetTennCareWith2PassAuthConfigOutput();
+
+            string sql = $"tc.qy_GetTennCareWith2PassAuthConfig @inputApplicationName, @inputType, @inputProcessName, @inputNameFilter, @inputUser";
+
+            List<SqlParameter> parms = new List<SqlParameter>();
+
+            // @inputApplicationName
+            SqlParameter parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputApplicationName",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Size = 128,
+                    Value = inputApplicationName
+                };
+            parms.Add( parm );
+
+            // @inputType
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputType",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Size = 50,
+                    Value = inputType
+                };
+            parms.Add( parm );
+
+            // @inputProcessName
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputProcessName",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Size = 128,
+                    Value = inputProcessName
+                };
+            parms.Add( parm );
+
+            // @inputNameFilter
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputNameFilter",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Size = 128,
+                    Value = inputNameFilter
+                };
+            parms.Add( parm );
+
+            // @inputUser [varchar] (50)
+            parm =
+                new SqlParameter
+                {
+                    ParameterName = "@inputUser",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Size = 50,
+                    Value = inputUser
+                };
+            parms.Add( parm );
+
+            try
+            {
+                returnOutput.qy_GetTennCareWith2PassAuthConfigOutputColumnsList =
+                    MyContext
+                    .qy_GetTennCareWith2PassAuthConfigOutputColumnsList
+                    .FromSqlRaw<qy_GetTennCareWith2PassAuthConfigOutputColumns>
+                    (
+                          sql
+                        , parms.ToArray()
+                    )
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  InnerException:  {ex.InnerException.Message}";
+                }
+                returnOutput.ErrorMessage = myErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+        // GET /api/Ops/dd_TruncateDailyFileCollectionsComparisonRaw
+        
+        [HttpGet]
+        public dd_TruncateDailyFileCollectionsComparisonRawOutput
+                    dd_TruncateDailyFileCollectionsComparisonRaw()
+        {
+            dd_TruncateDailyFileCollectionsComparisonRawOutput
+                returnOutput =
+                    new dd_TruncateDailyFileCollectionsComparisonRawOutput();
+
+            string sql = $"tc.dd_TruncateDailyFileCollectionsComparisonRaw";
+
+            List<SqlParameter> parms = new List<SqlParameter>();
+
+            try
+            {
+                returnOutput.dd_TruncateDailyFileCollectionsComparisonRawOutputColumnsList =
+                    MyContext
+                    .dd_TruncateDailyFileCollectionsComparisonRawOutputColumnsList
+                    .FromSqlRaw<dd_TruncateDailyFileCollectionsComparisonRawOutputColumns>
+                    (
+                          sql
+                        , parms.ToArray()
+                    )
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  InnerException:  {ex.InnerException.Message}";
+                }
+                returnOutput.ErrorMessage = myErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+        // GET /api/Ops/dd_TruncateDailyFileDunningComparisonRaw
+        [HttpGet]
+        public dd_TruncateDailyFileDunningComparisonRawOutput
+                    dd_TruncateDailyFileDunningComparisonRaw()
+        {
+            dd_TruncateDailyFileDunningComparisonRawOutput
+                returnOutput =
+                    new dd_TruncateDailyFileDunningComparisonRawOutput();
+
+            string sql = $"tc.dd_TruncateDailyFileDunningComparisonRaw";
+
+            List<SqlParameter> parms = new List<SqlParameter>();
+
+            try
+            {
+                returnOutput.dd_TruncateDailyFileDunningComparisonRawOutputColumnsList =
+                    MyContext
+                    .dd_TruncateDailyFileDunningComparisonRawOutputColumnsList
+                    .FromSqlRaw<dd_TruncateDailyFileDunningComparisonRawOutputColumns>
+                    (
+                          sql
+                        , parms.ToArray()
+                    )
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  InnerException:  {ex.InnerException.Message}";
+                }
+                returnOutput.ErrorMessage = myErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+
+        // GET /api/Ops/dd_TruncateMonthlyEntriesLookedUpTodayRaw
+
+        [HttpGet]
+        public dd_TruncateMonthlyEntriesLookedUpTodayRawOutput
+                    dd_TruncateMonthlyEntriesLookedUpTodayRaw()
+        {
+            dd_TruncateMonthlyEntriesLookedUpTodayRawOutput
+                returnOutput =
+                    new dd_TruncateMonthlyEntriesLookedUpTodayRawOutput();
+
+            string sql = $"tc.dd_TruncateMonthlyEntriesLookedUpTodayRaw";
+
+            List<SqlParameter> parms = new List<SqlParameter>();
+
+            try
+            {
+                returnOutput.dd_TruncateMonthlyEntriesLookedUpTodayRawOutputColumnsList =
+                    MyContext
+                    .dd_TruncateMonthlyEntriesLookedUpTodayRawOutputColumnsList
+                    .FromSqlRaw<dd_TruncateMonthlyEntriesLookedUpTodayRawOutputColumns>
+                    (
+                          sql
+                        , parms.ToArray()
+                    )
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  InnerException:  {ex.InnerException.Message}";
+                }
+                returnOutput.ErrorMessage = myErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+
+
+        // GET /api/Ops/di_FinalizeDailyFileCollectionsComparisonRaw
+        [HttpGet]
+        public di_FinalizeDailyFileCollectionsComparisonRawOutput
+                    di_FinalizeDailyFileCollectionsComparisonRaw()
+        {
+            di_FinalizeDailyFileCollectionsComparisonRawOutput
+                returnOutput =
+                    new di_FinalizeDailyFileCollectionsComparisonRawOutput();
+
+            string sql = $"tc.di_FinalizeDailyFileCollectionsComparisonRaw";
+
+            List<SqlParameter> parms = new List<SqlParameter>();
+
+            try
+            {
+                returnOutput.di_FinalizeDailyFileCollectionsComparisonRawOutputColumnsList =
+                    MyContext
+                    .di_FinalizeDailyFileCollectionsComparisonRawOutputColumnsList
+                    .FromSqlRaw<di_FinalizeDailyFileCollectionsComparisonRawOutputColumns>
+                    (
+                          sql
+                        , parms.ToArray()
+                    )
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  InnerException:  {ex.InnerException.Message}";
+                }
+                returnOutput.ErrorMessage = myErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+        // GET /api/Ops/di_FinalizeDailyFileDunningComparisonRaw
+        [HttpGet]
+        public di_FinalizeDailyFileDunningComparisonRawOutput
+                    di_FinalizeDailyFileDunningComparisonRaw()
+        {
+            di_FinalizeDailyFileDunningComparisonRawOutput
+                returnOutput =
+                    new di_FinalizeDailyFileDunningComparisonRawOutput();
+
+            string sql = $"tc.di_FinalizeDailyFileDunningComparisonRaw";
+
+            List<SqlParameter> parms = new List<SqlParameter>();
+
+            try
+            {
+                returnOutput.di_FinalizeDailyFileDunningComparisonRawOutputColumnsList =
+                    MyContext
+                    .di_FinalizeDailyFileDunningComparisonRawOutputColumnsList
+                    .FromSqlRaw<di_FinalizeDailyFileDunningComparisonRawOutputColumns>
+                    (
+                          sql
+                        , parms.ToArray()
+                    )
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  InnerException:  {ex.InnerException.Message}";
+                }
+                returnOutput.ErrorMessage = myErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+
+
+
+
+
+        // GET /api/Ops/di_FinalizeMonthlyEntriesLookedUpTodayRaw
+        [HttpGet]
+        public di_FinalizeMonthlyEntriesLookedUpTodayRawOutput
+                    di_FinalizeMonthlyEntriesLookedUpTodayRaw()
+        {
+            di_FinalizeMonthlyEntriesLookedUpTodayRawOutput
+                returnOutput =
+                    new di_FinalizeMonthlyEntriesLookedUpTodayRawOutput();
+
+            string sql = $"tc.di_FinalizeMonthlyEntriesLookedUpTodayRaw";
+
+            List<SqlParameter> parms = new List<SqlParameter>();
+
+            try
+            {
+                returnOutput.di_FinalizeMonthlyEntriesLookedUpTodayRawOutputColumnsList =
+                    MyContext
+                    .di_FinalizeMonthlyEntriesLookedUpTodayRawOutputColumnsList
+                    .FromSqlRaw<di_FinalizeMonthlyEntriesLookedUpTodayRawOutputColumns>
+                    (
+                          sql
+                        , parms.ToArray()
+                    )
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  InnerException:  {ex.InnerException.Message}";
+                }
+                returnOutput.ErrorMessage = myErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+        // GET /api/Ops/qy_GetAllCollectionsEntriesLookedUpToday
+        [HttpGet]
+        public qy_GetAllCollectionsEntriesLookedUpTodayOutput
+                    qy_GetAllCollectionsEntriesLookedUpToday()
+        {
+            qy_GetAllCollectionsEntriesLookedUpTodayOutput
+                returnOutput =
+                    new qy_GetAllCollectionsEntriesLookedUpTodayOutput();
+
+            string sql = $"tc.qy_GetAllCollectionsEntriesLookedUpToday";
+
+            List<SqlParameter> parms = new List<SqlParameter>();
+
+            try
+            {
+                returnOutput.qy_GetAllCollectionsEntriesLookedUpTodayOutputColumnsList =
+                    MyContext
+                    .qy_GetAllCollectionsEntriesLookedUpTodayOutputColumnsList
+                    .FromSqlRaw<qy_GetAllCollectionsEntriesLookedUpTodayOutputColumns>
+                    (
+                          sql
+                        , parms.ToArray()
+                    )
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  InnerException:  {ex.InnerException.Message}";
+                }
+                returnOutput.ErrorMessage = myErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+        // GET /api/Ops/qy_GetAllDunningEntriesLookedUpToday
+        [HttpGet]
+        public qy_GetAllDunningEntriesLookedUpTodayOutput
+                    qy_GetAllDunningEntriesLookedUpToday()
+        {
+            qy_GetAllDunningEntriesLookedUpTodayOutput
+                returnOutput =
+                    new qy_GetAllDunningEntriesLookedUpTodayOutput();
+
+            string sql = $"tc.qy_GetAllDunningEntriesLookedUpToday";
+
+            List<SqlParameter> parms = new List<SqlParameter>();
+
+            try
+            {
+                returnOutput.qy_GetAllDunningEntriesLookedUpTodayOutputColumnsList =
+                    MyContext
+                    .qy_GetAllDunningEntriesLookedUpTodayOutputColumnsList
+                    .FromSqlRaw<qy_GetAllDunningEntriesLookedUpTodayOutputColumns>
+                    (
+                          sql
+                        , parms.ToArray()
+                    )
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  InnerException:  {ex.InnerException.Message}";
+                }
+                returnOutput.ErrorMessage = myErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+        // GET /api/Ops/qy_GetAllMonthlyEntriesLookedUpToday
+        [HttpGet]
+        public qy_GetAllMonthlyEntriesLookedUpTodayOutput
+                    qy_GetAllMonthlyEntriesLookedUpToday()
+        {
+            qy_GetAllMonthlyEntriesLookedUpTodayOutput
+                returnOutput =
+                    new qy_GetAllMonthlyEntriesLookedUpTodayOutput();
+
+            string sql = $"tc.qy_GetAllMonthlyEntriesLookedUpToday";
+
+            List<SqlParameter> parms = new List<SqlParameter>();
+
+            try
+            {
+                returnOutput.qy_GetAllMonthlyEntriesLookedUpTodayOutputColumnsList =
+                    MyContext
+                    .qy_GetAllMonthlyEntriesLookedUpTodayOutputColumnsList
+                    .FromSqlRaw<qy_GetAllMonthlyEntriesLookedUpTodayOutputColumns>
+                    (
+                          sql
+                        , parms.ToArray()
+                    )
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  InnerException:  {ex.InnerException.Message}";
+                }
+                returnOutput.ErrorMessage = myErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+    }
+}

@@ -1,0 +1,7 @@
+-- SQL Server Instance:  smg-sql01
+-----------------------------------------------------------------------
+-- Grant Execute Authority on qy_GetAllMonthlyEntriesLookedUpToday
+-----------------------------------------------------------------------
+USE [Utilities];
+GRANT EXECUTE ON OBJECT::[tc].[qy_GetAllMonthlyEntriesLookedUpToday]
+   TO AppUser;  

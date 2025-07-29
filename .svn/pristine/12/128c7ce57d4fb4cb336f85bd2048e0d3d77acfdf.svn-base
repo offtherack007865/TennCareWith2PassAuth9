@@ -1,0 +1,1430 @@
+﻿using BulkInsert9.CallWebApiLand;
+using BulkInsert9.Data.Models;
+using log4net;
+using Spire.Xls;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TennCareWith2PassAuth9.CallWebApiLand;
+using TennCareWith2PassAuth9.Data.Models;
+
+namespace TennCareWith2PassAuth9.ImportConsoleApp
+{
+    public class MainOps
+    {
+        private static readonly ILog log = LogManager.GetLogger(typeof(MainOps));
+        public  MainOps
+                (
+                    qy_GetTennCareWith2PassAuthConfigOutputColumns inputqy_GetTennCareWith2PassAuthConfigOutputColumns
+                    ,TodaysCollectionsDunningAndMonthlyFiles inputTodaysCollectionsDunningAndMonthlyFiles
+                )
+        { 
+            MyConfigOptions = 
+                inputqy_GetTennCareWith2PassAuthConfigOutputColumns;
+            MyCollectionsFullFilename =
+                inputTodaysCollectionsDunningAndMonthlyFiles
+                .TodaysCollectionsFullFilename;
+            MyDunningFullFilename =
+                inputTodaysCollectionsDunningAndMonthlyFiles
+                .TodaysDunningFullFilename;
+            MyMonthlyFullFilenameList =
+                inputTodaysCollectionsDunningAndMonthlyFiles
+                .TodaysMonthlyFullFilenameList;
+        }
+
+        // MyConfigOption
+        public 
+            qy_GetTennCareWith2PassAuthConfigOutputColumns 
+                MyConfigOptions 
+                    { get; set; }    
+
+        // Collections full filename
+        public 
+            string
+                MyCollectionsFullFilename 
+                    { get; set; }   
+
+        // Dunning full filename
+        public 
+            string
+                MyDunningFullFilename 
+                    { get; set; }
+
+        // Monthly full filename List
+        public
+            List<string>
+                MyMonthlyFullFilenameList
+                    { get; set; }
+
+        public MainOpsOutput MyMain()
+        {
+            MainOpsOutput returnOutput = 
+                new MainOpsOutput();
+            // Collections
+            if (MyCollectionsFullFilename.Length > 0)
+            {
+                returnOutput = 
+                    MyMainCollections(returnOutput);
+            }
+
+            // Dunning
+            if (MyDunningFullFilename.Length > 0)
+            {
+                returnOutput = 
+                    MyMainDunning(returnOutput);
+            }
+
+            // Monthly
+            if (MyMonthlyFullFilenameList.Count > 0)
+            {
+                MyMainMonthly(returnOutput);
+            }
+            return returnOutput;
+        }
+        public MainOpsOutput MyMainCollections(MainOpsOutput inputMainOpsOutput)
+        {
+            MainOpsOutput returnOutput = inputMainOpsOutput;
+            string newInputFilename = 
+                MyCollectionsFullFilename;
+
+            FileInfo inputFi = new FileInfo(MyCollectionsFullFilename);
+            if (!newInputFilename.Contains("20"))
+            {
+                string filenameSansExtension =
+                    inputFi.Name.Replace(".xlsx", "");
+                DateTime currentDateTime = DateTime.Now;
+                string MM = currentDateTime.Month.ToString().PadLeft(2, '0');
+                string dd = currentDateTime.Day.ToString().PadLeft(2, '0');
+                string yyyy = currentDateTime.Year.ToString();
+                string collectionsArchiveYearFolder =
+                    Path.Combine(MyConfigOptions.CollectionsInputArchiveDirectory, yyyy);
+                if (!Directory.Exists(collectionsArchiveYearFolder))
+             
+                {
+                    Directory.CreateDirectory(collectionsArchiveYearFolder);
+                }
+
+                newInputFilename = 
+                    Path.Combine(collectionsArchiveYearFolder, $"{filenameSansExtension}_{yyyy}{MM}{dd}.xlsx");
+                if (File.Exists(newInputFilename)) 
+                {
+                    File.Delete(newInputFilename);
+                }
+                File.Copy(MyCollectionsFullFilename, newInputFilename, true);
+                if (File.Exists(newInputFilename))
+                {
+                    File.Delete(MyCollectionsFullFilename);  
+                }
+            }
+
+            // Extract Excel data
+            ExtractExcelDataFromCollectionsFileOutput
+                myExtractExcelDataFromCollectionsFileOutput =
+                    ExtractExcelDataFromCollectionsFile
+                    (
+                        newInputFilename
+                    );
+            if (!myExtractExcelDataFromCollectionsFileOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage = myExtractExcelDataFromCollectionsFileOutput.ErrorMessage;
+                return returnOutput;
+            }
+
+            // Truncate Raw table.
+            dd_CollectionsComparisonOutput
+                mydd_CollectionsComparisonOutput =
+                    TruncateCollections();
+            if (!mydd_CollectionsComparisonOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    mydd_CollectionsComparisonOutput.ErrorMessage;
+                return returnOutput;
+            }
+
+            // Bulk Insert 
+            BulkInsertOutput
+                myBulkInsertOutput =
+                    BulkInsertCollections
+                    (
+                        newInputFilename
+                        , myExtractExcelDataFromCollectionsFileOutput.MyCsvLineList
+                    );
+
+            if (!myBulkInsertOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    myBulkInsertOutput.ErrorMessage;
+                return returnOutput;
+            }
+
+            // Finalize CollectionsRaw table.
+            di_FinalizeCollectionsComparisonOutput
+                mydi_FinalizeCollectionsComparisonOutput =
+                    FinalizeDailyFileCollectionsComparisonRaw(MyConfigOptions.BaseWebApiUrl);
+            if (!mydi_FinalizeCollectionsComparisonOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    mydi_FinalizeCollectionsComparisonOutput.ErrorMessage;
+                return returnOutput;
+            }
+
+            string myEmailBodyLine =
+                $"File {newInputFilename} was successfully imported as a Physician Labs and Biometrics file.".Replace("\"", " ").Replace("\\", " ");
+            returnOutput.MailBodyLineList.Add(myEmailBodyLine);
+
+            return returnOutput;
+        }
+        public MainOpsOutput MyMainDunning(MainOpsOutput inputMainOpsOutput)
+        {
+            MainOpsOutput returnOutput = inputMainOpsOutput;
+            string newInputFilename = 
+                MyDunningFullFilename;
+
+            FileInfo inputFi = new FileInfo(MyDunningFullFilename);
+            if (!newInputFilename.Contains("20"))
+            {
+                string filenameSansExtension =
+                    inputFi.Name.Replace(".xlsx", "");
+                DateTime currentDateTime = DateTime.Now;
+                string MM = currentDateTime.Month.ToString().PadLeft(2, '0');
+                string dd = currentDateTime.Day.ToString().PadLeft(2, '0');
+                string yyyy = currentDateTime.Year.ToString();
+                string dunningArchiveYearFolder =
+                    Path.Combine(MyConfigOptions.DunningInputArchiveDirectory, yyyy);
+                if (!Directory.Exists(dunningArchiveYearFolder))
+                {
+                    Directory.CreateDirectory(dunningArchiveYearFolder);
+                }
+
+                newInputFilename = 
+                    Path.Combine(dunningArchiveYearFolder, $"{filenameSansExtension}_{yyyy}{MM}{dd}.xlsx");
+                if (File.Exists(newInputFilename)) 
+                {
+                    File.Delete(newInputFilename);
+                }
+                File.Copy(MyDunningFullFilename, newInputFilename, true);
+                if (File.Exists(newInputFilename))
+                {
+                    File.Delete(MyDunningFullFilename);  
+                }
+            }
+
+            // Extract Excel data
+            ExtractExcelDataFromDunningFileOutput
+                myExtractExcelDataFromDunningFileOutput =
+                    ExtractExcelDataFromDunningFile
+                    (
+                        newInputFilename
+                    );
+            if (!myExtractExcelDataFromDunningFileOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage = myExtractExcelDataFromDunningFileOutput.ErrorMessage;
+                return returnOutput;
+            }
+
+            // Truncate Raw table.
+            dd_DunningComparisonOutput
+                mydd_DunningComparisonOutput =
+                    TruncateDunningRaw();
+            if (!mydd_DunningComparisonOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    mydd_DunningComparisonOutput.ErrorMessage;
+                return returnOutput;
+            }
+
+            // Bulk Insert 
+            BulkInsertOutput
+                myBulkInsertOutput =
+                    BulkInsertDunning
+                    (
+                        newInputFilename
+                        , myExtractExcelDataFromDunningFileOutput.MyCsvLineList
+                    );
+
+            if (!myBulkInsertOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    myBulkInsertOutput.ErrorMessage;
+                return returnOutput;
+            }
+
+            // Finalize DunningRaw table.
+            di_FinalizeDunningComparisonOutput
+                mydi_FinalizeDunningComparisonOutput =
+                    FinalizeDailyFileDunningComparisonRaw(MyConfigOptions.BaseWebApiUrl);
+            if (!mydi_FinalizeDunningComparisonOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    mydi_FinalizeDunningComparisonOutput.ErrorMessage;
+                return returnOutput;
+            }
+
+            string myEmailBodyLine =
+                $"File {newInputFilename} was successfully imported as a Physician Labs and Biometrics file.".Replace("\"", " ").Replace("\\", " ");
+            returnOutput.MailBodyLineList.Add(myEmailBodyLine);
+
+            return returnOutput;
+        }
+
+
+
+
+        public MainOpsOutput MyMainMonthly(MainOpsOutput inputMainOpsOutput)
+        {
+            MainOpsOutput returnOutput = inputMainOpsOutput;
+
+            List<string> combinedMonthlyCsvList =
+                new List<string>();
+            string
+                newInputFilename = string.Empty;
+
+            foreach ( string loopMonthlyFullFilename in MyMonthlyFullFilenameList)
+            {
+                FileInfo inputFi = new FileInfo(loopMonthlyFullFilename);
+                if (!loopMonthlyFullFilename.Contains("20"))
+                {
+                    string filenameSansExtension =
+                        inputFi.Name.Replace(".xlsx", "");
+                    DateTime currentDateTime = DateTime.Now;    
+                    string MM = currentDateTime.Month.ToString().PadLeft(2, '0');
+                    string dd = currentDateTime.Day.ToString().PadLeft(2, '0');
+                    string yyyy = currentDateTime.Year.ToString();
+                    string monthlyArchiveYearFolder =
+                        Path.Combine(MyConfigOptions.MonthlyInputArchiveDirectory, yyyy);
+                    if (!Directory.Exists(monthlyArchiveYearFolder))
+                    {
+                        Directory.CreateDirectory(monthlyArchiveYearFolder);
+                    }
+                    string monthlyBatchFolder =
+                        Path.Combine(monthlyArchiveYearFolder, $"Batch_{yyyy}{MM}{dd}");
+                    if (!Directory.Exists(monthlyBatchFolder))
+                    {
+                        Directory.CreateDirectory(monthlyBatchFolder);
+                    }
+
+                    newInputFilename =
+                        Path.Combine(monthlyBatchFolder, $"{filenameSansExtension}_{yyyy}{MM}{dd}.xlsx");
+
+                    if (File.Exists(newInputFilename))
+                    {
+                        File.Delete(newInputFilename);
+                    }
+                    File.Copy(loopMonthlyFullFilename, newInputFilename, true);
+                    if (File.Exists(newInputFilename))
+                    {
+                        File.Delete(loopMonthlyFullFilename);
+                    }
+                }
+
+                // Extract Excel data
+                ExtractExcelDataFromMonthlyFileOutput
+                    myExtractExcelDataFromMonthlyFileOutput =
+                        ExtractExcelDataFromMonthlyFile
+                        (
+                            newInputFilename
+                        );
+                if (!myExtractExcelDataFromMonthlyFileOutput.IsOk)
+                {
+                    returnOutput.IsOk = false;
+                    returnOutput.ErrorMessage = myExtractExcelDataFromMonthlyFileOutput.ErrorMessage;
+                    return returnOutput;
+                }
+                combinedMonthlyCsvList
+                .AddRange
+                (
+                    myExtractExcelDataFromMonthlyFileOutput.MyCsvLineList
+                );
+            }
+
+
+            // Truncate Raw table.
+            dd_MonthlyToLookUpOutput
+                mydd_MonthlyToLookUpOutput =
+                    TruncateMonthlyRaw();
+            if (!mydd_MonthlyToLookUpOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    mydd_MonthlyToLookUpOutput.ErrorMessage;
+                return returnOutput;
+            }
+
+            // Bulk Insert 
+            BulkInsertOutput
+                myBulkInsertOutput =
+                    BulkInsertMonthly
+                    (
+                        newInputFilename
+                        , combinedMonthlyCsvList
+                    );
+
+            if (!myBulkInsertOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    myBulkInsertOutput.ErrorMessage;
+                return returnOutput;
+            }
+
+            // Finalize MonthlyRaw table.
+            di_FinalizeMonthlyToLookUpOutput
+                mydi_FinalizeDailyFileMonthlyComparisonRawOutput =
+                    FinalizeMonthlyEntriesLookedUpTodayRaw(MyConfigOptions.BaseWebApiUrl);
+            if (!mydi_FinalizeDailyFileMonthlyComparisonRawOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    mydi_FinalizeDailyFileMonthlyComparisonRawOutput.ErrorMessage;
+                return returnOutput;
+            }
+
+            string myEmailBodyLine =
+                $"File {newInputFilename} was successfully imported as a Physician Labs and Biometrics file.".Replace("\"", " ").Replace("\\", " ");
+            returnOutput.MailBodyLineList.Add(myEmailBodyLine);
+
+            return returnOutput;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public
+            ExtractExcelDataFromCollectionsFileOutput
+              ExtractExcelDataFromCollectionsFile
+                (
+                    string inputFullFilename
+                )
+        {
+            ExtractExcelDataFromCollectionsFileOutput
+                returnOutput =
+                    new ExtractExcelDataFromCollectionsFileOutput();
+
+            log.Info("B4 init of Workbook}");
+
+            // Load workbook
+            Workbook workbook = new Workbook();
+
+            log.Info($"B4 Load of workbook {inputFullFilename}");
+
+            workbook.LoadFromFile(inputFullFilename);
+
+            log.Info("b4 Load of worksheet");
+
+            // Get first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            log.Info("after Load of worksheet");
+
+            returnOutput.MyCsvLineList = new List<string>();
+
+            ExtractDataFromCollectionsExcelRowOutput 
+                myExtractDataFromCollectionsExcelRowOutput = 
+                    new ExtractDataFromCollectionsExcelRowOutput();
+            int rowCtr = 0;
+            rowCtr = MyConfigOptions.CollectionsLineWhereDataStarts;
+            while (true)
+            {
+                if (rowCtr >= 1611)
+                {
+                    int i = 0;
+                    i++;
+                }
+                myExtractDataFromCollectionsExcelRowOutput = 
+                    new ExtractDataFromCollectionsExcelRowOutput();
+                myExtractDataFromCollectionsExcelRowOutput =
+                    ExtractDataFromCollectionsExcelRow
+                    (
+                        sheet
+                        , rowCtr
+                    );
+                if (myExtractDataFromCollectionsExcelRowOutput.OutputCsvString.CompareTo("BlankLine") == 0)
+                {
+                    return returnOutput;
+                }
+                if (myExtractDataFromCollectionsExcelRowOutput.OutputCsvString.CompareTo("OmitLine") != 0)
+                {
+                    returnOutput.MyCsvLineList.Add(myExtractDataFromCollectionsExcelRowOutput.OutputCsvString);
+                } 
+                rowCtr++;
+            }
+        }
+        public dd_CollectionsComparisonOutput TruncateCollections()
+        {
+            dd_CollectionsComparisonOutput returnOutput =
+                new dd_CollectionsComparisonOutput();
+            CallWebApiLandClass myCallWebApiLandClass =
+                new CallWebApiLandClass(this.MyConfigOptions.BaseWebApiUrl);
+            returnOutput =
+                myCallWebApiLandClass
+                .dd_CollectionsComparison();
+            if (!returnOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    returnOutput.ErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+        public 
+            ExtractDataFromCollectionsExcelRowOutput 
+                ExtractDataFromCollectionsExcelRow(Worksheet inputWorksheet, int inputRowCtr)
+        {
+            ExtractDataFromCollectionsExcelRowOutput returnOutput = new ExtractDataFromCollectionsExcelRowOutput();
+
+            List<CollectionsExcelCellStringValue> myExcelCellStringValueList =
+                new List<CollectionsExcelCellStringValue>();
+
+            int colCtr = 0;
+
+            CollectionsExcelCellStringValue myExcelCellStringValue = null;
+
+            /*,[FileName] [varchar](300) NULL
+	,[PatientID] [int] NULL
+	,[DOB] [datetime] NOT NULL
+	,[SSN] [varchar](10) NOT NULL
+	,[DOS] [datetime] NOT NULL
+	,[DateImported] [datetime] NULL
+             */
+
+            // 1 PatientID
+            colCtr++;
+            myExcelCellStringValue =
+                new CollectionsExcelCellStringValue
+                    (
+                        inputWorksheet
+                        , MyConfigOptions
+                        , "PatientID"
+                        , inputRowCtr
+                        , colCtr
+                     );
+            myExcelCellStringValueList.Add(myExcelCellStringValue);
+
+            // 2 DOB
+            colCtr++;
+            myExcelCellStringValue =
+                new CollectionsExcelCellStringValue
+                    (
+                        inputWorksheet
+                        , MyConfigOptions
+                        , "DOB"
+                        , inputRowCtr
+                        , colCtr
+                     );
+            myExcelCellStringValueList.Add(myExcelCellStringValue);
+
+            // 3 SSN
+            colCtr++;
+            myExcelCellStringValue =
+                new CollectionsExcelCellStringValue
+                    (
+                        inputWorksheet
+                        , MyConfigOptions
+                        , "SSN"
+                        , inputRowCtr
+                        , colCtr
+                     );
+            myExcelCellStringValueList.Add(myExcelCellStringValue);
+
+            // 4 DOS
+            colCtr++;
+            myExcelCellStringValue =
+                new CollectionsExcelCellStringValue
+                    (
+                        inputWorksheet
+                        , MyConfigOptions
+                        , "DOS"
+                        , inputRowCtr
+                        , colCtr
+                     );
+            myExcelCellStringValueList.Add(myExcelCellStringValue);
+
+            StringBuilder outputCsvStringBuilder = new StringBuilder();
+            foreach (CollectionsExcelCellStringValue loopCellValue in myExcelCellStringValueList)
+            {
+                GetCollectionsExcelCellStringValueOutput
+                    myCellOutput =
+                        loopCellValue.GetExcelCellStringValue();
+                
+                if (myCellOutput.OutputStringValue.CompareTo("BlankLine") == 0)
+                {
+                    returnOutput.OutputCsvString = "BlankLine";
+                    return returnOutput;
+                }
+                else if (myCellOutput.OutputStringValue.CompareTo("OmitLine") == 0)
+                {
+                    returnOutput.OutputCsvString = "OmitLine";
+                    return returnOutput;
+                }
+
+                if (outputCsvStringBuilder.Length > 0)
+                {
+                    outputCsvStringBuilder.Append(",");
+                }
+
+                outputCsvStringBuilder.Append(myCellOutput.OutputStringValue);
+            }
+            string stringOperationallyEmpty = 
+                outputCsvStringBuilder.ToString().Replace(",", "").Replace("01/01/1900", "").Trim();
+            if (stringOperationallyEmpty.Length > 0)
+            {
+                returnOutput.OutputCsvString = 
+                    outputCsvStringBuilder.ToString();
+            }
+            else 
+            {
+                int i = 0;
+                i++;
+            }
+
+            return returnOutput;
+        }
+
+
+        public di_FinalizeCollectionsComparisonOutput
+                    FinalizeDailyFileCollectionsComparisonRaw
+                    (
+                        string inputProcessorTennCareLogOnId
+                    )
+        {
+            di_FinalizeCollectionsComparisonOutput 
+                returnOutput =
+                    new di_FinalizeCollectionsComparisonOutput();
+            
+            CallWebApiLandClass
+
+            myCallWebApiLandClass =
+                    new CallWebApiLandClass(this.MyConfigOptions.BaseWebApiUrl);
+
+            returnOutput =
+                myCallWebApiLandClass.di_FinalizeCollectionsComparison();
+            if (!returnOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    returnOutput.ErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+        public BulkInsertOutput BulkInsertCollections(string inputFilename, List<string> inputCsvLineList)
+        {
+            BulkInsertOutput returnOutput =
+                new BulkInsertOutput();
+
+            // Make sure the Pk column is in the non-CSV column list.
+            List<NonCsvFileColumnDefAndValue> 
+                myNonCsvFileColumnDefAndValueList = 
+                    new List<NonCsvFileColumnDefAndValue>();
+
+            // 998 [FileName] [varchar](300) NULL
+            spGetColumnDefsForGivenDbAndTableName_OutputColumns myPkColDef =
+                new spGetColumnDefsForGivenDbAndTableName_OutputColumns
+                {
+                    MyDbColumnName = "FileName",
+                    MyDbColumnLength = 300,
+                    MyDbColumnType = "varchar",
+                    MyDbName = "Staging",
+                    MyDbTableName = "tc.CollectionsComparison",
+                    MyFilePosition = 998
+                };
+            NonCsvFileColumnDefAndValue myPkNonCsvFileColumnDefAndValue =
+                new NonCsvFileColumnDefAndValue
+                {
+                    MyColDef = myPkColDef,
+                    MyValueString = inputFilename
+                };
+            myNonCsvFileColumnDefAndValueList.Add(myPkNonCsvFileColumnDefAndValue);
+
+            // 999 [DateImported] [datetime] NULL
+            myPkColDef =
+                new spGetColumnDefsForGivenDbAndTableName_OutputColumns
+                {
+                    MyDbColumnName = "DateImported",
+                    MyDbColumnLength = 50,
+                    MyDbColumnType = "datetime",
+                    MyDbName = "Staging",
+                    MyDbTableName = "tc.CollectionsComparison",
+                    MyFilePosition = 999
+                };
+            DateTime currentTimestamp = DateTime.Now;
+            myPkNonCsvFileColumnDefAndValue =
+                new NonCsvFileColumnDefAndValue
+                {
+                    MyColDef = myPkColDef,
+                    MyValueString = currentTimestamp.ToString("yyyy-MM-dd hh:mm:ss.ffffff")
+                };
+            myNonCsvFileColumnDefAndValueList.Add(myPkNonCsvFileColumnDefAndValue);
+
+            // 1000 - [AllEmployeesRawID] [int] NOT NULL
+            myPkColDef =
+                new spGetColumnDefsForGivenDbAndTableName_OutputColumns
+                {
+                    MyDbColumnName = "CollectionsComparisonID",
+                    MyDbColumnLength = 1,
+                    MyDbColumnType = "int",
+                    MyDbName = "Staging",
+                    MyDbTableName = "tc.CollectionsComparison",
+                    MyFilePosition = 1000
+                };
+            myPkNonCsvFileColumnDefAndValue =
+                new NonCsvFileColumnDefAndValue
+                {
+                    MyColDef = myPkColDef,
+                    MyValueString = "0"
+                };
+            myNonCsvFileColumnDefAndValueList.Add(myPkNonCsvFileColumnDefAndValue);
+
+            // Call Web API Endpoint to perform the Bulk Insert of Tcareb_Patient_Appt_Raw
+            CallBulkInsertWebApiLand
+                myCallBulkInsert =
+                new CallBulkInsertWebApiLand
+                (
+                    MyConfigOptions.BulkInsertConnectionString //string inputDbConnectionString
+                   , MyConfigOptions.BulkInsertDbName // string inputDbName
+                   , MyConfigOptions.CollectionsBulkInsertDbTableName // string inputDbTableName
+                   , inputCsvLineList // List<string> inputCsvLineList
+                   , myNonCsvFileColumnDefAndValueList // List<NonCsvFileColumnDefAndValue> inputNonCsvFileColumnDefAndValueList
+                   , MyConfigOptions.BulkInsertBaseWebApiUrl // string inputBulkInsertWebApiBaseUrl
+                );
+
+            BulkInsertOutput myBulkInsertOutput =
+                myCallBulkInsert.CallIt();
+
+            if (!myBulkInsertOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage = myBulkInsertOutput.ErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public 
+            ExtractExcelDataFromDunningFileOutput
+              ExtractExcelDataFromDunningFile
+                (
+                    string inputFullFilename
+                )
+        {
+            ExtractExcelDataFromDunningFileOutput
+                returnOutput =
+                    new ExtractExcelDataFromDunningFileOutput();
+
+            log.Info("B4 init of Workbook}");
+
+            // Load workbook
+            Workbook workbook = new Workbook();
+
+            log.Info($"B4 Load of workbook {inputFullFilename}");
+
+            workbook.LoadFromFile(inputFullFilename);
+
+            log.Info("b4 Load of worksheet");
+
+            // Get first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            log.Info("after Load of worksheet");
+
+            returnOutput.MyCsvLineList = new List<string>();
+
+            ExtractDataFromDunningExcelRowOutput 
+                myExtractDataFromDunningExcelRowOutput = 
+                    new ExtractDataFromDunningExcelRowOutput();
+            int rowCtr = 0;
+            rowCtr = MyConfigOptions.DunningLineWhereDataStarts;
+            while (true)
+            {
+                if (rowCtr >= 1611)
+                {
+                    int i = 0;
+                    i++;
+                }
+                myExtractDataFromDunningExcelRowOutput = 
+                    new ExtractDataFromDunningExcelRowOutput();
+                myExtractDataFromDunningExcelRowOutput =
+                    ExtractDataFromDunningExcelRow
+                    (
+                        sheet
+                        , rowCtr
+                    );
+                if (myExtractDataFromDunningExcelRowOutput.OutputCsvString.CompareTo("BlankLine") == 0)
+                {
+                    return returnOutput;
+                }
+                if (myExtractDataFromDunningExcelRowOutput.OutputCsvString.CompareTo("OmitLine") != 0)
+                {
+                    returnOutput.MyCsvLineList.Add(myExtractDataFromDunningExcelRowOutput.OutputCsvString);
+                } 
+                rowCtr++;
+            }
+        }
+        public dd_DunningComparisonOutput TruncateDunningRaw()
+        {
+            dd_DunningComparisonOutput returnOutput =
+                new dd_DunningComparisonOutput();
+            CallWebApiLandClass myCallWebApiLandClass =
+                new CallWebApiLandClass(this.MyConfigOptions.BaseWebApiUrl);
+            returnOutput =
+                myCallWebApiLandClass
+                .dd_DunningComparison();
+            if (!returnOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    returnOutput.ErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+        public 
+            ExtractDataFromDunningExcelRowOutput 
+                ExtractDataFromDunningExcelRow(Worksheet inputWorksheet, int inputRowCtr)
+        {
+            ExtractDataFromDunningExcelRowOutput returnOutput = new ExtractDataFromDunningExcelRowOutput();
+
+            List<DunningExcelCellStringValue> myExcelCellStringValueList =
+                new List<DunningExcelCellStringValue>();
+
+            int colCtr = 0;
+
+            DunningExcelCellStringValue myExcelCellStringValue = null;
+
+            /*,[FileName] [varchar](300) NULL
+	,[PatientID] [int] NULL
+	,[DOB] [datetime] NOT NULL
+	,[SSN] [varchar](10) NOT NULL
+	,[DOS] [datetime] NOT NULL
+	,[DateImported] [datetime] NULL
+             */
+
+            // 1 PatientID
+            colCtr++;
+            myExcelCellStringValue =
+                new DunningExcelCellStringValue
+                    (
+                        inputWorksheet
+                        , MyConfigOptions
+                        , "PatientID"
+                        , inputRowCtr
+                        , colCtr
+                     );
+            myExcelCellStringValueList.Add(myExcelCellStringValue);
+
+            // 2 DOB
+            colCtr++;
+            myExcelCellStringValue =
+                new DunningExcelCellStringValue
+                    (
+                        inputWorksheet
+                        , MyConfigOptions
+                        , "DOB"
+                        , inputRowCtr
+                        , colCtr
+                     );
+            myExcelCellStringValueList.Add(myExcelCellStringValue);
+
+            // 3 SSN
+            colCtr++;
+            myExcelCellStringValue =
+                new DunningExcelCellStringValue
+                    (
+                        inputWorksheet
+                        , MyConfigOptions
+                        , "SSN"
+                        , inputRowCtr
+                        , colCtr
+                     );
+            myExcelCellStringValueList.Add(myExcelCellStringValue);
+
+            // 4 DOS
+            colCtr++;
+            myExcelCellStringValue =
+                new DunningExcelCellStringValue
+                    (
+                        inputWorksheet
+                        , MyConfigOptions
+                        , "DOS"
+                        , inputRowCtr
+                        , colCtr
+                     );
+            myExcelCellStringValueList.Add(myExcelCellStringValue);
+
+            StringBuilder outputCsvStringBuilder = new StringBuilder();
+            foreach (DunningExcelCellStringValue loopCellValue in myExcelCellStringValueList)
+            {
+                GetDunningExcelCellStringValueOutput
+                    myCellOutput =
+                        loopCellValue.GetExcelCellStringValue();
+                
+                if (myCellOutput.OutputStringValue.CompareTo("BlankLine") == 0)
+                {
+                    returnOutput.OutputCsvString = "BlankLine";
+                    return returnOutput;
+                }
+                else if (myCellOutput.OutputStringValue.CompareTo("OmitLine") == 0)
+                {
+                    returnOutput.OutputCsvString = "OmitLine";
+                    return returnOutput;
+                }
+
+                if (outputCsvStringBuilder.Length > 0)
+                {
+                    outputCsvStringBuilder.Append(",");
+                }
+
+                outputCsvStringBuilder.Append(myCellOutput.OutputStringValue);
+            }
+            string stringOperationallyEmpty = 
+                outputCsvStringBuilder.ToString().Replace(",", "").Replace("01/01/1900", "").Trim();
+            if (stringOperationallyEmpty.Length > 0)
+            {
+                returnOutput.OutputCsvString = 
+                    outputCsvStringBuilder.ToString();
+            }
+            else 
+            {
+                int i = 0;
+                i++;
+            }
+
+            return returnOutput;
+        }
+
+
+        public di_FinalizeDunningComparisonOutput
+                    FinalizeDailyFileDunningComparisonRaw
+                    (
+                        string inputProcessorTennCareLogOnId
+                    )
+        {
+            di_FinalizeDunningComparisonOutput 
+                returnOutput =
+                    new di_FinalizeDunningComparisonOutput();
+            
+            CallWebApiLandClass
+
+            myCallWebApiLandClass =
+                    new CallWebApiLandClass(this.MyConfigOptions.BaseWebApiUrl);
+
+            returnOutput =
+                myCallWebApiLandClass.di_FinalizeDunningComparison();
+            if (!returnOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    returnOutput.ErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+        public BulkInsertOutput BulkInsertDunning(string inputFilename, List<string> inputCsvLineList)
+        {
+            BulkInsertOutput returnOutput =
+                new BulkInsertOutput();
+
+            // Make sure the Pk column is in the non-CSV column list.
+            List<NonCsvFileColumnDefAndValue> 
+                myNonCsvFileColumnDefAndValueList = 
+                    new List<NonCsvFileColumnDefAndValue>();
+
+            // 998 [FileName] [varchar](300) NULL
+            spGetColumnDefsForGivenDbAndTableName_OutputColumns myPkColDef =
+                new spGetColumnDefsForGivenDbAndTableName_OutputColumns
+                {
+                    MyDbColumnName = "FileName",
+                    MyDbColumnLength = 300,
+                    MyDbColumnType = "varchar",
+                    MyDbName = "Staging",
+                    MyDbTableName = "tc.DunningComparison",
+                    MyFilePosition = 998
+                };
+            NonCsvFileColumnDefAndValue myPkNonCsvFileColumnDefAndValue =
+                new NonCsvFileColumnDefAndValue
+                {
+                    MyColDef = myPkColDef,
+                    MyValueString = inputFilename
+                };
+            myNonCsvFileColumnDefAndValueList.Add(myPkNonCsvFileColumnDefAndValue);
+
+            // 999 [DateImported] [datetime] NULL
+            myPkColDef =
+                new spGetColumnDefsForGivenDbAndTableName_OutputColumns
+                {
+                    MyDbColumnName = "DateImported",
+                    MyDbColumnLength = 50,
+                    MyDbColumnType = "datetime",
+                    MyDbName = "Staging",
+                    MyDbTableName = "tc.DunningComparison",
+                    MyFilePosition = 999
+                };
+            DateTime currentTimestamp = DateTime.Now;
+            myPkNonCsvFileColumnDefAndValue =
+                new NonCsvFileColumnDefAndValue
+                {
+                    MyColDef = myPkColDef,
+                    MyValueString = currentTimestamp.ToString("yyyy-MM-dd hh:mm:ss.ffffff")
+                };
+            myNonCsvFileColumnDefAndValueList.Add(myPkNonCsvFileColumnDefAndValue);
+
+            // 1000 - [AllEmployeesRawID] [int] NOT NULL
+            myPkColDef =
+                new spGetColumnDefsForGivenDbAndTableName_OutputColumns
+                {
+                    MyDbColumnName = "DunningComparisonID",
+                    MyDbColumnLength = 1,
+                    MyDbColumnType = "int",
+                    MyDbName = "Staging",
+                    MyDbTableName = "tc.DunningComparison",
+                    MyFilePosition = 1000
+                };
+            myPkNonCsvFileColumnDefAndValue =
+                new NonCsvFileColumnDefAndValue
+                {
+                    MyColDef = myPkColDef,
+                    MyValueString = "0"
+                };
+            myNonCsvFileColumnDefAndValueList.Add(myPkNonCsvFileColumnDefAndValue);
+
+            // Call Web API Endpoint to perform the Bulk Insert of Tcareb_Patient_Appt_Raw
+            CallBulkInsertWebApiLand
+                myCallBulkInsert =
+                new CallBulkInsertWebApiLand
+                (
+                    MyConfigOptions.BulkInsertConnectionString //string inputDbConnectionString
+                   , MyConfigOptions.BulkInsertDbName // string inputDbName
+                   , MyConfigOptions.DunningBulkInsertDbTableName // string inputDbTableName
+                   , inputCsvLineList // List<string> inputCsvLineList
+                   , myNonCsvFileColumnDefAndValueList // List<NonCsvFileColumnDefAndValue> inputNonCsvFileColumnDefAndValueList
+                   , MyConfigOptions.BulkInsertBaseWebApiUrl // string inputBulkInsertWebApiBaseUrl
+                );
+
+            BulkInsertOutput myBulkInsertOutput =
+                myCallBulkInsert.CallIt();
+
+            if (!myBulkInsertOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage = myBulkInsertOutput.ErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public
+        ExtractExcelDataFromMonthlyFileOutput
+            ExtractExcelDataFromMonthlyFile
+            (
+                string inputFullFilename
+            )
+        {
+            ExtractExcelDataFromMonthlyFileOutput
+                returnOutput =
+                    new ExtractExcelDataFromMonthlyFileOutput();
+
+            log.Info("B4 init of Workbook}");
+
+            // Load workbook
+            Workbook workbook = new Workbook();
+
+            log.Info($"B4 Load of workbook {inputFullFilename}");
+
+            workbook.LoadFromFile(inputFullFilename);
+
+            log.Info("b4 Load of worksheet");
+
+            // Get first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            log.Info("after Load of worksheet");
+
+            returnOutput.MyCsvLineList = new List<string>();
+
+            ExtractDataFromMonthlyExcelRowOutput
+                myExtractDataFromMonthlyExcelRowOutput =
+                    new ExtractDataFromMonthlyExcelRowOutput();
+            int rowCtr = 0;
+            rowCtr = MyConfigOptions.MonthlyAgencyLineWhereDataStarts;
+            while (true)
+            {
+                if (rowCtr >= 1611)
+                {
+                    int i = 0;
+                    i++;
+                }
+                myExtractDataFromMonthlyExcelRowOutput =
+                    new ExtractDataFromMonthlyExcelRowOutput();
+                myExtractDataFromMonthlyExcelRowOutput =
+                    ExtractDataFromMonthlyExcelRow
+                    (
+                        sheet
+                        , rowCtr
+                    );
+                if (myExtractDataFromMonthlyExcelRowOutput.OutputCsvString.CompareTo("BlankLine") == 0)
+                {
+                    return returnOutput;
+                }
+                if (myExtractDataFromMonthlyExcelRowOutput.OutputCsvString.CompareTo("OmitLine") != 0)
+                {
+                    returnOutput.MyCsvLineList.Add(myExtractDataFromMonthlyExcelRowOutput.OutputCsvString);
+                }
+                rowCtr++;
+            }
+        }
+        public dd_MonthlyToLookUpOutput TruncateMonthlyRaw()
+        {
+            dd_MonthlyToLookUpOutput returnOutput =
+                new dd_MonthlyToLookUpOutput();
+            CallWebApiLandClass myCallWebApiLandClass =
+                new CallWebApiLandClass(this.MyConfigOptions.BaseWebApiUrl);
+            returnOutput =
+                myCallWebApiLandClass
+                .dd_MonthlyToLookUp();
+            if (!returnOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    returnOutput.ErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+        public
+            ExtractDataFromMonthlyExcelRowOutput
+                ExtractDataFromMonthlyExcelRow(Worksheet inputWorksheet, int inputRowCtr)
+        {
+            ExtractDataFromMonthlyExcelRowOutput returnOutput = new ExtractDataFromMonthlyExcelRowOutput();
+
+            List<MonthlyExcelCellStringValue> myExcelCellStringValueList =
+                new List<MonthlyExcelCellStringValue>();
+
+            int colCtr = 0;
+
+            MonthlyExcelCellStringValue myExcelCellStringValue = null;
+
+            /*,[PatientID] [int] NULL
+	,[DOS] [datetime] NOT NULL
+	,[PatientName] [varchar](300) NULL
+	,[DOB] [datetime] NOT NULL
+	,[SSN] [varchar](10) NOT NULL
+             */
+
+            // 1 PatientID
+            colCtr++;
+            myExcelCellStringValue =
+                new MonthlyExcelCellStringValue
+                    (
+                        inputWorksheet
+                        , MyConfigOptions
+                        , "PatientID"
+                        , inputRowCtr
+                        , colCtr
+                     );
+            myExcelCellStringValueList.Add(myExcelCellStringValue);
+
+            // 2 DOS
+            colCtr++;
+            myExcelCellStringValue =
+                new MonthlyExcelCellStringValue
+                    (
+                        inputWorksheet
+                        , MyConfigOptions
+                        , "DOS"
+                        , inputRowCtr
+                        , colCtr
+                     );
+            myExcelCellStringValueList.Add(myExcelCellStringValue);
+
+            // 3 PatientName
+            colCtr++;
+            myExcelCellStringValue =
+                new MonthlyExcelCellStringValue
+                    (
+                        inputWorksheet
+                        , MyConfigOptions
+                        , "PatientName"
+                        , inputRowCtr
+                        , colCtr
+                     );
+            myExcelCellStringValueList.Add(myExcelCellStringValue);
+
+            // 4 DOB
+            colCtr++;
+            myExcelCellStringValue =
+                new MonthlyExcelCellStringValue
+                    (
+                        inputWorksheet
+                        , MyConfigOptions
+                        , "DOB"
+                        , inputRowCtr
+                        , colCtr
+                     );
+            myExcelCellStringValueList.Add(myExcelCellStringValue);
+
+            // 5 SSN
+            colCtr++;
+            myExcelCellStringValue =
+                new MonthlyExcelCellStringValue
+                    (
+                        inputWorksheet
+                        , MyConfigOptions
+                        , "SSN"
+                        , inputRowCtr
+                        , colCtr
+                     );
+            myExcelCellStringValueList.Add(myExcelCellStringValue);
+
+            StringBuilder outputCsvStringBuilder = new StringBuilder();
+            foreach (MonthlyExcelCellStringValue loopCellValue in myExcelCellStringValueList)
+            {
+                GetMonthlyExcelCellStringValueOutput
+                    myCellOutput =
+                        loopCellValue.GetExcelCellStringValue();
+
+                if (myCellOutput.OutputStringValue.CompareTo("BlankLine") == 0)
+                {
+                    returnOutput.OutputCsvString = "BlankLine";
+                    return returnOutput;
+                }
+                else if (myCellOutput.OutputStringValue.CompareTo("OmitLine") == 0)
+                {
+                    returnOutput.OutputCsvString = "OmitLine";
+                    return returnOutput;
+                }
+
+                if (outputCsvStringBuilder.Length > 0)
+                {
+                    outputCsvStringBuilder.Append(",");
+                }
+
+                outputCsvStringBuilder.Append(myCellOutput.OutputStringValue);
+            }
+            string stringOperationallyEmpty =
+                outputCsvStringBuilder.ToString().Replace(",", "").Replace("01/01/1900", "").Trim();
+            if (stringOperationallyEmpty.Length > 0)
+            {
+                returnOutput.OutputCsvString =
+                    outputCsvStringBuilder.ToString();
+            }
+            else
+            {
+                int i = 0;
+                i++;
+            }
+
+            return returnOutput;
+        }
+
+
+        public di_FinalizeMonthlyToLookUpOutput
+                    FinalizeMonthlyEntriesLookedUpTodayRaw
+                    (
+                        string inputProcessorTennCareLogOnId
+                    )
+        {
+            di_FinalizeMonthlyToLookUpOutput
+                returnOutput =
+                    new di_FinalizeMonthlyToLookUpOutput();
+
+            CallWebApiLandClass
+
+            myCallWebApiLandClass =
+                    new CallWebApiLandClass(this.MyConfigOptions.BaseWebApiUrl);
+
+            returnOutput =
+                myCallWebApiLandClass.di_FinalizeMonthlyToLookUp();
+            if (!returnOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage =
+                    returnOutput.ErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+        public BulkInsertOutput BulkInsertMonthly(string inputFilename, List<string> inputCsvLineList)
+        {
+            BulkInsertOutput returnOutput =
+                new BulkInsertOutput();
+
+            // Make sure the Pk column is in the non-CSV column list.
+            List<NonCsvFileColumnDefAndValue>
+                myNonCsvFileColumnDefAndValueList =
+                    new List<NonCsvFileColumnDefAndValue>();
+
+            // 997  [ImportFullFilename] [varchar] (1000) NOT NULL
+            spGetColumnDefsForGivenDbAndTableName_OutputColumns myPkColDef =
+                new spGetColumnDefsForGivenDbAndTableName_OutputColumns
+                {
+                    MyDbColumnName = "ImportFullFilename",
+                    MyDbColumnLength = 1000,
+                    MyDbColumnType = "varchar",
+                    MyDbName = "Staging",
+                    MyDbTableName = "tc.MonthlyToLookUp",
+                    MyFilePosition = 997
+                };
+            NonCsvFileColumnDefAndValue myPkNonCsvFileColumnDefAndValue =
+                new NonCsvFileColumnDefAndValue
+                {
+                    MyColDef = myPkColDef,
+                    MyValueString = inputFilename
+                };
+            myNonCsvFileColumnDefAndValueList.Add(myPkNonCsvFileColumnDefAndValue);
+
+
+            // 998 [DateImported] [datetime] NULL
+             myPkColDef =
+                new spGetColumnDefsForGivenDbAndTableName_OutputColumns
+                {
+                    MyDbColumnName = "DateImported",
+                    MyDbColumnLength = 50,
+                    MyDbColumnType = "datetime",
+                    MyDbName = "Staging",
+                    MyDbTableName = "tc.MonthlyToLookUp",
+                    MyFilePosition = 998
+                };
+            myPkNonCsvFileColumnDefAndValue =
+                new NonCsvFileColumnDefAndValue
+                {
+                    MyColDef = myPkColDef,
+                    MyValueString = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ffffff")
+                };
+            myNonCsvFileColumnDefAndValueList.Add(myPkNonCsvFileColumnDefAndValue);
+
+            // 999  [LookedUp] [bit]
+            myPkColDef =
+               new spGetColumnDefsForGivenDbAndTableName_OutputColumns
+               {
+                   MyDbColumnName = "LookedUp",
+                   MyDbColumnLength = 1,
+                   MyDbColumnType = "bit",
+                   MyDbName = "Staging",
+                   MyDbTableName = "tc.MonthlyToLookUp",
+                   MyFilePosition = 999
+               };
+            myPkNonCsvFileColumnDefAndValue =
+                new NonCsvFileColumnDefAndValue
+                {
+                    MyColDef = myPkColDef,
+                    MyValueString = "0"
+                };
+            myNonCsvFileColumnDefAndValueList.Add(myPkNonCsvFileColumnDefAndValue);
+
+
+            // 1000 - [MonthlyEntriesLookedUpTodayRawID] [int] NOT NULL
+            myPkColDef =
+                new spGetColumnDefsForGivenDbAndTableName_OutputColumns
+                {
+                    MyDbColumnName = "MonthlyToLookUpID",
+                    MyDbColumnLength = 1,
+                    MyDbColumnType = "int",
+                    MyDbName = "Staging",
+                    MyDbTableName = "tc.MonthlyToLookUp",
+                    MyFilePosition = 1000
+                };
+            myPkNonCsvFileColumnDefAndValue =
+                new NonCsvFileColumnDefAndValue
+                {
+                    MyColDef = myPkColDef,
+                    MyValueString = "0"
+                };
+            myNonCsvFileColumnDefAndValueList.Add(myPkNonCsvFileColumnDefAndValue);
+
+            // Call Web API Endpoint to perform the Bulk Insert of Tcareb_Patient_Appt_Raw
+            CallBulkInsertWebApiLand
+                myCallBulkInsert =
+                new CallBulkInsertWebApiLand
+                (
+                    MyConfigOptions.BulkInsertConnectionString //string inputDbConnectionString
+                   , MyConfigOptions.BulkInsertDbName // string inputDbName
+                   , MyConfigOptions.MonthlyBulkInsertDbTableName // string inputDbTableName
+                   , inputCsvLineList // List<string> inputCsvLineList
+                   , myNonCsvFileColumnDefAndValueList // List<NonCsvFileColumnDefAndValue> inputNonCsvFileColumnDefAndValueList
+                   , MyConfigOptions.BulkInsertBaseWebApiUrl // string inputBulkInsertWebApiBaseUrl
+                );
+
+            BulkInsertOutput myBulkInsertOutput =
+                myCallBulkInsert.CallIt();
+
+            if (!myBulkInsertOutput.IsOk)
+            {
+                returnOutput.IsOk = false;
+                returnOutput.ErrorMessage = myBulkInsertOutput.ErrorMessage;
+                return returnOutput;
+            }
+            return returnOutput;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+}

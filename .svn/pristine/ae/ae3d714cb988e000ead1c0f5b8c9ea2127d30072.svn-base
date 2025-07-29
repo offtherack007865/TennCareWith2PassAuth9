@@ -1,0 +1,1248 @@
+﻿using log4net;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Newtonsoft.Json;
+using TennCareWith2PassAuth9.Data;
+using TennCareWith2PassAuth9.Data.Models;
+
+namespace TennCareWith2PassAuth9.CallWebApiLand
+{
+    public class CallWebApiLandClass
+    {
+        private static readonly ILog log = LogManager.GetLogger(typeof(CallWebApiLandClass));
+
+        public CallWebApiLandClass
+        (
+            string inputBaseWebApiUrl
+        )
+        {
+            MyBaseWebApiUrl = inputBaseWebApiUrl;
+        }
+        public string MyBaseWebApiUrl { get; set; }
+
+
+        // GET /api/Ops/du_MarkCollectionsToLookUpAsLookedUp?inputCollectionsEntriesLookedUpTodayID=1
+        public du_MarkCollectionsToLookUpAsLookedUpOutput
+                    du_MarkCollectionsToLookUpAsLookedUp
+                    (
+                        int inputCollectionsEntriesLookedUpTodayID
+                    )
+        {
+            du_MarkCollectionsToLookUpAsLookedUpOutput
+                returnOutput =
+                    du_MarkCollectionsToLookUpAsLookedUpAsync(inputCollectionsEntriesLookedUpTodayID)
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<du_MarkCollectionsToLookUpAsLookedUpOutput>
+                        du_MarkCollectionsToLookUpAsLookedUpAsync
+                        (
+                            int inputCollectionsEntriesLookedUpTodayID
+                        )
+        {
+            du_MarkCollectionsToLookUpAsLookedUpOutput
+                returnOutput =
+                    new du_MarkCollectionsToLookUpAsLookedUpOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/du_MarkCollectionsToLookUpAsLookedUp?inputCollectionsEntriesLookedUpTodayID={inputCollectionsEntriesLookedUpTodayID}";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<du_MarkCollectionsToLookUpAsLookedUpOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+
+
+
+
+
+
+        // GET /api/Ops/du_MarkDunningToLookUpAsLookedUp?inputDunningEntriesLookedUpTodayID=1
+        public du_MarkDunningToLookUpAsLookedUpOutput
+                    du_MarkDunningToLookUpAsLookedUp
+                    (
+                        int inputDunningEntriesLookedUpTodayID
+                    )
+        {
+            du_MarkDunningToLookUpAsLookedUpOutput
+                returnOutput =
+                    du_MarkDunningToLookUpAsLookedUpAsync(inputDunningEntriesLookedUpTodayID)
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<du_MarkDunningToLookUpAsLookedUpOutput>
+                        du_MarkDunningToLookUpAsLookedUpAsync
+                        (
+                            int inputDunningEntriesLookedUpTodayID
+                        )
+        {
+            du_MarkDunningToLookUpAsLookedUpOutput
+                returnOutput =
+                    new du_MarkDunningToLookUpAsLookedUpOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/du_MarkDunningToLookUpAsLookedUp?inputDunningEntriesLookedUpTodayID={inputDunningEntriesLookedUpTodayID}";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<du_MarkDunningToLookUpAsLookedUpOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+        // GET /api/Ops/du_MarkMonthlyToLookUpAsLookedUp?inputMonthlyEntriesLookedUpTodayID=1
+        public du_MarkMonthlyToLookUpAsLookedUpOutput
+                    du_MarkMonthlyToLookUpAsLookedUp
+                    (
+                        int inputMonthlyEntriesLookedUpTodayID
+                    )
+        {
+            du_MarkMonthlyToLookUpAsLookedUpOutput
+                returnOutput =
+                    du_MarkMonthlyToLookUpAsLookedUpAsync(inputMonthlyEntriesLookedUpTodayID)
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<du_MarkMonthlyToLookUpAsLookedUpOutput>
+                        du_MarkMonthlyToLookUpAsLookedUpAsync
+                        (
+                            int inputMonthlyEntriesLookedUpTodayID
+                        )
+        {
+            log.Info($"In du_MarkMonthlyToLookUpAsLookedUpAsync");
+            du_MarkMonthlyToLookUpAsLookedUpOutput
+                returnOutput =
+                    new du_MarkMonthlyToLookUpAsLookedUpOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/du_MarkMonthlyToLookUpAsLookedUp?inputMonthlyEntriesLookedUpTodayID={inputMonthlyEntriesLookedUpTodayID}";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<du_MarkMonthlyToLookUpAsLookedUpOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+
+
+
+
+        // GET /api/Ops/dd_MonthlyToLookUp
+        public dd_MonthlyToLookUpOutput
+                    dd_MonthlyToLookUp()
+        {
+            dd_MonthlyToLookUpOutput
+                returnOutput =
+                    dd_MonthlyToLookUpAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<dd_MonthlyToLookUpOutput>
+                        dd_MonthlyToLookUpAsync()
+        {
+            log.Info($"In dd_MonthlyToLookUpAsync");
+            dd_MonthlyToLookUpOutput
+                returnOutput =
+                    new dd_MonthlyToLookUpOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/dd_MonthlyToLookUp";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<dd_MonthlyToLookUpOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+        // GET /api/Ops/di_FinalizeMonthlyToLookUp
+        public di_FinalizeMonthlyToLookUpOutput
+                    di_FinalizeMonthlyToLookUp()
+        {
+            di_FinalizeMonthlyToLookUpOutput
+                returnOutput =
+                    di_FinalizeMonthlyToLookUpAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<di_FinalizeMonthlyToLookUpOutput>
+                        di_FinalizeMonthlyToLookUpAsync()
+        {
+            log.Info($"In di_FinalizeMonthlyToLookUpAsync");
+            di_FinalizeMonthlyToLookUpOutput
+                returnOutput =
+                    new di_FinalizeMonthlyToLookUpOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/di_FinalizeMonthlyToLookUp";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<di_FinalizeMonthlyToLookUpOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+
+        // GET /api/Ops/qy_GetImportAllEmployeesConfig
+        public qy_GetTennCareWith2PassAuthConfigOutput
+                    qy_GetTennCareWith2PassAuthConfig
+                    (
+                        string inputApplicationName
+                        , string inputType
+                        , string inputProcessName
+                        , string inputNameFilter
+                        , string inputUser
+                    )
+        {
+            qy_GetTennCareWith2PassAuthConfigOutput
+                returnOutput =
+                    qy_GetTennCareWith2PassAuthConfigAsync
+                    (
+                        inputApplicationName
+                        , inputType
+                        , inputProcessName
+                        , inputNameFilter
+                        , inputUser
+                    ).Result;
+
+            return returnOutput;
+        }
+
+        public async Task<qy_GetTennCareWith2PassAuthConfigOutput>
+                        qy_GetTennCareWith2PassAuthConfigAsync
+                        (
+                            string inputApplicationName
+                            , string inputType
+                            , string inputProcessName
+                            , string inputNameFilter
+                            , string inputUser
+                        )
+        {
+            log.Info($"In qy_GetTennCareWith2PassAuthConfigAsync");
+            qy_GetTennCareWith2PassAuthConfigOutput
+                returnOutput =
+                    new qy_GetTennCareWith2PassAuthConfigOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/qy_GetTennCareWith2PassAuthConfig?inputApplicationName={inputApplicationName}&inputType={inputType}&inputProcessName={inputProcessName}&inputNameFilter={inputNameFilter}&inputUser={inputUser}";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<qy_GetTennCareWith2PassAuthConfigOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+        // GET /api/Ops/dd_TruncateDailyFileCollectionsComparisonRaw
+        public dd_TruncateDailyFileCollectionsComparisonRawOutput
+            dd_TruncateDailyFileCollectionsComparisonRaw()
+        {
+            dd_TruncateDailyFileCollectionsComparisonRawOutput
+                returnOutput =
+                    dd_TruncateDailyFileCollectionsComparisonRawAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<dd_TruncateDailyFileCollectionsComparisonRawOutput>
+                        dd_TruncateDailyFileCollectionsComparisonRawAsync()
+        {
+            log.Info($"In dd_TruncateDailyFileCollectionsComparisonRawAsync");
+            dd_TruncateDailyFileCollectionsComparisonRawOutput
+                returnOutput =
+                    new dd_TruncateDailyFileCollectionsComparisonRawOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/dd_TruncateDailyFileCollectionsComparisonRaw";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<dd_TruncateDailyFileCollectionsComparisonRawOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+        // GET /api/Ops/di_FinalizeCollectionsComparison
+        public di_FinalizeCollectionsComparisonOutput
+            di_FinalizeCollectionsComparison()
+        {
+            di_FinalizeCollectionsComparisonOutput
+                returnOutput =
+                    di_FinalizeCollectionsComparisonAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<di_FinalizeCollectionsComparisonOutput>
+                        di_FinalizeCollectionsComparisonAsync()
+        {
+            log.Info($"In di_FinalizeCollectionsComparisonAsync");
+            di_FinalizeCollectionsComparisonOutput
+                returnOutput =
+                    new di_FinalizeCollectionsComparisonOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/di_FinalizeCollectionsComparison";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<di_FinalizeCollectionsComparisonOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+        // GET /api/Ops/dd_DunningComparison
+        public dd_DunningComparisonOutput
+            dd_DunningComparison()
+        {
+            dd_DunningComparisonOutput
+                returnOutput =
+                    dd_DunningComparisonAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<dd_DunningComparisonOutput>
+                        dd_DunningComparisonAsync()
+        {
+            log.Info($"In dd_DunningComparisonAsync");
+            dd_DunningComparisonOutput
+                returnOutput =
+                    new dd_DunningComparisonOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/dd_DunningComparison";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<dd_DunningComparisonOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+        // GET /api/Ops/di_FinalizeDunningComparison
+        public di_FinalizeDunningComparisonOutput
+            di_FinalizeDunningComparison()
+        {
+            di_FinalizeDunningComparisonOutput
+                returnOutput =
+                    di_FinalizeDunningComparisonAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<di_FinalizeDunningComparisonOutput>
+                        di_FinalizeDunningComparisonAsync()
+        {
+            log.Info($"In di_FinalizeDunningComparisonAsync");
+            di_FinalizeDunningComparisonOutput
+                returnOutput =
+                    new di_FinalizeDunningComparisonOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/di_FinalizeDunningComparison";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<di_FinalizeDunningComparisonOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+
+        // GET /api/Ops/qy_GetCollectionsToLookUp
+        public qy_GetCollectionsToLookUpOutput
+            qy_GetCollectionsToLookUp()
+        {
+            qy_GetCollectionsToLookUpOutput
+                returnOutput =
+                    qy_GetCollectionsToLookUpAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<qy_GetCollectionsToLookUpOutput>
+                        qy_GetCollectionsToLookUpAsync()
+        {
+            log.Info($"In qy_GetCollectionsToLookUpAsync");
+            qy_GetCollectionsToLookUpOutput
+                returnOutput =
+                    new qy_GetCollectionsToLookUpOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/qy_GetCollectionsToLookUp";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<qy_GetCollectionsToLookUpOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+
+        // GET /api/Ops/qy_GetCollectionsEligibility
+        public qy_GetCollectionsEligibilityOutput
+            qy_GetCollectionsEligibility()
+        {
+            qy_GetCollectionsEligibilityOutput
+                returnOutput =
+                    qy_GetCollectionsEligibilityAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<qy_GetCollectionsEligibilityOutput>
+                        qy_GetCollectionsEligibilityAsync()
+        {
+            log.Info($"In qy_GetCollectionsEligibilityAsync");
+            qy_GetCollectionsEligibilityOutput
+                returnOutput =
+                    new qy_GetCollectionsEligibilityOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/qy_GetCollectionsEligibility";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<qy_GetCollectionsEligibilityOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+
+
+
+
+        // GET /api/Ops/qy_GetMonthlyToLookUp
+        public qy_GetMonthlyToLookUpOutput
+            qy_GetMonthlyToLookUp()
+        {
+            qy_GetMonthlyToLookUpOutput
+                returnOutput =
+                    qy_GetMonthlyToLookUpAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<qy_GetMonthlyToLookUpOutput>
+                        qy_GetMonthlyToLookUpAsync()
+        {
+            log.Info($"In qy_GetMonthlyToLookUpAsync");
+            qy_GetMonthlyToLookUpOutput
+                returnOutput =
+                    new qy_GetMonthlyToLookUpOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/qy_GetMonthlyToLookUp";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<qy_GetMonthlyToLookUpOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+
+        // GET /api/Ops/dd_CollectionsComparison
+        public dd_CollectionsComparisonOutput
+            dd_CollectionsComparison()
+        {
+            dd_CollectionsComparisonOutput
+                returnOutput =
+                    dd_CollectionsComparisonAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<dd_CollectionsComparisonOutput>
+                        dd_CollectionsComparisonAsync()
+        {
+            log.Info($"In dd_CollectionsComparisonAsync");
+            dd_CollectionsComparisonOutput
+                returnOutput =
+                    new dd_CollectionsComparisonOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/dd_CollectionsComparison";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<dd_CollectionsComparisonOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+
+
+
+
+
+
+
+
+        // GET /api/Ops/dd_DunningEligibility
+        public dd_DunningEligibilityOutput
+            dd_DunningEligibility()
+        {
+            dd_DunningEligibilityOutput
+                returnOutput =
+                    dd_DunningEligibilityAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<dd_DunningEligibilityOutput>
+                        dd_DunningEligibilityAsync()
+        {
+            log.Info($"In dd_DunningEligibilityAsync");
+            dd_DunningEligibilityOutput
+                returnOutput =
+                    new dd_DunningEligibilityOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/dd_DunningEligibility";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<dd_DunningEligibilityOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+
+
+
+        // GET /api/Ops/dd_MonthlyEligibility
+        public dd_MonthlyEligibilityOutput
+            dd_MonthlyEligibility()
+        {
+            dd_MonthlyEligibilityOutput
+                returnOutput =
+                    dd_MonthlyEligibilityAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<dd_MonthlyEligibilityOutput>
+                        dd_MonthlyEligibilityAsync()
+        {
+            log.Info($"In dd_MonthlyEligibilityAsync");
+            dd_MonthlyEligibilityOutput
+                returnOutput =
+                    new dd_MonthlyEligibilityOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/dd_MonthlyEligibility";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<dd_MonthlyEligibilityOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+        // GET /api/Ops/di_InsertCollectionsEligibility?inputImportFileName=C:\temp\importFile.xlsx&inputPatientIDString=777777&inputDOBInyyyyMMdd=19620913&inputSSN=444444444&inputDOSInyyyyMMdd=20250418&inputDateImportedInyyyyMMdd=20250418&inputMCO=myMCO&inputMedicare=MyMedicare&inputPCP=myPCP&inputStatus=myStatus&inputTennCareEligibility=myTennCareEligibility&inputOutputFileDateInyyyyMMdd=20250418&inputOutputFileName=MyFilename
+        public di_InsertCollectionsEligibilityOutput
+            di_InsertCollectionsEligibility
+            (
+                string inputImportFileName
+                , string inputPatientIDString
+                , string inputDOBInyyyyMMdd
+                , string inputSSN
+                , string inputDOSInyyyyMMdd
+                , string inputDateImportedInyyyyMMdd
+                , string inputMCO
+                , string inputMedicare
+                , string inputPCP
+                , string inputStatus
+                , string inputTennCareEligibility
+                , string inputOutputFileDateInyyyyMMdd
+                , string inputOutputFileName
+            )
+        {
+            di_InsertCollectionsEligibilityOutput
+                returnOutput =
+                    di_InsertCollectionsEligibilityAsync
+                    (
+                        inputImportFileName
+                        , inputPatientIDString
+                        , inputDOBInyyyyMMdd
+                        , inputSSN
+                        , inputDOSInyyyyMMdd
+                        , inputDateImportedInyyyyMMdd
+                        , inputMCO
+                        , inputMedicare
+                        , inputPCP
+                        , inputStatus
+                        , inputTennCareEligibility
+                        , inputOutputFileDateInyyyyMMdd
+                        , inputOutputFileName
+                    )
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<di_InsertCollectionsEligibilityOutput>
+                        di_InsertCollectionsEligibilityAsync
+                        (
+                            string inputImportFileName
+                            , string inputPatientIDString
+                            , string inputDOBInyyyyMMdd
+                            , string inputSSN
+                            , string inputDOSInyyyyMMdd
+                            , string inputDateImportedInyyyyMMdd
+                            , string inputMCO
+                            , string inputMedicare
+                            , string inputPCP
+                            , string inputStatus
+                            , string inputTennCareEligibility
+                            , string inputOutputFileDateInyyyyMMdd
+                            , string inputOutputFileName
+                        )
+        {
+            log.Info($"In di_InsertCollectionsEligibilityAsync");
+            di_InsertCollectionsEligibilityOutput
+                returnOutput =
+                    new di_InsertCollectionsEligibilityOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/di_InsertCollectionsEligibility?inputImportFileName={inputImportFileName}&inputPatientIDString={inputPatientIDString}&inputDOBInyyyyMMdd={inputDOBInyyyyMMdd}&inputSSN={inputSSN}&inputDOSInyyyyMMdd={inputDOSInyyyyMMdd}&inputDateImportedInyyyyMMdd={inputDateImportedInyyyyMMdd}&inputMCO={inputMCO}&inputMedicare={inputMedicare}&inputPCP={inputPCP}&inputStatus={inputStatus}&inputTennCareEligibility={inputTennCareEligibility}&inputOutputFileDateInyyyyMMdd={inputOutputFileDateInyyyyMMdd}&inputOutputFileName={inputOutputFileName}";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<di_InsertCollectionsEligibilityOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+        // GET /api/Ops/di_InsertDunningEligibility?inputImportFileName=C:\temp\importFile.xlsx&inputPatientIDString=777777&inputDOBInyyyyMMdd=19620913&inputSSN=444444444&inputDOSInyyyyMMdd=20250418&inputDateImportedInyyyyMMdd=20250418&inputMCO=myMCO&inputMedicare=MyMedicare&inputPCP=myPCP&inputStatus=myStatus&inputTennCareEligibility=myTennCareEligibility&inputOutputFileDateInyyyyMMdd=20250418&inputOutputFileName=MyFilename
+        public di_InsertDunningEligibilityOutput
+            di_InsertDunningEligibility
+            (
+                string inputImportFileName
+                , string inputPatientIDString
+                , string inputDOBInyyyyMMdd
+                , string inputSSN
+                , string inputDOSInyyyyMMdd
+                , string inputDateImportedInyyyyMMdd
+                , string inputMCO
+                , string inputMedicare
+                , string inputPCP
+                , string inputStatus
+                , string inputTennCareEligibility
+                , string inputOutputFileDateInyyyyMMdd
+                , string inputOutputFileName
+            )
+        {
+            di_InsertDunningEligibilityOutput
+                returnOutput =
+                    di_InsertDunningEligibilityAsync
+                    (
+                        inputImportFileName
+                        , inputPatientIDString
+                        , inputDOBInyyyyMMdd
+                        , inputSSN
+                        , inputDOSInyyyyMMdd
+                        , inputDateImportedInyyyyMMdd
+                        , inputMCO
+                        , inputMedicare
+                        , inputPCP
+                        , inputStatus
+                        , inputTennCareEligibility
+                        , inputOutputFileDateInyyyyMMdd
+                        , inputOutputFileName
+                    )
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<di_InsertDunningEligibilityOutput>
+                        di_InsertDunningEligibilityAsync
+                        (
+                            string inputImportFileName
+                            , string inputPatientIDString
+                            , string inputDOBInyyyyMMdd
+                            , string inputSSN
+                            , string inputDOSInyyyyMMdd
+                            , string inputDateImportedInyyyyMMdd
+                            , string inputMCO
+                            , string inputMedicare
+                            , string inputPCP
+                            , string inputStatus
+                            , string inputTennCareEligibility
+                            , string inputOutputFileDateInyyyyMMdd
+                            , string inputOutputFileName
+                        )
+        {
+            di_InsertDunningEligibilityOutput
+                returnOutput =
+                    new di_InsertDunningEligibilityOutput();
+           
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/di_InsertDunningEligibility?inputImportFileName={inputImportFileName}&inputPatientIDString={inputPatientIDString}&inputDOBInyyyyMMdd={inputDOBInyyyyMMdd}&inputSSN={inputSSN}&inputDOSInyyyyMMdd={inputDOSInyyyyMMdd}&inputDateImportedInyyyyMMdd={inputDateImportedInyyyyMMdd}&inputMCO={inputMCO}&inputMedicare={inputMedicare}&inputPCP={inputPCP}&inputStatus={inputStatus}&inputTennCareEligibility={inputTennCareEligibility}&inputOutputFileDateInyyyyMMdd={inputOutputFileDateInyyyyMMdd}&inputOutputFileName={inputOutputFileName}";
+            if (!myCompleteUrl.Contains("=&"))
+            {
+                try
+                {
+                    using (var client = new HttpClient())
+                    {
+                        client.Timeout = TimeSpan.FromHours(1);
+
+                        var result = await client.GetAsync(myCompleteUrl);
+                        var response = await result.Content.ReadAsStringAsync();
+                        returnOutput = JsonConvert.DeserializeObject<di_InsertDunningEligibilityOutput>(response);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    returnOutput.IsOk = false;
+                    string myErrorMessage = ex.Message;
+                    if (ex.InnerException != null)
+                    {
+                        myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                    }
+                    return returnOutput;
+                }
+            }
+
+            return returnOutput;
+        }
+
+
+
+        // GET /api/Ops/di_InsertMonthlyEligibility?inputPatientIDString=234254&inputDOSInyyyyMMdd=20250430&inputPatientName=MIckey&inputDOBInyyyyMMdd=19620913&inputSSN=444444444&inputImportFullFileName=C:\temp\importFile.xlsx&inputDateImportedInyyyyMMdd=20250430&inputMCO=MCO&inputMedicare=Medicare&inputPCP=PCP&inputStatus=Status&inputTennCareEligibility=Elig&inputOutputFileDateInyyyyMMdd=20250430&inputOutputFileName=Output.txt
+        public di_InsertMonthlyEligibilityOutput
+            di_InsertMonthlyEligibility
+            (
+                         string inputPatientIDString
+                        , string inputDOSInyyyyMMdd
+                        , string inputPatientName
+                        , string inputDOBInyyyyMMdd
+                        , string inputSSN
+                        , string inputImportFullFileName
+                        , string inputDateImportedInyyyyMMdd
+                        , string inputMCO
+                        , string inputMedicare
+                        , string inputPCP
+                        , string inputStatus
+                        , string inputTennCareEligibility
+                        , string inputOutputFileDateInyyyyMMdd
+                        , string inputOutputFileName
+            )
+        {
+            di_InsertMonthlyEligibilityOutput
+                returnOutput =
+                    di_InsertMonthlyEligibilityAsync
+                    (
+                         inputPatientIDString
+                        , inputDOSInyyyyMMdd
+                        , inputPatientName
+                        , inputDOBInyyyyMMdd
+                        , inputSSN
+                        , inputImportFullFileName
+                        , inputDateImportedInyyyyMMdd
+                        , inputMCO
+                        , inputMedicare
+                        , inputPCP
+                        , inputStatus
+                        , inputTennCareEligibility
+                        , inputOutputFileDateInyyyyMMdd
+                        , inputOutputFileName
+                    )
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<di_InsertMonthlyEligibilityOutput>
+                        di_InsertMonthlyEligibilityAsync
+                        (
+                            string inputPatientIDString
+                            , string inputDOSInyyyyMMdd
+                            , string inputPatientName
+                            , string inputDOBInyyyyMMdd
+                            , string inputSSN
+                            , string inputImportFullFileName
+                            , string inputDateImportedInyyyyMMdd
+                            , string inputMCO
+                            , string inputMedicare
+                            , string inputPCP
+                            , string inputStatus
+                            , string inputTennCareEligibility
+                            , string inputOutputFileDateInyyyyMMdd
+                            , string inputOutputFileName
+                        )
+        {
+            di_InsertMonthlyEligibilityOutput
+                returnOutput =
+                    new di_InsertMonthlyEligibilityOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/di_InsertMonthlyEligibility?inputPatientIDString={inputPatientIDString}&inputDOSInyyyyMMdd={inputDOSInyyyyMMdd}&inputPatientName={inputPatientName}&inputDOBInyyyyMMdd={inputDOBInyyyyMMdd}&inputSSN={inputSSN}&inputImportFullFileName={inputImportFullFileName}&inputDateImportedInyyyyMMdd={inputDateImportedInyyyyMMdd}&inputMCO={inputMCO}&inputMedicare={inputMedicare}&inputPCP={inputPCP}&inputStatus={inputStatus}&inputTennCareEligibility={inputTennCareEligibility}&inputOutputFileDateInyyyyMMdd={inputOutputFileDateInyyyyMMdd}&inputOutputFileName={inputOutputFileName}";
+            if (!myCompleteUrl.Contains("=&"))
+            {
+                try
+                {
+                    using (var client = new HttpClient())
+                    {
+                        client.Timeout = TimeSpan.FromHours(1);
+
+                        var result = await client.GetAsync(myCompleteUrl);
+                        var response = await result.Content.ReadAsStringAsync();
+                        returnOutput = JsonConvert.DeserializeObject<di_InsertMonthlyEligibilityOutput>(response);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    returnOutput.IsOk = false;
+                    string myErrorMessage = ex.Message;
+                    if (ex.InnerException != null)
+                    {
+                        myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                    }
+                    return returnOutput;
+                }
+            }
+            return returnOutput;
+        }
+
+
+
+
+        // GET /api/Ops/qy_GetMonthlyEligibility
+        public qy_GetMonthlyEligibilityOutput
+            qy_GetMonthlyEligibility()
+        {
+            qy_GetMonthlyEligibilityOutput
+                returnOutput =
+                    qy_GetMonthlyEligibilityAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<qy_GetMonthlyEligibilityOutput>
+                        qy_GetMonthlyEligibilityAsync()
+        {
+            log.Info($"In qy_GetMonthlyEligibilityAsync");
+            qy_GetMonthlyEligibilityOutput
+                returnOutput =
+                    new qy_GetMonthlyEligibilityOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/qy_GetMonthlyEligibility";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<qy_GetMonthlyEligibilityOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+
+        // GET /api/Ops/qy_GetDunningEntriesYieldingEligInfoToday
+        public qy_GetDunningEntriesYieldingEligInfoTodayOutput
+            qy_GetDunningEntriesYieldingEligInfoToday()
+        {
+            qy_GetDunningEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    qy_GetDunningEntriesYieldingEligInfoTodayAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<qy_GetDunningEntriesYieldingEligInfoTodayOutput>
+                        qy_GetDunningEntriesYieldingEligInfoTodayAsync()
+        {
+            log.Info($"In qy_GetDunningEntriesYieldingEligInfoTodayAsync");
+            qy_GetDunningEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    new qy_GetDunningEntriesYieldingEligInfoTodayOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/qy_GetDunningEntriesYieldingEligInfoToday";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<qy_GetDunningEntriesYieldingEligInfoTodayOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+
+        // GET /api/Ops/qy_GetMonthlyEntriesYieldingEligInfoToday
+        public qy_GetMonthlyEntriesYieldingEligInfoTodayOutput
+            qy_GetMonthlyEntriesYieldingEligInfoToday()
+        {
+            qy_GetMonthlyEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    qy_GetMonthlyEntriesYieldingEligInfoTodayAsync()
+                    .Result;
+
+            return returnOutput;
+        }
+
+        public async Task<qy_GetMonthlyEntriesYieldingEligInfoTodayOutput>
+                        qy_GetMonthlyEntriesYieldingEligInfoTodayAsync()
+        {
+            log.Info($"In qy_GetMonthlyEntriesYieldingEligInfoTodayAsync");
+            qy_GetMonthlyEntriesYieldingEligInfoTodayOutput
+                returnOutput =
+                    new qy_GetMonthlyEntriesYieldingEligInfoTodayOutput();
+
+            string myCompleteUrl = $"{MyBaseWebApiUrl}/api/Ops/qy_GetMonthlyEntriesYieldingEligInfoToday";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromHours(1);
+
+                    var result = await client.GetAsync(myCompleteUrl);
+                    var response = await result.Content.ReadAsStringAsync();
+                    returnOutput = JsonConvert.DeserializeObject<qy_GetMonthlyEntriesYieldingEligInfoTodayOutput>(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                returnOutput.IsOk = false;
+                string myErrorMessage = ex.Message;
+                if (ex.InnerException != null)
+                {
+                    myErrorMessage = $"{myErrorMessage}.  Inner Exception:  {ex.InnerException.Message}";
+                }
+                return returnOutput;
+            }
+
+            return returnOutput;
+        }
+    }
+}

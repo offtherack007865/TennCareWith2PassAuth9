@@ -1,0 +1,275 @@
+-- SQL Server Instance:  smg-sql01
+USE [Utilities];
+IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND OBJECT_ID = OBJECT_ID('tc.di_FinalizeDunningComparison'))
+   DROP PROC [tc].[di_FinalizeDunningComparison]
+GO
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+                       
+CREATE PROCEDURE [tc].[di_FinalizeDunningComparison]
+/* -----------------------------------------------------------------------------------------------------------
+   Procedure Name  :  tc.di_FinalizeDunningComparison
+   Business Analyis:
+   Project/Process :   
+   Description     :  Finalize DunningComparison table.
+	  
+   Author          :  Philip Morrison 
+   Create Date     :  07/14/2025
+
+   ***********************************************************************************************************
+   **         Change History                                                                                **
+   ***********************************************************************************************************
+
+   Date       Version    Author             Description
+   --------   --------   -----------        ------------
+   07/14/2025 1.01.001   Philip Morrison    Created
+
+*/ -----------------------------------------------------------------------------------------------------------                                      
+AS
+BEGIN
+
+
+-- Instance Declarations.
+declare @IsOk [bit] 
+declare @MyCount [int] 
+
+-- Template Declarations
+DECLARE @Application            varchar(128) = 'TennCareEligility' 
+DECLARE @Version                varchar(25)  = '1.00.001'
+
+DECLARE @ProcessID              int          = 212
+DECLARE @Process                varchar(128) = 'Import'
+
+DECLARE @BatchOutID             int
+DECLARE @BatchDescription       varchar(1000) = @@ServerName + '  - ' + @Version
+DECLARE @BatchDetailDescription varchar(1000)
+DECLARE @BatchMessage           varchar(MAX)
+DECLARE @User                   varchar(128) = SUSER_NAME()
+
+DECLARE @AnticipatedRecordCount int 
+DECLARE @ActualRecordCount      int
+
+SET NOCOUNT ON
+
+BEGIN TRY
+
+--  Initialize Batch
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  NULL, 'BatchStart', @BatchDescription, @ProcessID, @Process
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    SET @BatchDetailDescription = '010/050:   Truncate Dunning Entries Looked Up Today'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+	                                   FROM [TennCareEligibility].[tc].[DunningToLookUp];
+	  
+    -- Truncate Dunning Entries Looked Up Today
+    TRUNCATE TABLE [TennCareEligibility].[tc].[DunningToLookUp];
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+    
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    SET @BatchDetailDescription = '020/050:   Store only the new Entries from the Dunning file.'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+	  FROM [Staging].[tc].[DunningComparison] todays	
+      LEFT OUTER JOIN  [TennCareEligibility].[tc].[DunningComparison] yesterdays
+      ON yesterdays.[PatientID] = todays.[PatientID]    
+         AND yesterdays.[DOB] = todays.[DOB]
+	     AND yesterdays.[SSN] = todays.[SSN]
+	     AND yesterdays.[DOS] = todays.[DOS]
+      WHERE yesterdays.[PatientID] IS NULL;
+
+	  
+    -- Store only the new Entries from the Dunning file.
+    INSERT INTO [TennCareEligibility].[tc].[DunningToLookUp]
+    (
+      [FileName]
+	  ,[PatientID]
+	  ,[DOB]
+	  ,[SSN]
+	  ,[DOS]
+	  ,[DateImported]
+    )
+    SELECT 
+      todays.[FileName]
+	  ,todays.[PatientID]
+	  ,todays.[DOB]
+	  ,todays.[SSN]
+	  ,todays.[DOS]
+	  ,todays.[DateImported]
+    FROM [Staging].[tc].[DunningComparison] todays	
+    LEFT OUTER JOIN  [TennCareEligibility].[tc].[DunningComparison] yesterdays
+    ON yesterdays.[PatientID] = todays.[PatientID]    
+       AND yesterdays.[DOB] = todays.[DOB]
+	   AND yesterdays.[SSN] = todays.[SSN]
+	   AND yesterdays.[DOS] = todays.[DOS]
+    WHERE yesterdays.[PatientID] IS NULL;
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+    
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    SET @BatchDetailDescription = '030/050:   Delete of todays Dunning entries from todays Dunning history'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+	  FROM [TennCareEligibility].[tc].[DunningToLookUpHistory] todayHistory
+	  JOIN [TennCareEligibility].[tc].[DunningToLookUp] today
+      ON today.[PatientID] = todayHistory.[PatientID]    
+         AND today.[DOB] = todayHistory.[DOB]
+	     AND today.[SSN] = todayHistory.[SSN]
+	     AND today.[DOS] = todayHistory.[DOS] 	 
+		 AND today.[FileName] = todayHistory.[FileName]; 	 
+
+	  
+     -- Delete of todays Dunning entries from todays Dunning history
+	 DELETE [TennCareEligibility].[tc].[DunningToLookUpHistory]
+	 FROM [TennCareEligibility].[tc].[DunningToLookUpHistory] todayHistory
+	 JOIN [TennCareEligibility].[tc].[DunningToLookUp] today
+       ON today.[PatientID] = todayHistory.[PatientID]    
+          AND today.[DOB] = todayHistory.[DOB]
+	      AND today.[SSN] = todayHistory.[SSN]
+	      AND today.[DOS] = todayHistory.[DOS] 	 
+		  AND today.[FileName] = todayHistory.[FileName]; 	 
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+	
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    SET @BatchDetailDescription = '040/050:   Copy Todays Dunning entries to History'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+	  FROM [TennCareEligibility].[tc].[DunningToLookUp]
+
+	  
+    -- Copy Todays Dunning entries to History
+    INSERT INTO [TennCareEligibility].[tc].[DunningToLookUpHistory]
+    (
+      [FileName]
+	  ,[PatientID]
+	  ,[DOB]
+	  ,[SSN]
+	  ,[DOS]
+	  ,[DateImported]
+    )
+    SELECT 
+      [FileName]
+	  ,[PatientID]
+	  ,[DOB]
+	  ,[SSN]
+	  ,[DOS]
+	  ,[DateImported]
+    FROM [TennCareEligibility].[tc].[DunningToLookUp];
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+    SET @BatchDetailDescription = 'Truncate Yesterdays Dunning File Entries'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+	  FROM [TennCareEligibility].[tc].[DunningComparison]; 	 	 
+
+	  
+     -- Truncate Yesterdays Dunning File Entries
+	 TRUNCATE TABLE [TennCareEligibility].[tc].[DunningComparison]; 	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+    
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    SET @BatchDetailDescription = '050/050:   Re-populate yesterdays Dunning for tomorrows comparison'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+	  FROM [Staging].[tc].[DunningComparison]; 	 	 
+
+	  
+     -- Re-populate yesterdays Dunning for tomorrows comparison
+      INSERT INTO [TennCareEligibility].[tc].[DunningComparison] 	
+	  (
+	    [FileName]
+	    ,[PatientID]
+	    ,[DOB]
+	    ,[SSN]
+	    ,[DOS]
+	    ,[DateImported]
+	  )
+	  SELECT 
+	    [FileName]
+	    ,[PatientID]
+	    ,[DOB]
+	    ,[SSN]
+	    ,[DOS]
+	    ,[DateImported]
+	  FROM [Staging].[tc].[DunningComparison];	
+	
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+    
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+--  Close batch
+    EXEC Admin.Utilities.logs.di_batch @BatchOutID OUTPUT, @BatchOutID, 'BatchEnd'
+
+set @MyCount = 0
+select @MyCount = count(*)
+  from [Staging].[tc].[DunningToLookUp];
+
+if (@MyCount > 0) begin
+  set @IsOk = 1
+  select @IsOk as [IsOk]
+  return
+end  
+
+set @IsOk = 0
+select @IsOk as [IsOk]
+    
+
+END TRY
+
+BEGIN CATCH
+DECLARE @Err              int
+     ,  @ErrorMessage     varchar(Max)
+     ,  @ErrorLine        varchar(128)
+     ,  @Workstation      varchar(128) = @Application
+     ,  @Procedure        VARCHAR(500)
+
+    IF ERROR_NUMBER() IS NULL 
+      SET @Err =0;
+    ELSE
+      SET @Err = ERROR_NUMBER();
+
+    SET @ErrorMessage = ERROR_MESSAGE()
+    SET @ErrorLine    = 'SP Line Number: ' + CAST(ERROR_LINE() as varchar(10)) 
+	SET @Workstation  = HOST_NAME()
+    SET @Procedure    = @@SERVERNAME + '.' + DB_NAME() + '.' + OBJECT_SCHEMA_NAME(@@ProcID) + '.' + OBJECT_NAME(@@ProcID) + ' - ' + @ErrorLine + ' - ' + LEFT(@BatchDetailDescription, 7)
+    EXEC Admin.Utilities.administration.di_ErrorLog  @Application ,@Process, @Version ,0, @ErrorMessage, @Procedure,  @User , @Workstation
+
+    SET @BatchMessage = 'Process Failed:  ' +  @ErrorMessage
+    
+    EXEC Admin.Utilities.logs.di_batch @BatchOutID OUTPUT, @BatchOutID, 'BatchEnd', @BatchMessage
+        
+    set @IsOk = 0
+    select @IsOk as [IsOk]
+    
+    RAISERROR(@ErrorMessage, 16,1)
+
+END CATCH
+
+END
+
+
+
+  

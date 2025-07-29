@@ -1,0 +1,897 @@
+-- SQL Server Instance: smg-sql01
+USE [BulkInsert8];
+
+-- Delete the current entries for tables 50, 51, and 52
+SELECT COUNT(*)
+FROM [BulkInsert8].[dbo].[BulkInsertDataTableAndColumnDefinition]
+WHERE [BulkInsertDataTablePk] in (50, 51, 52);
+-- Number of records for tables 50, 51, and 52
+
+BEGIN TRAN
+DELETE [BulkInsert8].[dbo].[BulkInsertDataTableAndColumnDefinition]
+WHERE [BulkInsertDataTablePk] in (50, 51, 52);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+-- 001 [PatientID] [int] NULL
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  50 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'int' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,1 --[MyDbColumnLength] [int] NOT NULL
+  ,1 --[MyFilePosition] [int] NOT NULL
+  ,'PatientID' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.CollectionsComparison' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+-- 002 [DOB] [datetime] NOT NULL
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  50 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'datetime MM/dd/yyyy' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,50 --[MyDbColumnLength] [int] NOT NULL
+  ,2 --[MyFilePosition] [int] NOT NULL
+  ,'DOB' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.CollectionsComparison' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+-- 003 [SSN] [varchar](10) NOT NULL
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  50 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'varchar' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,10 --[MyDbColumnLength] [int] NOT NULL
+  ,3 --[MyFilePosition] [int] NOT NULL
+  ,'SSN' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.CollectionsComparison' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+-- 004 [DOS] [datetime] NOT NULL
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  50 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'datetime MM/dd/yyyy' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,50 --[MyDbColumnLength] [int] NOT NULL
+  ,4 --[MyFilePosition] [int] NOT NULL
+  ,'DOS' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.CollectionsComparison' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+
+-- 998 [FileName] [varchar](300) NULL
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  50 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'varchar' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,300 --[MyDbColumnLength] [int] NOT NULL
+  ,998 --[MyFilePosition] [int] NOT NULL
+  ,'FileName' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.CollectionsComparison' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+
+-- 999 [DateImported] [datetime] NULL
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  50 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'datetime' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,50 --[MyDbColumnLength] [int] NOT NULL
+  ,999 --[MyFilePosition] [int] NOT NULL
+  ,'DateImported' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.CollectionsComparison' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+
+-- 1000 [DailyFileCollectionsComparisonRawID] [int] IDENTITY ( 1, 1 ) NOT NULL
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  50 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'int' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,1 --[MyDbColumnLength] [int] NOT NULL
+  ,1000 --[MyFilePosition] [int] NOT NULL
+  ,'CollectionsComparisonID' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.CollectionsComparison' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+-- 001 [PatientID] [int] NULL
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  51 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'int' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,1 --[MyDbColumnLength] [int] NOT NULL
+  ,1 --[MyFilePosition] [int] NOT NULL
+  ,'PatientID' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.DunningComparison' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+-- 002 [DOB] [datetime] NOT NULL
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  51 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'datetime MM/dd/yyyy' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,50 --[MyDbColumnLength] [int] NOT NULL
+  ,2 --[MyFilePosition] [int] NOT NULL
+  ,'DOB' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.DunningComparison' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+-- 003 [SSN] [varchar](10) NOT NULL
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  51 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'varchar' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,10 --[MyDbColumnLength] [int] NOT NULL
+  ,3 --[MyFilePosition] [int] NOT NULL
+  ,'SSN' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.DunningComparison' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+-- 004 [DOS] [datetime] NOT NULL
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  51 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'datetime MM/dd/yyyy' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,50 --[MyDbColumnLength] [int] NOT NULL
+  ,4 --[MyFilePosition] [int] NOT NULL
+  ,'DOS' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.DunningComparison' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+-- 998 [FileName] [varchar](300) NULL
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  51 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'varchar' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,300 --[MyDbColumnLength] [int] NOT NULL
+  ,998 --[MyFilePosition] [int] NOT NULL
+  ,'FileName' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.DunningComparison' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+
+-- 999 [DateImported] [datetime] NULL
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  51 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'datetime' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,50 --[MyDbColumnLength] [int] NOT NULL
+  ,999 --[MyFilePosition] [int] NOT NULL
+  ,'DateImported' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.DunningComparison' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+
+-- 1000 [DunningComparisonID] [int] IDENTITY ( 1, 1 ) NOT NULL
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  51 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'int' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,1 --[MyDbColumnLength] [int] NOT NULL
+  ,1000 --[MyFilePosition] [int] NOT NULL
+  ,'DunningComparisonID' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.DunningComparison' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+-- 001 [PatientID] [int] NULL
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  52 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'int' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,1 --[MyDbColumnLength] [int] NOT NULL
+  ,1 --[MyFilePosition] [int] NOT NULL
+  ,'PatientID' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.MonthlyToLookUp' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+-- 002 [DOS] [datetime] NOT NULL
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  52 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'datetime MM/dd/yyyy' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,50 --[MyDbColumnLength] [int] NOT NULL
+  ,2 --[MyFilePosition] [int] NOT NULL
+  ,'DOS' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.MonthlyToLookUp' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+-- 003 [PatientName] [varchar] (300) NOT NULL
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  52 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'varchar' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,300 --[MyDbColumnLength] [int] NOT NULL
+  ,3 --[MyFilePosition] [int] NOT NULL
+  ,'PatientName' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.MonthlyToLookUp' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+-- 004 [DOB] [datetime] NOT NULL
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  52 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'datetime MM/dd/yyyy' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,50 --[MyDbColumnLength] [int] NOT NULL
+  ,4 --[MyFilePosition] [int] NOT NULL
+  ,'DOB' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.MonthlyToLookUp' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+-- 005 [SSN] [varchar](10) NULL
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  52 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'varchar' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,10 --[MyDbColumnLength] [int] NOT NULL
+  ,5 --[MyFilePosition] [int] NOT NULL
+  ,'SSN' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.MonthlyToLookUp' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+-- 997 - [ImportFullFilename] [varchar] (1000) NOT NULL
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  52 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'varchar' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,1000 --[MyDbColumnLength] [int] NOT NULL
+  ,997 --[MyFilePosition] [int] NOT NULL
+  ,'ImportFullFilename' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.MonthlyToLookUp' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+-- 998 - [LookedUp] [bit] 
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  52 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'bit' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,1 --[MyDbColumnLength] [int] NOT NULL
+  ,998 --[MyFilePosition] [int] NOT NULL
+  ,'LookedUp' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.MonthlyToLookUp' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+-- 999 [DateImported] [datetime] NULL
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  52 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'datetime' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,50 --[MyDbColumnLength] [int] NOT NULL
+  ,999 --[MyFilePosition] [int] NOT NULL
+  ,'DateImported' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.MonthlyToLookUp' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------
+
+
+-- 1000 [MonthlyToLookUpID] [int] IDENTITY ( 1, 1 ) NOT NULL
+SELECT 1;
+-- 1 record 
+
+BEGIN TRAN
+Insert [dbo].[BulkInsertDataTableAndColumnDefinition]
+(
+  [BulkInsertDataTablePk] 
+  ,[MyDbColumnType]
+  ,[MyDbColumnLength]
+  ,[MyFilePosition]
+  ,[MyDbColumnName]
+  ,[MyDbTableName]
+  ,[MyDbName]
+  ,[CreatedBy]
+  ,[CreatedTimestamp]
+  ,[UpdatedBy]
+  ,[UpdatedTimestamp]
+)
+values 
+(
+  52 -- [BulkInsertDataTablePk] [bigint] NOT NULL
+  ,'int' --[MyDbColumnType] [nvarchar] (20) NOT NULL
+  ,1 --[MyDbColumnLength] [int] NOT NULL
+  ,1000 --[MyFilePosition] [int] NOT NULL
+  ,'MonthlyToLookUpID' --[MyDbColumnName] [nvarchar] (100) NOT NULL
+  ,'tc.MonthlyToLookUp' --[MyDbTableName] [nvarchar] (100) NOT NULL
+  ,'Staging' --[MyDbName] [nvarchar] (100) NOT NULL
+  ,'pwmorrison' --[CreatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[CreatedTimestamp] [datetime] NOT NULL
+  ,'pwmorrison' --[UpdatedBy] [nvarchar](30) NOT NULL
+  ,getdate() --[UpdatedTimestamp] [datetime] NOT NULL
+);
+
+-- COMMIT
+-- ROLLBACK
+-----------------------------------------------------------------------------------------------

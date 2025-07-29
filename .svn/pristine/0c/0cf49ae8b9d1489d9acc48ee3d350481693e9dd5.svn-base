@@ -1,0 +1,186 @@
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+
+namespace TennCareWith2PassAuth9.Data.Models;
+
+public partial class TennCareEligibilityContext : DbContext
+{
+    public TennCareEligibilityContext(DbContextOptions<TennCareEligibilityContext> options)
+        : base(options)
+    {
+        string projectPath = AppDomain.CurrentDomain.BaseDirectory;
+        IConfigurationRoot configuration =
+            new ConfigurationBuilder()
+                .SetBasePath(projectPath)
+        .AddJsonFile(MyConstants.AppSettingsFile)
+        .Build();
+        Database.SetCommandTimeout(9000);
+        MyConnectionString =
+            configuration.GetConnectionString(MyConstants.ConnectionString);
+    }
+
+    public string MyConnectionString { get; set; }
+
+    public virtual DbSet<DailyFileCollectionsComparison> DailyFileCollectionsComparisons { get; set; }
+    public virtual DbSet<qy_GetTennCareWith2PassAuthConfigOutputColumns> qy_GetTennCareWith2PassAuthConfigOutputColumnsList { get; set; }   
+    public virtual DbSet<dd_TruncateDailyFileCollectionsComparisonRawOutputColumns> dd_TruncateDailyFileCollectionsComparisonRawOutputColumnsList { get; set; }   
+    public virtual DbSet<dd_TruncateDailyFileDunningComparisonRawOutputColumns> dd_TruncateDailyFileDunningComparisonRawOutputColumnsList { get; set; }
+    public virtual DbSet<di_FinalizeDailyFileCollectionsComparisonRawOutputColumns> di_FinalizeDailyFileCollectionsComparisonRawOutputColumnsList { get; set; }   
+    public virtual DbSet<di_FinalizeDailyFileDunningComparisonRawOutputColumns> di_FinalizeDailyFileDunningComparisonRawOutputColumnsList { get; set; }
+    public virtual DbSet<dd_TruncateMonthlyEntriesLookedUpTodayRawOutputColumns> dd_TruncateMonthlyEntriesLookedUpTodayRawOutputColumnsList { get; set; }
+    public virtual DbSet<di_FinalizeMonthlyEntriesLookedUpTodayRawOutputColumns> di_FinalizeMonthlyEntriesLookedUpTodayRawOutputColumnsList { get; set; }
+    public virtual DbSet<qy_GetAllCollectionsEntriesLookedUpTodayOutputColumns> qy_GetAllCollectionsEntriesLookedUpTodayOutputColumnsList { get; set; }
+    public virtual DbSet<qy_GetAllDunningEntriesLookedUpTodayOutputColumns> qy_GetAllDunningEntriesLookedUpTodayOutputColumnsList { get; set; }
+    public virtual DbSet<qy_GetAllMonthlyEntriesLookedUpTodayOutputColumns> qy_GetAllMonthlyEntriesLookedUpTodayOutputColumnsList { get; set; }
+    public virtual DbSet<du_MarkCollectionsEntryLookedUpTodayAsLookedUpOutputColumns> du_MarkCollectionsEntryLookedUpTodayAsLookedUpOutputColumnsList { get; set; }
+    public virtual DbSet<du_MarkDunningEntryLookedUpTodayAsLookedUpOutputColumns> du_MarkDunningEntryLookedUpTodayAsLookedUpOutputColumnsList { get; set; }
+    public virtual DbSet<du_MarkMonthlyEntryLookedUpTodayAsLookedUpOutputColumns> du_MarkMonthlyEntryLookedUpTodayAsLookedUpOutputColumnsList { get; set; }
+    public virtual DbSet<dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutputColumns> dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutputColumnsList { get; set; }
+    public virtual DbSet<dd_TruncateDunningEntriesYieldingEligInfoTodayOutputColumns> dd_TruncateDunningEntriesYieldingEligInfoTodayOutputColumnsList { get; set;  }
+    public virtual DbSet<dd_TruncateMonthlyEntriesYieldingEligInfoTodayOutputColumns> dd_TruncateMonthlyEntriesYieldingEligInfoTodayOutputColumnsList { get; set; }
+    public virtual DbSet<di_InsertCollectionsEntriesYieldingEligInfoTodayOutputColumns> di_InsertCollectionsEntriesYieldingEligInfoTodayOutputColumnsList { get; set; }
+    public virtual DbSet<di_InsertDunningEntriesYieldingEligInfoTodayOutputColumns> di_InsertDunningEntriesYieldingEligInfoTodayOutputColumnsList { get; set; }
+    public virtual DbSet<di_InsertMonthlyEntriesYieldingEligInfoTodayOutputColumns> di_InsertMonthlyEntriesYieldingEligInfoTodayOutputColumnsList { get; set; }
+    public virtual DbSet<qy_GetCollectionsEntriesYieldingEligInfoTodayOutputColumns> qy_GetCollectionsEntriesYieldingEligInfoTodayOutputColumnsList { get; set;  }
+    public virtual DbSet<qy_GetDunningEntriesYieldingEligInfoTodayOutputColumns> qy_GetDunningEntriesYieldingEligInfoTodayOutputColumnsList { get; set;  }
+    public virtual DbSet<qy_GetMonthlyEntriesYieldingEligInfoTodayOutputColumns> qy_GetMonthlyEntriesYieldingEligInfoTodayOutputColumnsList { get; set; }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<qy_GetMonthlyEntriesYieldingEligInfoTodayOutputColumns>(entity =>
+        {
+            entity.HasNoKey();
+        });
+
+        modelBuilder.Entity<qy_GetDunningEntriesYieldingEligInfoTodayOutputColumns>(entity =>
+        {
+            entity.HasNoKey();
+        });
+
+        modelBuilder.Entity<qy_GetCollectionsEntriesYieldingEligInfoTodayOutputColumns>(entity =>
+        {
+            entity.HasNoKey();
+        });
+
+        modelBuilder.Entity<di_InsertMonthlyEntriesYieldingEligInfoTodayOutputColumns>(entity =>
+        {
+            entity.HasNoKey();
+        });
+
+        modelBuilder.Entity<di_InsertDunningEntriesYieldingEligInfoTodayOutputColumns>(entity =>
+        {
+            entity.HasNoKey();
+        });
+
+        modelBuilder.Entity<di_InsertCollectionsEntriesYieldingEligInfoTodayOutputColumns>(entity =>
+        {
+            entity.HasNoKey();
+        });
+
+        modelBuilder.Entity<dd_TruncateMonthlyEntriesYieldingEligInfoTodayOutputColumns>(entity =>
+        {
+            entity.HasNoKey();
+        });
+
+        modelBuilder.Entity<dd_TruncateDunningEntriesYieldingEligInfoTodayOutputColumns>(entity =>
+        {
+            entity.HasNoKey();
+        });
+
+        modelBuilder.Entity<dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutputColumns>(entity =>
+        {
+            entity.HasNoKey();
+        });
+
+        modelBuilder.Entity<du_MarkMonthlyEntryLookedUpTodayAsLookedUpOutputColumns>(entity =>
+        {
+            entity.HasNoKey();
+        });
+
+        modelBuilder.Entity<du_MarkDunningEntryLookedUpTodayAsLookedUpOutputColumns>(entity =>
+        {
+            entity.HasNoKey();
+        });
+
+        modelBuilder.Entity<du_MarkCollectionsEntryLookedUpTodayAsLookedUpOutputColumns>(entity =>
+        {
+            entity.HasNoKey();
+        });
+
+        modelBuilder.Entity<qy_GetAllMonthlyEntriesLookedUpTodayOutputColumns>(entity =>
+        {
+            entity.HasNoKey();
+        });
+
+        modelBuilder.Entity<qy_GetAllDunningEntriesLookedUpTodayOutputColumns>(entity =>
+        {
+            entity.HasNoKey();
+        });
+
+
+        modelBuilder.Entity<qy_GetAllCollectionsEntriesLookedUpTodayOutputColumns>(entity =>
+        {
+            entity.HasNoKey();
+        });
+
+        modelBuilder.Entity<di_FinalizeMonthlyEntriesLookedUpTodayRawOutputColumns>(entity =>
+        {
+            entity.HasNoKey();
+        });
+
+        modelBuilder.Entity<dd_TruncateMonthlyEntriesLookedUpTodayRawOutputColumns>(entity =>
+        {
+            entity.HasNoKey();
+        });
+
+        modelBuilder.Entity<di_FinalizeDailyFileDunningComparisonRawOutputColumns>(entity =>
+        {
+            entity.HasNoKey();
+        });
+
+        modelBuilder.Entity<di_FinalizeDailyFileCollectionsComparisonRawOutputColumns>(entity =>
+        {
+            entity.HasNoKey();
+        });
+
+        modelBuilder.Entity<dd_TruncateDailyFileDunningComparisonRawOutputColumns>(entity =>
+        {
+            entity.HasNoKey();
+        });
+
+        modelBuilder.Entity<dd_TruncateDailyFileCollectionsComparisonRawOutputColumns>(entity =>
+        {
+            entity.HasNoKey();
+        });
+        modelBuilder.Entity<qy_GetTennCareWith2PassAuthConfigOutputColumns>(entity =>
+        {
+            entity.HasNoKey();
+        });
+        modelBuilder.Entity<DailyFileCollectionsComparison>(entity =>
+        {
+            entity.HasKey(e => e.Pk);
+
+            entity.ToTable("DailyFileCollectionsComparison");
+
+            entity.Property(e => e.Dob)
+                .HasColumnType("datetime")
+                .HasColumnName("DOB");
+            entity.Property(e => e.Dos)
+                .HasColumnType("datetime")
+                .HasColumnName("DOS");
+            entity.Property(e => e.FileName)
+                .HasMaxLength(75)
+                .IsUnicode(false);
+            entity.Property(e => e.PatientId).HasColumnName("PatientID");
+            entity.Property(e => e.Ssn)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("SSN");
+        });
+
+        OnModelCreatingPartial(modelBuilder);
+    }
+
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+}

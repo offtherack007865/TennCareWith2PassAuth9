@@ -1,0 +1,278 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\source\\repos\\TennCareWith2PassAuth9\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{74044E28-FD46-4691-B082-1F47A9432757}|TennCareWith2PassAuth9.ImportConsoleApp\\TennCareWith2PassAuth9.ImportConsoleApp.csproj|d:\\source\\repos\\tenncarewith2passauth9\\tenncarewith2passauth9.importconsoleapp\\tenncarewith2passauth9.importconsoleapp.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{74044E28-FD46-4691-B082-1F47A9432757}|TennCareWith2PassAuth9.ImportConsoleApp\\TennCareWith2PassAuth9.ImportConsoleApp.csproj|solutionrelative:tenncarewith2passauth9.importconsoleapp\\tenncarewith2passauth9.importconsoleapp.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D59192AB-6237-411B-B311-7B3A9FD71C4B}|TennCareWith2PassAuth9.MonthlyLookUpConsoleApp\\TennCareWith2PassAuth9.MonthlyLookUpConsoleApp.csproj|d:\\source\\repos\\tenncarewith2passauth9\\tenncarewith2passauth9.monthlylookupconsoleapp\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{D59192AB-6237-411B-B311-7B3A9FD71C4B}|TennCareWith2PassAuth9.MonthlyLookUpConsoleApp\\TennCareWith2PassAuth9.MonthlyLookUpConsoleApp.csproj|solutionrelative:tenncarewith2passauth9.monthlylookupconsoleapp\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D59192AB-6237-411B-B311-7B3A9FD71C4B}|TennCareWith2PassAuth9.MonthlyLookUpConsoleApp\\TennCareWith2PassAuth9.MonthlyLookUpConsoleApp.csproj|d:\\source\\repos\\tenncarewith2passauth9\\tenncarewith2passauth9.monthlylookupconsoleapp\\mainops.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D59192AB-6237-411B-B311-7B3A9FD71C4B}|TennCareWith2PassAuth9.MonthlyLookUpConsoleApp\\TennCareWith2PassAuth9.MonthlyLookUpConsoleApp.csproj|solutionrelative:tenncarewith2passauth9.monthlylookupconsoleapp\\mainops.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9EA89ADF-1FEB-4F9A-BF8D-ECEFDB4A721D}|TennCareWith2PassAuth9.CallWebApiLand\\TennCareWith2PassAuth9.CallWebApiLand.csproj|d:\\source\\repos\\tenncarewith2passauth9\\tenncarewith2passauth9.callwebapiland\\callwebapilandclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9EA89ADF-1FEB-4F9A-BF8D-ECEFDB4A721D}|TennCareWith2PassAuth9.CallWebApiLand\\TennCareWith2PassAuth9.CallWebApiLand.csproj|solutionrelative:tenncarewith2passauth9.callwebapiland\\callwebapilandclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{74044E28-FD46-4691-B082-1F47A9432757}|TennCareWith2PassAuth9.ImportConsoleApp\\TennCareWith2PassAuth9.ImportConsoleApp.csproj|d:\\source\\repos\\tenncarewith2passauth9\\tenncarewith2passauth9.importconsoleapp\\mainops.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{74044E28-FD46-4691-B082-1F47A9432757}|TennCareWith2PassAuth9.ImportConsoleApp\\TennCareWith2PassAuth9.ImportConsoleApp.csproj|solutionrelative:tenncarewith2passauth9.importconsoleapp\\mainops.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{684DAA87-5F3A-450A-A55B-969747415EE4}|TennCareWith2PassAuth9.DunningLookUpConsoleApp\\TennCareWith2PassAuth9.DunningLookUpConsoleApp.csproj|d:\\source\\repos\\tenncarewith2passauth9\\tenncarewith2passauth9.dunninglookupconsoleapp\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{684DAA87-5F3A-450A-A55B-969747415EE4}|TennCareWith2PassAuth9.DunningLookUpConsoleApp\\TennCareWith2PassAuth9.DunningLookUpConsoleApp.csproj|solutionrelative:tenncarewith2passauth9.dunninglookupconsoleapp\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{684DAA87-5F3A-450A-A55B-969747415EE4}|TennCareWith2PassAuth9.DunningLookUpConsoleApp\\TennCareWith2PassAuth9.DunningLookUpConsoleApp.csproj|d:\\source\\repos\\tenncarewith2passauth9\\tenncarewith2passauth9.dunninglookupconsoleapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{684DAA87-5F3A-450A-A55B-969747415EE4}|TennCareWith2PassAuth9.DunningLookUpConsoleApp\\TennCareWith2PassAuth9.DunningLookUpConsoleApp.csproj|solutionrelative:tenncarewith2passauth9.dunninglookupconsoleapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{684DAA87-5F3A-450A-A55B-969747415EE4}|TennCareWith2PassAuth9.DunningLookUpConsoleApp\\TennCareWith2PassAuth9.DunningLookUpConsoleApp.csproj|d:\\source\\repos\\tenncarewith2passauth9\\tenncarewith2passauth9.dunninglookupconsoleapp\\mainops.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{684DAA87-5F3A-450A-A55B-969747415EE4}|TennCareWith2PassAuth9.DunningLookUpConsoleApp\\TennCareWith2PassAuth9.DunningLookUpConsoleApp.csproj|solutionrelative:tenncarewith2passauth9.dunninglookupconsoleapp\\mainops.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EEF7BE2F-D3E2-46EB-B591-BFA841E5851D}|TennCareWith2PassAuth9.CollectionsLookUpConsoleApp\\TennCareWith2PassAuth9.CollectionsLookUpConsoleApp.csproj|d:\\source\\repos\\tenncarewith2passauth9\\tenncarewith2passauth9.collectionslookupconsoleapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EEF7BE2F-D3E2-46EB-B591-BFA841E5851D}|TennCareWith2PassAuth9.CollectionsLookUpConsoleApp\\TennCareWith2PassAuth9.CollectionsLookUpConsoleApp.csproj|solutionrelative:tenncarewith2passauth9.collectionslookupconsoleapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EEF7BE2F-D3E2-46EB-B591-BFA841E5851D}|TennCareWith2PassAuth9.CollectionsLookUpConsoleApp\\TennCareWith2PassAuth9.CollectionsLookUpConsoleApp.csproj|d:\\source\\repos\\tenncarewith2passauth9\\tenncarewith2passauth9.collectionslookupconsoleapp\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{EEF7BE2F-D3E2-46EB-B591-BFA841E5851D}|TennCareWith2PassAuth9.CollectionsLookUpConsoleApp\\TennCareWith2PassAuth9.CollectionsLookUpConsoleApp.csproj|solutionrelative:tenncarewith2passauth9.collectionslookupconsoleapp\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{74044E28-FD46-4691-B082-1F47A9432757}|TennCareWith2PassAuth9.ImportConsoleApp\\TennCareWith2PassAuth9.ImportConsoleApp.csproj|d:\\source\\repos\\tenncarewith2passauth9\\tenncarewith2passauth9.importconsoleapp\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{74044E28-FD46-4691-B082-1F47A9432757}|TennCareWith2PassAuth9.ImportConsoleApp\\TennCareWith2PassAuth9.ImportConsoleApp.csproj|solutionrelative:tenncarewith2passauth9.importconsoleapp\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{24901639-A66B-4201-A2F0-07880BE2B805}|TennCareWith2PassAuth9.WebApiLand\\TennCareWith2PassAuth9.WebApiLand.csproj|d:\\source\\repos\\tenncarewith2passauth9\\tenncarewith2passauth9.webapiland\\controllers\\opscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{24901639-A66B-4201-A2F0-07880BE2B805}|TennCareWith2PassAuth9.WebApiLand\\TennCareWith2PassAuth9.WebApiLand.csproj|solutionrelative:tenncarewith2passauth9.webapiland\\controllers\\opscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{24901639-A66B-4201-A2F0-07880BE2B805}|TennCareWith2PassAuth9.WebApiLand\\TennCareWith2PassAuth9.WebApiLand.csproj|d:\\source\\repos\\tenncarewith2passauth9\\tenncarewith2passauth9.webapiland\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{24901639-A66B-4201-A2F0-07880BE2B805}|TennCareWith2PassAuth9.WebApiLand\\TennCareWith2PassAuth9.WebApiLand.csproj|solutionrelative:tenncarewith2passauth9.webapiland\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D59192AB-6237-411B-B311-7B3A9FD71C4B}|TennCareWith2PassAuth9.MonthlyLookUpConsoleApp\\TennCareWith2PassAuth9.MonthlyLookUpConsoleApp.csproj|d:\\source\\repos\\tenncarewith2passauth9\\tenncarewith2passauth9.monthlylookupconsoleapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D59192AB-6237-411B-B311-7B3A9FD71C4B}|TennCareWith2PassAuth9.MonthlyLookUpConsoleApp\\TennCareWith2PassAuth9.MonthlyLookUpConsoleApp.csproj|solutionrelative:tenncarewith2passauth9.monthlylookupconsoleapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 18,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:3:0:{57d563b6-44a5-47df-85be-f4199ad6b651}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:5:0:{57d563b6-44a5-47df-85be-f4199ad6b651}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:7:0:{57d563b6-44a5-47df-85be-f4199ad6b651}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.DunningLookUpConsoleApp\\Program.cs",
+              "RelativeDocumentMoniker": "TennCareWith2PassAuth9.DunningLookUpConsoleApp\\Program.cs",
+              "ToolTip": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.DunningLookUpConsoleApp\\Program.cs",
+              "RelativeToolTip": "TennCareWith2PassAuth9.DunningLookUpConsoleApp\\Program.cs",
+              "ViewState": "AgIAAEwAAAAAAAAAAAAAAFIAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-22T14:39:42.53Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.CollectionsLookUpConsoleApp\\Program.cs",
+              "RelativeDocumentMoniker": "TennCareWith2PassAuth9.CollectionsLookUpConsoleApp\\Program.cs",
+              "ToolTip": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.CollectionsLookUpConsoleApp\\Program.cs",
+              "RelativeToolTip": "TennCareWith2PassAuth9.CollectionsLookUpConsoleApp\\Program.cs",
+              "ViewState": "AgIAAFIAAAAAAAAAAAAUwG0AAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-22T14:23:16.306Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.ImportConsoleApp\\appsettings.json",
+              "RelativeDocumentMoniker": "TennCareWith2PassAuth9.ImportConsoleApp\\appsettings.json",
+              "ToolTip": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.ImportConsoleApp\\appsettings.json",
+              "RelativeToolTip": "TennCareWith2PassAuth9.ImportConsoleApp\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-07-21T20:32:00.048Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.DunningLookUpConsoleApp\\appsettings.json",
+              "RelativeDocumentMoniker": "TennCareWith2PassAuth9.DunningLookUpConsoleApp\\appsettings.json",
+              "ToolTip": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.DunningLookUpConsoleApp\\appsettings.json",
+              "RelativeToolTip": "TennCareWith2PassAuth9.DunningLookUpConsoleApp\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAABfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-07-21T20:28:40.623Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.CollectionsLookUpConsoleApp\\appsettings.json",
+              "RelativeDocumentMoniker": "TennCareWith2PassAuth9.CollectionsLookUpConsoleApp\\appsettings.json",
+              "ToolTip": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.CollectionsLookUpConsoleApp\\appsettings.json",
+              "RelativeToolTip": "TennCareWith2PassAuth9.CollectionsLookUpConsoleApp\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-07-21T20:28:05.07Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.WebApiLand\\appsettings.json",
+              "RelativeDocumentMoniker": "TennCareWith2PassAuth9.WebApiLand\\appsettings.json",
+              "ToolTip": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.WebApiLand\\appsettings.json",
+              "RelativeToolTip": "TennCareWith2PassAuth9.WebApiLand\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-07-21T19:17:30.542Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "OpsController.cs",
+              "DocumentMoniker": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.WebApiLand\\Controllers\\OpsController.cs",
+              "RelativeDocumentMoniker": "TennCareWith2PassAuth9.WebApiLand\\Controllers\\OpsController.cs",
+              "ToolTip": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.WebApiLand\\Controllers\\OpsController.cs",
+              "RelativeToolTip": "TennCareWith2PassAuth9.WebApiLand\\Controllers\\OpsController.cs",
+              "ViewState": "AgIAAMUGAAAAAAAAAAAIwNwGAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-21T19:01:31.964Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MainOps.cs",
+              "DocumentMoniker": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.MonthlyLookUpConsoleApp\\MainOps.cs",
+              "RelativeDocumentMoniker": "TennCareWith2PassAuth9.MonthlyLookUpConsoleApp\\MainOps.cs",
+              "ToolTip": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.MonthlyLookUpConsoleApp\\MainOps.cs",
+              "RelativeToolTip": "TennCareWith2PassAuth9.MonthlyLookUpConsoleApp\\MainOps.cs",
+              "ViewState": "AgIAAIgAAAAAAAAAAAAAwKAAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-18T17:16:35.358Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.MonthlyLookUpConsoleApp\\appsettings.json",
+              "RelativeDocumentMoniker": "TennCareWith2PassAuth9.MonthlyLookUpConsoleApp\\appsettings.json",
+              "ToolTip": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.MonthlyLookUpConsoleApp\\appsettings.json",
+              "RelativeToolTip": "TennCareWith2PassAuth9.MonthlyLookUpConsoleApp\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-07-18T17:15:33.348Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.MonthlyLookUpConsoleApp\\Program.cs",
+              "RelativeDocumentMoniker": "TennCareWith2PassAuth9.MonthlyLookUpConsoleApp\\Program.cs",
+              "ToolTip": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.MonthlyLookUpConsoleApp\\Program.cs",
+              "RelativeToolTip": "TennCareWith2PassAuth9.MonthlyLookUpConsoleApp\\Program.cs",
+              "ViewState": "AgIAAEkAAAAAAAAAAAAAAG0AAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-18T17:15:23.665Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MainOps.cs",
+              "DocumentMoniker": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.ImportConsoleApp\\MainOps.cs",
+              "RelativeDocumentMoniker": "TennCareWith2PassAuth9.ImportConsoleApp\\MainOps.cs",
+              "ToolTip": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.ImportConsoleApp\\MainOps.cs",
+              "RelativeToolTip": "TennCareWith2PassAuth9.ImportConsoleApp\\MainOps.cs",
+              "ViewState": "AgIAADsAAAAAAAAAAAAawFQAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-18T17:06:44.386Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "TennCareWith2PassAuth9.ImportConsoleApp.csproj",
+              "DocumentMoniker": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.ImportConsoleApp\\TennCareWith2PassAuth9.ImportConsoleApp.csproj",
+              "RelativeDocumentMoniker": "TennCareWith2PassAuth9.ImportConsoleApp\\TennCareWith2PassAuth9.ImportConsoleApp.csproj",
+              "ToolTip": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.ImportConsoleApp\\TennCareWith2PassAuth9.ImportConsoleApp.csproj",
+              "RelativeToolTip": "TennCareWith2PassAuth9.ImportConsoleApp\\TennCareWith2PassAuth9.ImportConsoleApp.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-07-18T13:39:03.181Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "MainOps.cs",
+              "DocumentMoniker": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.DunningLookUpConsoleApp\\MainOps.cs",
+              "RelativeDocumentMoniker": "TennCareWith2PassAuth9.DunningLookUpConsoleApp\\MainOps.cs",
+              "ToolTip": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.DunningLookUpConsoleApp\\MainOps.cs",
+              "RelativeToolTip": "TennCareWith2PassAuth9.DunningLookUpConsoleApp\\MainOps.cs",
+              "ViewState": "AgIAAKgAAAAAAAAAAAAswL4AAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-17T20:20:58.241Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "CallWebApiLandClass.cs",
+              "DocumentMoniker": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.CallWebApiLand\\CallWebApiLandClass.cs",
+              "RelativeDocumentMoniker": "TennCareWith2PassAuth9.CallWebApiLand\\CallWebApiLandClass.cs",
+              "ToolTip": "D:\\source\\repos\\TennCareWith2PassAuth9\\TennCareWith2PassAuth9.CallWebApiLand\\CallWebApiLandClass.cs",
+              "RelativeToolTip": "TennCareWith2PassAuth9.CallWebApiLand\\CallWebApiLandClass.cs",
+              "ViewState": "AgIAAHUAAAAAAAAAAAAuwJAAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-17T20:05:44.22Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

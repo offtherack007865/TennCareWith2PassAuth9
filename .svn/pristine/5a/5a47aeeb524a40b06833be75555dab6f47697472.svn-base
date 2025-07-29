@@ -1,0 +1,2 @@
+-- SQL Server Instance:  smg-sql01 -- Apply To Staging
+CREATE SCHEMA tc;

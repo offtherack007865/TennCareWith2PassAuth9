@@ -1,0 +1,8 @@
+-- SQL Server Instance:  smg-sql01
+-----------------------------------------------------------------------
+-- Grant Execute Authority on di_InsertCollectionsEntriesYieldingEligInfoToday
+-- to AppUser
+-----------------------------------------------------------------------
+USE [Utilities];
+GRANT EXECUTE ON OBJECT::[tc].[di_InsertCollectionsEntriesYieldingEligInfoToday]
+   TO AppUser;  

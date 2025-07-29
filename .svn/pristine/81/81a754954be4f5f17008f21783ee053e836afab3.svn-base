@@ -1,0 +1,10 @@
+{
+    "BaseWebUrl": "http://webservices:5571",
+
+    "DbConfigSettingsApplication": "TennCareEligibility",
+    "DbConfigSettingsType": "Default",
+    "DbConfigSettingsProcess": "TennCareEligibilityImport",
+    "DbConfigSettingsNameFilter": "BLANK",
+    "DbConfigSettingsUser": "AppUser",
+    "DbConfigSettingsFireFoxDirectory": "C:\\Users\\pwmorrison\\AppData\\Local\\Mozilla Firefox"
+}

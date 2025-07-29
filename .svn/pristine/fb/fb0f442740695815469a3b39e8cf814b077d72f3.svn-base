@@ -1,0 +1,37 @@
+-- SQL Instance Name:  smg-sql01
+USE [TennCareEligibility];
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'DunningComparison' AND TABLE_SCHEMA = 'tc')
+   DROP TABLE [tc].[DunningComparison];
+GO
+/* -----------------------------------------------------------------------------------------------------------
+   Table Name  :  tc.DunningComparison
+   Business Analyis:
+   Project/Process :   
+   Description     :  "Yesterday's Dunning data file content"
+                        
+   Author          :   Philip Morrison
+   Create Date     :   07/14/2025 
+
+   ***********************************************************************************************************
+   **         Change History                                                                                **
+   ***********************************************************************************************************
+
+   Date       Version    Author             Description
+   --------   --------   -----------        ------------
+   07/14/2025 1.01.001   Philip Morrison    Created
+*/ -----------------------------------------------------------------------------------------------------------                                   
+
+
+CREATE TABLE [tc].[DunningComparison](
+    [DunningComparisonID] [int] IDENTITY ( 1, 1 ) NOT NULL
+	,[FileName] [varchar](300) NULL
+	,[PatientID] [int] NULL
+	,[DOB] [datetime] NOT NULL
+	,[SSN] [varchar](10) NOT NULL
+	,[DOS] [datetime] NOT NULL
+	,[DateImported] [datetime] NULL
+ CONSTRAINT [PK_DunningComparison] PRIMARY KEY CLUSTERED 
+(
+	[DunningComparisonID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]

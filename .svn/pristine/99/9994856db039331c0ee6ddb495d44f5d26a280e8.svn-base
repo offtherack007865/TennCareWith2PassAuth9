@@ -1,0 +1,9 @@
+{
+  "BaseWebUrl": "http://webservices:5571",
+
+  "DbConfigSettingsApplication": "TennCareEligibility",
+  "DbConfigSettingsType": "Default",
+  "DbConfigSettingsProcess": "Import",
+  "DbConfigSettingsNameFilter": "BLANK",
+  "DbConfigSettingsUser": "AppUser"
+}

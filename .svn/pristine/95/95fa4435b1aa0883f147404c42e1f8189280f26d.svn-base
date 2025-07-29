@@ -1,0 +1,774 @@
+-- SQL Service Instance:  smg-sql01
+/*	
+    [CollectionsReadDirectory] [nvarchar] (200) NOT NULL
+	,[DunningReadDirectory] [nvarchar] (200) NOT NULL
+	,[MonthlyReadDirectory] [nvarchar] (200) NOT NULL
+	,[CollectionsInputArchiveDirectory] [nvarchar] (200) NOT NULL
+	,[DunningInputArchiveDirectory] [nvarchar] (200) NOT NULL
+	,[MonthlyInputArchiveDirectory] [nvarchar] (200) NOT NULL
+	,[CollectionsOutputArchiveDirectory] [nvarchar] (200) NOT NULL
+	,[DunningOutputArchiveDirectory] [nvarchar] (200) NOT NULL
+	,[CollectionsFilenameContainsString] [nvarchar] (200) NOT NULL
+	,[MonthlyInputArchiveDirectory] [nvarchar] (200) NOT NULL
+	,[DunningFilenameContainsString] [nvarchar] (200) NOT NULL
+	,[MonthlyAgencyFilenameContainsString] [nvarchar] (200) NOT NULL
+	,[MonthlyDeceasedFilenameContainsString] [nvarchar] (200) NOT NULL
+	,[MonthlyInHouseFilenameContainsString] [nvarchar] (200) NOT NULL
+	,[MonthlyCollectionsFilenameContainsString] [nvarchar] (200) NOT NULL
+	,[MonthlyDunningFilenameContainsString] [nvarchar] (200) NOT NULL
+	,[CollectionsLineWhereDataStarts] [int] NOT NULL 
+	,[DunningLineWhereDataStarts] [int] NOT NULL 
+	,[MonthlyAgencyFilenameContainsString] [int] NOT NULL
+	,[MonthlyDeceasedFilenameContainsString] [int] NOT NULL
+	,[MonthlyInHouseFilenameContainsString] [int] NOT NULL
+	,[MonthlyCollectionsFilenameContainsString] [int] NOT NULL
+	,[MonthlyDunningFilenameContainsString] [int] NOT NULL
+	,[BaseWebApiUrl] [nvarchar] (200) NOT NULL 
+	,[BulkInsertBaseWebApiUrl] [nvarchar] (200) NOT NULL 
+	,[BulkInsertConnectionString] [nvarchar] (200) NOT NULL 
+	,[BulkInsertDbName] [nvarchar] (200) NOT NULL 
+	,[CollectionsBulkInsertDbTableName] [nvarchar] (200) NOT NULL 
+	,[DunningBulkInsertDbTableName] [nvarchar] (200) NOT NULL 
+	,[MonthlyBulkInsertDbTableName] [nvarchar] (200) NOT NULL 
+    ,[ToEmailAddressList] [nvarchar] (200) NOT NULL 
+	,[EmailBaseWebApiUrl] [nvarchar] (200) NOT NULL 
+	,[EmailFromAddress] [nvarchar] (200) NOT NULL 
+*/
+USE [Administration];
+
+
+DECLARE @MyApplicationID [int] = 0;
+
+-- If Application ID exists, delete both the Process ID and its associated Settings.
+SELECT @MyApplicationID = [ApplicationID]
+  FROM [admin].[Application]
+  WHERE [ApplicationName] = 'TennCareEligibility';
+  
+IF (@MyApplicationID IS NULL OR @MyApplicationID = 0) BEGIN
+  print ('Insert Application');
+  INSERT INTO [admin].[Application]
+           ([ApplicationName]
+           ,[Description]
+           ,[NotificationOnError]
+           ,[NotificationGroupID]
+           ,[Notes]
+           ,[Visible]
+           ,[ListOrder]
+           ,[Active]
+           ,[InsertedBy]
+           ,[InsertedDate]
+           ,[UpdatedBy]
+           ,[UpdatedDate])
+     VALUES
+           ('TennCareEligibility'
+           ,'TennCareEligibility'
+           ,0
+           ,null
+           ,null
+           ,1
+           ,550
+           ,1
+           ,'pwmorrison'
+           ,getdate()
+           ,'pwmorrison'
+           ,getdate());
+		   
+SELECT @MyApplicationID = [ApplicationID]
+  FROM [admin].[Application]
+  WHERE [ApplicationName] = 'TennCareEligibility';
+		   
+END
+
+DECLARE @MyProcessID [int] = 0;
+
+-- If Process ID exists, delete both the Process ID and its associated Settings.
+SELECT @MyProcessID = [ProcessID]
+  FROM [support].[Process]
+  WHERE [Name] = 'Import'
+    AND [ApplicationID] = @MyApplicationID;  
+  
+IF (@MyProcessID IS NOT NULL) BEGIN
+  DELETE [support].[Setting]
+   WHERE [ApplicationID] = @MyApplicationID
+     AND [ProcessID] = @MyProcessID;
+	 
+  DELETE [support].[Process]
+   WHERE [ApplicationID] = @MyApplicationID
+     AND [ProcessID] = @MyProcessID;
+	 
+END
+  
+-- Insert Process 
+INSERT INTO [support].[Process]
+           ([ApplicationID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[NotificationOnError]
+           ,[NotificationGroupID]
+           ,[Visible]
+           ,[ListOrder]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,'Import'
+           ,'Reporting' 
+           ,'Import'
+           ,0
+           ,NULL
+           ,1
+           ,0 
+           ,1);		   
+
+-- Find newly inserted process ID
+SET @MyProcessID = NULL;
+SELECT @MyProcessID = [ProcessID]
+  FROM [support].[Process]
+  WHERE [Name] = 'TennCareEligibilityImport'
+    AND [ApplicationID] = @MyApplicationID;  
+IF (@MyProcessID IS NULL) BEGIN
+  print 'Process ID not there.'
+  RETURN;
+END 
+
+print 'ApplicationId = ' + convert([nvarchar] (20), @MyApplicationID)
+print 'ProcessId = ' + convert([nvarchar] (20), @MyProcessID)
+
+/*	
+    [CollectionsReadDirectory] [nvarchar] (200) NOT NULL
+	,[DunningReadDirectory] [nvarchar] (200) NOT NULL
+	,[MonthlyReadDirectory] [nvarchar] (200) NOT NULL
+	,[CollectionsInputArchiveDirectory] [nvarchar] (200) NOT NULL
+	,[DunningInputArchiveDirectory] [nvarchar] (200) NOT NULL
+	,[MonthlyInputArchiveDirectory] [nvarchar] (200) NOT NULL
+	,[CollectionsOutputArchiveDirectory] [nvarchar] (200) NOT NULL
+	,[DunningOutputArchiveDirectory] [nvarchar] (200) NOT NULL
+	,[MonthlyOutputArchiveDirectory] [nvarchar] (200) NOT NULL
+	,[CollectionsFilenameContainsString] [nvarchar] (200) NOT NULL
+	,[DunningFilenameContainsString] [nvarchar] (200) NOT NULL
+	,[MonthlyAgencyFilenameContainsString] [nvarchar] (200) NOT NULL
+	,[MonthlyDeceasedFilenameContainsString] [nvarchar] (200) NOT NULL
+	,[MonthlyInHouseFilenameContainsString] [nvarchar] (200) NOT NULL
+	,[MonthlyCollectionsFilenameContainsString] [nvarchar] (200) NOT NULL
+	,[MonthlyDunningFilenameContainsString] [nvarchar] (200) NOT NULL
+	,[CollectionsLineWhereDataStarts] [int] NOT NULL 
+	,[DunningLineWhereDataStarts] [int] NOT NULL 
+	,[MonthlyAgencyLineWhereDataStarts] [int] NOT NULL
+	,[MonthlyDeceasedLineWhereDataStarts] [int] NOT NULL
+	,[MonthlyInHouseLineWhereDataStarts] [int] NOT NULL
+	,[MonthlyCollectionsLineWhereDataStarts] [int] NOT NULL
+	,[MonthlyDunningLineWhereDataStarts] [int] NOT NULL
+	,[BaseWebApiUrl] [nvarchar] (200) NOT NULL 
+	,[BulkInsertBaseWebApiUrl] [nvarchar] (200) NOT NULL 
+	,[BulkInsertConnectionString] [nvarchar] (200) NOT NULL 
+	,[BulkInsertDbName] [nvarchar] (200) NOT NULL 
+	,[CollectionsBulkInsertDbTableName] [nvarchar] (200) NOT NULL 
+	,[DunningBulkInsertDbTableName] [nvarchar] (200) NOT NULL 
+	,[MonthlyBulkInsertDbTableName] [nvarchar] (200) NOT NULL 
+    ,[ToEmailAddressList] [nvarchar] (200) NOT NULL 
+	,[EmailBaseWebApiUrl] [nvarchar] (200) NOT NULL 
+	,[EmailFromAddress] [nvarchar] (200) NOT NULL 
+*/
+
+-- CollectionsReadDirectory
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'CollectionsReadDirectory'
+           ,'Default'
+           ,''
+           ,'\\ps-nas\NAS\SSS\AR\Collections\TennCareElligibilityFilesForAutomatedProcess\Daily\Collections'
+           ,1);
+
+-- DunningReadDirectory
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'DunningReadDirectory'
+           ,'Default'
+           ,''
+           ,'\\ps-nas\NAS\SSS\AR\Collections\TennCareElligibilityFilesForAutomatedProcess\Daily\Dunning'
+           ,1);
+
+-- MonthlyReadDirectory
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'MonthlyReadDirectory'
+           ,'Default'
+           ,''
+           ,'\\ps-nas\NAS\SSS\AR\Collections\TennCareElligibilityFilesForAutomatedProcess\Monthly'
+           ,1);
+		   
+-- CollectionsInputArchiveDirectory
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'CollectionsInputArchiveDirectory'
+           ,'Default'
+           ,''
+           ,'\\ps-nas\NAS\SSS\AR\Collections\TennCareElligibilityFilesForAutomatedProcess\Daily\Collections\InputArchive'
+           ,1);
+		   
+-- DunningInputArchiveDirectory
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'DunningInputArchiveDirectory'
+           ,'Default'
+           ,''
+           ,'\\ps-nas\NAS\SSS\AR\Collections\TennCareElligibilityFilesForAutomatedProcess\Daily\Dunning\InputArchive'
+           ,1);
+
+-- MonthlyInputArchiveDirectory
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'MonthlyInputArchiveDirectory'
+           ,'Default'
+           ,''
+           ,'\\ps-nas\NAS\SSS\AR\Collections\TennCareElligibilityFilesForAutomatedProcess\Monthly\InputArchive'
+           ,1);
+
+-- CollectionsOutputArchiveDirectory
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'CollectionsOutputArchiveDirectory'
+           ,'Default'
+           ,''
+           ,'\\ps-nas\NAS\SSS\AR\Collections\TennCareElligibilityFilesForAutomatedProcess\Daily\Collections\OutputArchive'
+           ,1);
+		   
+-- DunningOutputArchiveDirectory
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'DunningOutputArchiveDirectory'
+           ,'Default'
+           ,''
+           ,'\\ps-nas\NAS\SSS\AR\Collections\TennCareElligibilityFilesForAutomatedProcess\Daily\Dunning\OutputArchive'
+           ,1);
+
+-- MonthlyOutputArchiveDirectory
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'MonthlyOutputArchiveDirectory'
+           ,'Default'
+           ,''
+           ,'\\ps-nas\NAS\SSS\AR\Collections\TennCareElligibilityFilesForAutomatedProcess\Monthly\OutputArchive'
+           ,1);
+
+		   
+		   
+		   
+		   
+		   
+		   
+-- CollectionsFilenameContainsString
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'CollectionsFilenameContainsString'
+           ,'Default'
+           ,''
+           ,'TennCareCollections'
+           ,1);
+		   
+-- DunningFilenameContainsString
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'DunningFilenameContainsString'
+           ,'Default'
+           ,''
+           ,'TennCareDunning'
+           ,1);
+		   
+-- MonthlyAgencyFilenameContainsString
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'MonthlyAgencyFilenameContainsString'
+           ,'Default'
+           ,''
+           ,'Agency'
+           ,1);
+
+-- MonthlyDeceasedFilenameContainsString
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'MonthlyDeceasedFilenameContainsString'
+           ,'Default'
+           ,''
+           ,'Deceased'
+           ,1);
+
+-- MonthlyInHouseFilenameContainsString
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'MonthlyInHouseFilenameContainsString'
+           ,'Default'
+           ,''
+           ,'.xlsx'
+           ,1);
+
+-- MonthlyCollectionsFilenameContainsString
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'MonthlyCollectionsFilenameContainsString'
+           ,'Default'
+           ,''
+           ,'TennCareCollections'
+           ,1);
+
+-- MonthlyDunningFilenameContainsString
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'MonthlyDunningFilenameContainsString'
+           ,'Default'
+           ,''
+           ,'TennCareDunning'
+           ,1);
+
+
+-- CollectionsLineWhereDataStarts		   
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'CollectionsLineWhereDataStarts'
+           ,'Default'
+           ,''
+           ,'2'
+           ,1);
+		   
+-- DunningLineWhereDataStarts		   
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'DunningLineWhereDataStarts'
+           ,'Default'
+           ,''
+           ,'2'
+           ,1);
+
+-- MonthlyAgencyLineWhereDataStarts		   
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'MonthlyAgencyLineWhereDataStarts'
+           ,'Default'
+           ,''
+           ,'2'
+           ,1);
+		   
+-- MonthlyDeceasedLineWhereDataStarts		   
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'MonthlyDeceasedLineWhereDataStarts'
+           ,'Default'
+           ,''
+           ,'2'
+           ,1);
+
+-- MonthlyInHouseLineWhereDataStarts		   
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'MonthlyInHouseLineWhereDataStarts'
+           ,'Default'
+           ,''
+           ,'2'
+           ,1);
+
+-- MonthlyCollectionsLineWhereDataStarts		   
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'MonthlyCollectionsLineWhereDataStarts'
+           ,'Default'
+           ,''
+           ,'2'
+           ,1);
+		
+-- MonthlyDunningLineWhereDataStarts		   
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'MonthlyDunningLineWhereDataStarts'
+           ,'Default'
+           ,''
+           ,'2'
+           ,1);		
+		   
+-- BaseWebApiUrl		   
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'BaseWebApiUrl'
+           ,'Default'
+           ,''
+           ,'http://webservices:5571'
+           ,1);
+		   
+-- BulkInsertBaseWebApiUrl
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'BulkInsertBaseWebApiUrl'
+           ,'Default'
+           ,''
+           ,'http://webservices:5559'
+           ,1);
+
+-- BulkInsertConnectionString
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'BulkInsertConnectionString'
+           ,'Default'
+           ,''
+           ,'Data Source=vs-dev-db;Initial Catalog=Staging;TrustServerCertificate=True;Integrated Security=False;User ID=AppUser;Password=SoMm1t!@'
+           ,1);
+		   
+-- BulkInsertDbName
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'BulkInsertDbName'
+           ,'Default'
+           ,''
+           ,'Staging'
+           ,1);
+		   
+-- CollectionsBulkInsertDbTableName
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'CollectionsBulkInsertDbTableName'
+           ,'Default'
+           ,''
+           ,'tc.DailyFileCollectionsComparisonRaw'
+           ,1);  
+		   
+-- DunningBulkInsertDbTableName
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'DunningBulkInsertDbTableName'
+           ,'Default'
+           ,''
+           ,'tc.DailyFileDunningComparisonRaw'
+           ,1);  
+
+-- MonthlyBulkInsertDbTableName
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'MonthlyBulkInsertDbTableName'
+           ,'Default'
+           ,''
+           ,'tc.MonthlyEntriesLookedUpTodayRaw'
+           ,1);  
+		   
+-- ToEmailAddressList
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'ToEmailAddressList'
+           ,'Default'
+           ,''
+           ,'pwmorrison@summithealthcare.com'
+           ,1);  
+		   
+		   
+-- EmailBaseWebApiUrl
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'EmailBaseWebApiUrl'
+           ,'Default'
+           ,''
+           ,'http://webservices:5570/api/EmailWebApi/SendEmailWithHtmlStringInput'
+           ,1);  
+
+		   
+-- EmailFromAddress
+INSERT INTO [support].[Setting]
+           ([ApplicationID]
+           ,[ProcessID]
+           ,[Name]
+           ,[Type]
+           ,[Description]
+           ,[Value]
+           ,[Active])
+     VALUES
+           (@MyApplicationID
+           ,@MyProcessID
+           ,'EmailFromAddress'
+           ,'Default'
+           ,''
+           ,'smgapplications@summithealthcare.com'
+           ,1);  

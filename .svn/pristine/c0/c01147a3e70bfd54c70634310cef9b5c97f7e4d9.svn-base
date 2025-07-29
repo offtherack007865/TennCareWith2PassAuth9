@@ -1,0 +1,39 @@
+-- SQL Instance Name:  smg-sql01
+USE [Staging];
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'MonthlyEntriesLookedUpToday' AND TABLE_SCHEMA = 'tc')
+   DROP TABLE [tc].[MonthlyEntriesLookedUpToday];
+GO
+/* -----------------------------------------------------------------------------------------------------------
+   Table Name  :  tc.MonthlyEntriesLookedUpToday
+   Business Analyis:
+   Project/Process :   
+   Description     :  The Monthly Entries Looked Up Today.
+                        
+   Author          :   Philip Morrison
+   Create Date     :   04/04/2025 
+
+   ***********************************************************************************************************
+   **         Change History                                                                                **
+   ***********************************************************************************************************
+
+   Date       Version    Author             Description
+   --------   --------   -----------        ------------
+   04/04/2025 1.01.001   Philip Morrison    Created
+*/ -----------------------------------------------------------------------------------------------------------                                   
+
+
+CREATE TABLE [tc].[MonthlyEntriesLookedUpToday](
+    [MonthlyEntriesLookedUpTodayID] [int] IDENTITY ( 1, 1 ) NOT NULL
+	,[PatientID] [int] NULL
+	,[DOS] [datetime] NOT NULL
+	,[PatientName] [varchar](300) NULL
+	,[DOB] [datetime] NOT NULL
+	,[SSN] [varchar](10) NOT NULL
+	,[ImportFullFilename] [varchar] (1000) NOT NULL
+	,[DateImported] [datetime] NULL
+	,[LookedUp] [bit] DEFAULT (0)
+ CONSTRAINT [PK_MonthlyEntriesLookedUpToday] PRIMARY KEY CLUSTERED 
+(
+	[MonthlyEntriesLookedUpTodayID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <DeleteExistingFiles>true</DeleteExistingFiles>
+    <ExcludeApp_Data>false</ExcludeApp_Data>
+    <LaunchSiteAfterPublish>true</LaunchSiteAfterPublish>
+    <LastUsedBuildConfiguration>Release</LastUsedBuildConfiguration>
+    <LastUsedPlatform>Any CPU</LastUsedPlatform>
+    <PublishProvider>FileSystem</PublishProvider>
+    <PublishUrl>c:\TennCareWith2PassAuth9.WebApiLand_dev</PublishUrl>
+    <WebPublishMethod>FileSystem</WebPublishMethod>
+    <_TargetId>Folder</_TargetId>
+    <SiteUrlToLaunchAfterPublish />
+    <TargetFramework>net9.0</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <ProjectGuid>24901639-a66b-4201-a2f0-07880be2b805</ProjectGuid>
+    <SelfContained>true</SelfContained>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,24 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TennCareWith2PassAuth9.Data.Models
+{
+    public class di_FinalizeDailyFileCollectionsComparisonRawOutput
+    {
+        public di_FinalizeDailyFileCollectionsComparisonRawOutput()
+        {
+            IsOk = true;
+            ErrorMessage = string.Empty;
+            di_FinalizeDailyFileCollectionsComparisonRawOutputColumnsList = 
+                new List<di_FinalizeDailyFileCollectionsComparisonRawOutputColumns>();
+        }
+        public bool IsOk { get; set; }
+        public string ErrorMessage { get; set; }    
+        public List<di_FinalizeDailyFileCollectionsComparisonRawOutputColumns>
+            di_FinalizeDailyFileCollectionsComparisonRawOutputColumnsList
+                { get; set; }
+    }
+}

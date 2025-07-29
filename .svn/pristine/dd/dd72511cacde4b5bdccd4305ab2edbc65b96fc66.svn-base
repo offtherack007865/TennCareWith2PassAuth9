@@ -1,0 +1,143 @@
+-- SQL Server Instance:  smg-sql01
+USE [Utilities];
+IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND OBJECT_ID = OBJECT_ID('sl.qy_GetSummitLifeDailyReportConfig'))
+   DROP PROC [sl].[qy_GetSummitLifeDailyReportConfig]
+GO
+CREATE PROCEDURE [sl].[qy_GetSummitLifeDailyReportConfig]
+/* -----------------------------------------------------------------------------------------------------------
+   Procedure Name  :  sl.qy_GetSummitLifeDailyReportConfig
+   Business Analyis:
+   Project/Process :   
+   Description     :  Get configuration settings for the 
+                      'SummitLifeDailyReports' application.
+	  
+   Author          :  Philip Morrison 
+   Create Date     :  05/05/2025
+
+   ***********************************************************************************************************
+   **         Change History                                                                                **
+   ***********************************************************************************************************
+
+   Date       Version    Author             Description
+   --------   --------   -----------        ------------
+   05/05/2025 1.01.001   Philip Morrison    Created
+
+*/ -----------------------------------------------------------------------------------------------------------                                   
+
+AS
+BEGIN
+
+-- Local Declarations
+  -- KeyValueTable
+  DECLARE @KeyValueTable Table
+  (
+    [Name] [nvarchar] (1000)
+	,[Value] [nvarchar] (1000)
+  );
+  
+  DECLARE @ApplicationName [nvarchar] (200) = '';
+  
+	
+-- [ApplicationName] [nvarchar] (200) NOT NULL
+
+
+
+-- Declarations
+DECLARE @Application            varchar(128) = 'Summit Life' 
+DECLARE @Version                varchar(25)  = '1.00.001'
+
+DECLARE @ProcessID              int          = 212
+DECLARE @Process                varchar(128) = 'DailyReports'
+
+DECLARE @BatchOutID             int
+DECLARE @BatchDescription       varchar(1000) = @@ServerName + '  - ' + @Version
+DECLARE @BatchDetailDescription varchar(1000)
+DECLARE @BatchMessage           varchar(MAX)
+DECLARE @User                   varchar(128) = SUSER_NAME()
+
+DECLARE @AnticipatedRecordCount int 
+DECLARE @ActualRecordCount      int
+DECLARE @IsOk [bit] 
+DECLARE @MyCount [int] 
+
+SET NOCOUNT ON  
+
+BEGIN TRY
+
+--  Initialize Batch
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  NULL, 'BatchStart', @BatchDescription, @ProcessID, @Process
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    SET @BatchDetailDescription = 'Populate KeyValueTable with call to [administration].[qy_GetApplicationSettings]'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+	                                   FROM @KeyValueTable;
+	  
+      -- Populate KeyValueTable with call to [administration].[qy_GetApplicationSettings]
+      INSERT INTO @KeyValueTable
+      (
+        [Name]
+	    ,[Value]
+      )
+      EXEC [Admin].[Utilities].[administration].[qy_GetApplicationSettings] 'Summit Life', 'Default', 'DailyReports', NULL, 'AppUser';
+	  
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+    SET @BatchDetailDescription = 'Populate @ApplicationName'
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailStart', @BatchDetailDescription
+	
+	  SELECT @AnticipatedRecordCount = COUNT(*)
+      FROM @KeyValueTable
+      WHERE [Name] = 'ApplicationName';	
+	  
+      -- Populate @ApplicationName
+      SELECT @ApplicationName = [Value]
+      FROM @KeyValueTable
+      WHERE [Name] = 'ApplicationName';	
+	
+      SELECT @ApplicationName AS [ApplicationName];
+	  
+    SET @ActualRecordCount = @@ROWCOUNT
+    EXEC Admin.Utilities.logs.di_Batch @BatchOutID OUTPUT,  @BatchOutID, 'DetailEnd', NULL, NULL, NULL, @AnticipatedRecordCount, @ActualRecordCount
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+--  Close batch
+    EXEC Admin.Utilities.logs.di_batch @BatchOutID OUTPUT, @BatchOutID, 'BatchEnd'
+
+
+
+
+
+END TRY
+
+
+
+BEGIN CATCH
+DECLARE @Err              int
+     ,  @ErrorMessage     varchar(Max)
+     ,  @ErrorLine        varchar(128)
+     ,  @Workstation      varchar(128) = @Application
+     ,  @Procedure        VARCHAR(500)
+
+    IF ERROR_NUMBER() IS NULL 
+      SET @Err =0;
+    ELSE
+      SET @Err = ERROR_NUMBER();
+
+    SET @ErrorMessage = ERROR_MESSAGE()
+    SET @ErrorLine    = 'SP Line Number: ' + CAST(ERROR_LINE() as varchar(10)) 
+    SET @Workstation  = HOST_NAME()
+    SET @Procedure    = @@SERVERNAME + '.' + DB_NAME() + '.' + OBJECT_SCHEMA_NAME(@@ProcID) + '.' + OBJECT_NAME(@@ProcID) + ' - ' + @ErrorLine + ' - ' + LEFT(@BatchDetailDescription, 7)
+
+    EXEC Admin.Utilities.administration.di_ErrorLog  @Application ,@Process, @Version ,@Err, @ErrorMessage, @Procedure,  @User , @Workstation
+
+    SET @BatchMessage = 'Process Failed:  ' +  @ErrorMessage
+    EXEC Admin.Utilities.logs.di_batch @BatchOutID OUTPUT, @BatchOutID, 'BatchEnd', @BatchMessage
+    RAISERROR(@ErrorMessage, 16,1)
+END CATCH
+END

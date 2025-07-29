@@ -1,0 +1,1113 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="4/8/2025 2:57:00 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="99-BLEFLER"
+  DTS:CreatorName="SUMMIT_NT\pwmorrison"
+  DTS:DTSID="{716A65AE-A168-4BE8-B522-6784E470DD73}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="16.0.5685.0"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="Package"
+  DTS:PackageType="5"
+  DTS:VersionBuild="23"
+  DTS:VersionGUID="{C3895EBE-3224-4A8B-AD2A-FC65E9D431B4}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[appdb01.TennCareEligibility]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{DC42A2C3-CA79-4C47-94D8-4A2C8BF1600F}"
+      DTS:ObjectName="appdb01.TennCareEligibility">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=appdb01;Initial Catalog=TennCareEligibility;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Application Name=SSIS-Package-{DC42A2C3-CA79-4C47-94D8-4A2C8BF1600F}appdb01.TennCareEligibility;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[vs-dev-db.TennCareEligibility]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{8320C687-A932-43BA-A355-196E1037F42C}"
+      DTS:ObjectName="vs-dev-db.TennCareEligibility">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=vs-dev-db;Initial Catalog=TennCareEligibility;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Application Name=SSIS-Package-{8320C687-A932-43BA-A355-196E1037F42C}vs-dev-db.TennCareEligibility;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Truncate DailyFileCollectionsComparison"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{56FE95D5-95DB-444E-BAA2-B2438245A429}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Truncate DailyFileCollectionsComparison"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{8320C687-A932-43BA-A355-196E1037F42C}"
+          SQLTask:SqlStatementSource="truncate table tc.DailyFileCollectionsComparison;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Truncate DailyFileDunningComparison"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{921849FC-C0B7-4A22-97E0-0D38571ECC1B}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Truncate DailyFileDunningComparison"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{8320C687-A932-43BA-A355-196E1037F42C}"
+          SQLTask:SqlStatementSource="truncate table tc.DailyFileDunningComparison;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Xfr DailyFileCollectionsComparison"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{516F19AE-B49A-457E-B088-3F5A4E769DFA}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Xfr DailyFileCollectionsComparison"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="OLE DB Destination"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[tc].[DailyFileCollectionsComparison]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[vs-dev-db.TennCareEligibility]"
+                  connectionManagerRefId="Package.ConnectionManagers[vs-dev-db.TennCareEligibility]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[FileName]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="75"
+                      cachedName="FileName"
+                      externalMetadataColumnId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[FileName]"
+                      lineageId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[FileName]" />
+                    <inputColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[PatientID]"
+                      cachedDataType="i4"
+                      cachedName="PatientID"
+                      externalMetadataColumnId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[PatientID]"
+                      lineageId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[PatientID]" />
+                    <inputColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[DOB]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="DOB"
+                      externalMetadataColumnId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[DOB]"
+                      lineageId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[DOB]" />
+                    <inputColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[SSN]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="10"
+                      cachedName="SSN"
+                      externalMetadataColumnId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[SSN]"
+                      lineageId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[SSN]" />
+                    <inputColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[DOS]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="DOS"
+                      externalMetadataColumnId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[DOS]"
+                      lineageId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[DOS]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[FileName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="300"
+                      name="FileName" />
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[PatientID]"
+                      dataType="i4"
+                      name="PatientID" />
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[DOB]"
+                      dataType="dbTimeStamp"
+                      name="DOB" />
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[SSN]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="SSN" />
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[DOS]"
+                      dataType="dbTimeStamp"
+                      name="DOS" />
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[DailyFileCollectionsComparisonID]"
+                      dataType="i4"
+                      name="DailyFileCollectionsComparisonID" />
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[DateImported]"
+                      dataType="dbTimeStamp"
+                      name="DateImported" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="OLE DB Source"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[DailyFileCollectionsComparison]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[appdb01.TennCareEligibility]"
+                  connectionManagerRefId="Package.ConnectionManagers[appdb01.TennCareEligibility]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[FileName]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[FileName]"
+                      length="75"
+                      lineageId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[FileName]"
+                      name="FileName"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[PatientID]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[PatientID]"
+                      lineageId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[PatientID]"
+                      name="PatientID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[DOB]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[DOB]"
+                      lineageId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[DOB]"
+                      name="DOB"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[SSN]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[SSN]"
+                      length="10"
+                      lineageId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[SSN]"
+                      name="SSN"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[DOS]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[DOS]"
+                      lineageId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[DOS]"
+                      name="DOS"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[FileName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="75"
+                      name="FileName" />
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[PatientID]"
+                      dataType="i4"
+                      name="PatientID" />
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[DOB]"
+                      dataType="dbTimeStamp"
+                      name="DOB" />
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[SSN]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="SSN" />
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[DOS]"
+                      dataType="dbTimeStamp"
+                      name="DOS" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[FileName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="75"
+                      lineageId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[FileName]"
+                      name="FileName" />
+                    <outputColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[PatientID]"
+                      dataType="i4"
+                      lineageId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[PatientID]"
+                      name="PatientID" />
+                    <outputColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[DOB]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[DOB]"
+                      name="DOB" />
+                    <outputColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[SSN]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      lineageId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[SSN]"
+                      name="SSN" />
+                    <outputColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[DOS]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[DOS]"
+                      name="DOS" />
+                    <outputColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Xfr DailyFileCollectionsComparison.Paths[OLE DB Source Output]"
+              endId="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination.Inputs[OLE DB Destination Input]"
+              name="OLE DB Source Output"
+              startId="Package\Xfr DailyFileCollectionsComparison\OLE DB Source.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Xfr DailyFileDunningComparison"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{D74078DD-61FE-47E9-AA80-9CFE90B9C355}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Xfr DailyFileDunningComparison"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Xfr DailyFileDunningComparison\OLE DB Destination"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="OLE DB Destination"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[tc].[DailyFileDunningComparison]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">true</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[vs-dev-db.TennCareEligibility]"
+                  connectionManagerRefId="Package.ConnectionManagers[vs-dev-db.TennCareEligibility]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[FileName]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="75"
+                      cachedName="FileName"
+                      externalMetadataColumnId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[FileName]"
+                      lineageId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[FileName]" />
+                    <inputColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[PatientID]"
+                      cachedDataType="i4"
+                      cachedName="PatientID"
+                      externalMetadataColumnId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[PatientID]"
+                      lineageId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[PatientID]" />
+                    <inputColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[DOB]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="DOB"
+                      externalMetadataColumnId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[DOB]"
+                      lineageId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[DOB]" />
+                    <inputColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[SSN]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="10"
+                      cachedName="SSN"
+                      externalMetadataColumnId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[SSN]"
+                      lineageId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[SSN]" />
+                    <inputColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[DOS]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="DOS"
+                      externalMetadataColumnId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[DOS]"
+                      lineageId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[DOS]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[FileName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="300"
+                      name="FileName" />
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[PatientID]"
+                      dataType="i4"
+                      name="PatientID" />
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[DOB]"
+                      dataType="dbTimeStamp"
+                      name="DOB" />
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[SSN]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="SSN" />
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[DOS]"
+                      dataType="dbTimeStamp"
+                      name="DOS" />
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[DailyFileDunningComparisonID]"
+                      dataType="i4"
+                      name="DailyFileDunningComparisonID" />
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[DateImported]"
+                      dataType="dbTimeStamp"
+                      name="DateImported" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Xfr DailyFileDunningComparison\OLE DB Source"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="OLE DB Source"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[DailyFileDunningComparison]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[appdb01.TennCareEligibility]"
+                  connectionManagerRefId="Package.ConnectionManagers[appdb01.TennCareEligibility]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[FileName]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[FileName]"
+                      length="75"
+                      lineageId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[FileName]"
+                      name="FileName"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[PatientID]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[PatientID]"
+                      lineageId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[PatientID]"
+                      name="PatientID"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[DOB]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[DOB]"
+                      lineageId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[DOB]"
+                      name="DOB"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[SSN]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[SSN]"
+                      length="10"
+                      lineageId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[SSN]"
+                      name="SSN"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[DOS]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[DOS]"
+                      lineageId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].Columns[DOS]"
+                      name="DOS"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[FileName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="75"
+                      name="FileName" />
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[PatientID]"
+                      dataType="i4"
+                      name="PatientID" />
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[DOB]"
+                      dataType="dbTimeStamp"
+                      name="DOB" />
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[SSN]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="SSN" />
+                    <externalMetadataColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[DOS]"
+                      dataType="dbTimeStamp"
+                      name="DOS" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[FileName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="75"
+                      lineageId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[FileName]"
+                      name="FileName" />
+                    <outputColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[PatientID]"
+                      dataType="i4"
+                      lineageId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[PatientID]"
+                      name="PatientID" />
+                    <outputColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[DOB]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[DOB]"
+                      name="DOB" />
+                    <outputColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[SSN]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      lineageId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[SSN]"
+                      name="SSN" />
+                    <outputColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[DOS]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[DOS]"
+                      name="DOS" />
+                    <outputColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Xfr DailyFileDunningComparison.Paths[OLE DB Source Output]"
+              endId="Package\Xfr DailyFileDunningComparison\OLE DB Destination.Inputs[OLE DB Destination Input]"
+              name="OLE DB Source Output"
+              startId="Package\Xfr DailyFileDunningComparison\OLE DB Source.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{E992F442-33BF-4698-AE18-E42441B83B35}"
+      DTS:From="Package\Truncate DailyFileCollectionsComparison"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Xfr DailyFileCollectionsComparison" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{D7E77AEA-B958-4121-B7F0-55CEE6D10595}"
+      DTS:From="Package\Xfr DailyFileCollectionsComparison"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Truncate DailyFileDunningComparison" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{2DDD10CA-CF80-4344-B109-21AD2B9EE67F}"
+      DTS:From="Package\Truncate DailyFileDunningComparison"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\Xfr DailyFileDunningComparison" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="270,42"
+          Id="Package\Truncate DailyFileCollectionsComparison"
+          TopLeft="158.333324682382,90.9999993671974" />
+        <NodeLayout
+          Size="258,42"
+          Id="Package\Truncate DailyFileDunningComparison"
+          TopLeft="167.499990848204,279.933331386712" />
+        <NodeLayout
+          Size="242,42"
+          Id="Package\Xfr DailyFileCollectionsComparison"
+          TopLeft="173.333323862818,172.466665467355" />
+        <NodeLayout
+          Size="230,42"
+          Id="Package\Xfr DailyFileDunningComparison"
+          TopLeft="180.499990438422,366.899997486869" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="293.6333242726,132.599999367197">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,39.8666661001577"
+              Start="0,0"
+              End="0,32.3666661001577">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,32.3666661001577" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="295.216657355511,214.066665467355">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,65.8666659193568"
+              Start="0,0"
+              End="0,58.3666659193568">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,58.3666659193568" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="295.799990643313,321.533331386712">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,45.3666661001576"
+              Start="0,0"
+              End="0,37.8666661001576">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,37.8666661001576" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Xfr DailyFileCollectionsComparison">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="152,42"
+          Id="Package\Xfr DailyFileCollectionsComparison\OLE DB Source"
+          TopLeft="230.499996647239,114.499998375773" />
+        <NodeLayout
+          Size="171,42"
+          Id="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination"
+          TopLeft="229.999996572733,196.999997064471" />
+        <EdgeLayout
+          Id="Package\Xfr DailyFileCollectionsComparison.Paths[OLE DB Source Output]"
+          TopLeft="306.499996647239,156.099998375773">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="9.09999992549416,40.8999986886978"
+              Start="0,0"
+              End="9.09999992549416,33.3999986886978">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,16.4499993443489" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,16.4499993443489"
+                    Point2="0,20.4499993443489"
+                    Point3="4,20.4499993443489" />
+                  <mssgle:LineSegment
+                    End="5.09999992549416,20.4499993443489" />
+                  <mssgle:CubicBezierSegment
+                    Point1="5.09999992549416,20.4499993443489"
+                    Point2="9.09999992549416,20.4499993443489"
+                    Point3="9.09999992549416,24.4499993443489" />
+                  <mssgle:LineSegment
+                    End="9.09999992549416,33.3999986886978" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Xfr DailyFileCollectionsComparison\OLE DB Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Xfr DailyFileCollectionsComparison\OLE DB Source">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\Xfr DailyFileDunningComparison">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="152,42"
+          Id="Package\Xfr DailyFileDunningComparison\OLE DB Source"
+          TopLeft="234.999996498227,184.999997243285" />
+        <NodeLayout
+          Size="171,42"
+          Id="Package\Xfr DailyFileDunningComparison\OLE DB Destination"
+          TopLeft="225.499996721745,275.499995976687" />
+        <EdgeLayout
+          Id="Package\Xfr DailyFileDunningComparison.Paths[OLE DB Source Output]"
+          TopLeft="311.049996609986,226.599997243285">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,48.8999987334013"
+              Start="0,0"
+              End="0,41.3999987334013">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,41.3999987334013" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Xfr DailyFileDunningComparison\OLE DB Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Xfr DailyFileDunningComparison\OLE DB Source">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

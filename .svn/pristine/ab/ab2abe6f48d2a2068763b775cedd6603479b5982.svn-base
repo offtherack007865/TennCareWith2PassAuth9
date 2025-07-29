@@ -1,0 +1,24 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TennCareWith2PassAuth9.Data.Models
+{
+    public class dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutput
+    {
+        public dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutput()
+        {
+            IsOk = true;
+            ErrorMessage = string.Empty;
+            dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutputColumnsList =
+                new List<dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutputColumns>();
+        }
+        public bool IsOk {  get; set; }
+        public string ErrorMessage { get; set; }
+        public List<dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutputColumns>
+            dd_TruncateCollectionsEntriesYieldingEligInfoTodayOutputColumnsList
+                { get; set; }
+    }
+}
